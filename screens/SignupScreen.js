@@ -8,6 +8,7 @@ import { View, TextInput, Logo, Button, FormErrorMessage } from "../components";
 import { Images, Colors, auth } from "../config";
 import { useTogglePasswordVisibility } from "../hooks";
 import { signupValidationSchema } from "../utils";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -30,7 +31,7 @@ export const SignupScreen = ({ navigation }) => {
   };
 
   return (
-    <View isSafe style={styles.container}>
+    <SafeAreaView isSafe style={styles.container}>
       <KeyboardAwareScrollView enableOnAndroid={true}>
         {/* LogoContainer: consist app logo and screen title */}
         <View style={styles.logoContainer}>
@@ -125,7 +126,7 @@ export const SignupScreen = ({ navigation }) => {
           onPress={() => navigation.navigate("Login")}
         />
       </KeyboardAwareScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 

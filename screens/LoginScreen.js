@@ -8,6 +8,7 @@ import { View, TextInput, Logo, Button, FormErrorMessage } from "../components";
 import { Images, Colors, auth } from "../config";
 import { useTogglePasswordVisibility } from "../hooks";
 import { loginValidationSchema } from "../utils";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -21,7 +22,7 @@ export const LoginScreen = ({ navigation }) => {
     );
   };
   return (
-    <>
+    <SafeAreaView>
       <View isSafe style={styles.container}>
         <KeyboardAwareScrollView enableOnAndroid={true}>
           {/* LogoContainer: consist app logo and screen title */}
@@ -112,7 +113,7 @@ export const LoginScreen = ({ navigation }) => {
       <View style={styles.footer}>
         <Text style={styles.footerText}>Expo Firebase Starter App</Text>
       </View>
-    </>
+    </SafeAreaView>
   );
 };
 
