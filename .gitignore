@@ -39,7 +39,10 @@ Temporary Items
 .apdisk
 
 # Project related
-.env
+#.env
 .expo
 .expo-shared
 .vscode
+
+#android
+android/
