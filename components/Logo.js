@@ -4,12 +4,13 @@ import { Image, StyleSheet } from "react-native";
 import { Images } from "../config";
 
 export const Logo = ({ uri }) => {
-  return <Image source={uri} resizeMode="contain" />;
+  return <Image source={uri} style={styles.image} resizeMode="contain" />;
 };
 
 const styles = StyleSheet.create({
   image: {
-    width: 200,
-    height: 200,
+    width: "100%",
+    position: 'absolute',
+    top: 0,
   },
 });

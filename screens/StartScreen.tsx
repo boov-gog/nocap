@@ -8,8 +8,8 @@ export const StartScreen = () => {
   const handleStart = () => {};
 
   return (
-    <SafeAreaView>
-      <Logo uri={Images.logo} />
+    <SafeAreaView style={styles.container}>
+      <Logo uri={Images.logo}/>
       <View style={styles.btnContainer}>
         <Button title="Start" onPress={handleStart} />
       </View>
@@ -18,6 +18,13 @@ export const StartScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#000621",
+    width: "100%",
+    position: 'relative'
+  },
   btnContainer: {
     position: "absolute",
     bottom: 20,
