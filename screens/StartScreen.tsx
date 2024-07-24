@@ -3,6 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Logo } from "../components";
 import { Images } from "../config";
+import NocapButton from "../components/NocapButton";
 
 export const StartScreen = () => {
   const handleStart = () => {};
@@ -11,7 +12,7 @@ export const StartScreen = () => {
     <SafeAreaView style={styles.container}>
       <Logo uri={Images.logo}/>
       <View style={styles.btnContainer}>
-        <Button title="Start" onPress={handleStart} />
+        <NocapButton title="Start" onPress={handleStart} />
       </View>
     </SafeAreaView>
   );

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 
-const NocapButton = ({ onPress, title, buttonStyle, textStyle }) => {
+const NocapButton = ({ onPress, title, buttonStyle = {}, textStyle = {}}) => {
   const [pressed, setPressed] = useState(false);
 
   const handlePress = () => {
