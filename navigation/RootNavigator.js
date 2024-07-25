@@ -8,9 +8,26 @@ import { AuthenticatedUserContext } from "../providers";
 import { LoadingIndicator } from "../components";
 import { auth } from "../config";
 
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+
 export const RootNavigator = () => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        'Kanit-Regular': require('../assets/font/Kanit-Regular.ttf'),
+        // 'Kanit-Bold': require('./assets/fonts/Kanit-Bold.ttf'),
+        // Add other Kanit styles as needed
+      });
+      setFontsLoaded(true);
+    }
+    loadFonts();
+  }, []);
 
   useEffect(() => {
     // onAuthStateChanged returns an unsubscriber
@@ -26,8 +43,8 @@ export const RootNavigator = () => {
     return unsubscribeAuthStateChanged;
   }, [user]);
 
-  if (isLoading) {
-    return <LoadingIndicator />;
+  if (isLoading && !fontsLoaded) {
+    return <AppLoading />;
   }
 
   return (
