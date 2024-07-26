@@ -10,7 +10,7 @@ import {
 import React, { useState } from "react";
 import { Images } from "../config";
 
-const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
+const GenderButton = ({ onPress, uri, width }) => {
   const [pressed, setPressed] = useState(false);
 
   const handlePressIn = () => {
@@ -21,50 +21,37 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
     setPressed(false);
   };
 
-  if (containerWidth == null || containerWidth == 0) {
-    containerWidth = Dimensions.get("window").width;
-  }
-
-  const paddingBtnHorz = (11 / 100) * containerWidth;
-  const paddingBtnVert = (7 / 100) * containerWidth;
-
   const styles = StyleSheet.create({
     container: {
-      width: "100%",
-      aspectRatio: 3.359,
-      paddingHorizontal: paddingBtnHorz,
-      paddingVertical: paddingBtnVert,
+      width: width,
+      aspectRatio: 1.25,
+      paddingHorizontal: width * 0.05,
+      paddingTop: width * 0.05,
+      paddingBottom: width * 0.07,
     },
     innerContainer: {
       width: "100%",
       height: "100%",
-      borderRadius: 100,
+      borderRadius: width * 0.2,
       backgroundColor: "white",
       alignItems: "center",
       justifyContent: "center",
     },
     pressedContainer: {
-      width: "100%",
-      aspectRatio: 3.359,
+      width: width,
+      aspectRatio: 1.25,
       position: "relative",
-      alignItems: "center",
       justifyContent: "center",
+      alignItems: "center",
     },
     buttonBack: {
       width: "100%",
       height: "100%",
       position: "absolute",
     },
-    title: {
-      fontFamily: "Kanit-Bold",
-      fontSize: 32,
-      // fontWeight: "700",
-    },
-    pressedTitle: {
-      fontFamily: "Kanit-Bold",
-      fontSize: 32,
-      // fontWeight: "700",
-      color: "white",
+    innerImage: {
+      width: width * 0.6,
+      height: width * 0.6,
     },
   });
 
@@ -78,16 +65,20 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
       {pressed ? (
         <View style={styles.pressedContainer}>
           <Image
-            source={Images.buttonBack}
+            source={Images.genderBtnBack}
             style={styles.buttonBack}
-            resizeMode="contain"
+            resizeMode="stretch"
           />
-          <Text style={[styles.pressedTitle, titleStyle]}>{title}</Text>
+          <Image source={uri} style={styles.innerImage} resizeMode="contain" />
         </View>
       ) : (
         <View style={styles.container}>
           <View style={styles.innerContainer}>
-            <Text style={[styles.title, titleStyle]}>{title}</Text>
+            <Image
+              source={uri}
+              style={styles.innerImage}
+              resizeMode="contain"
+            />
           </View>
         </View>
       )}
@@ -95,4 +86,4 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
   );
 };
 
-export default NocapButton;
+export default GenderButton;

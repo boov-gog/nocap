@@ -28,6 +28,9 @@ export default {
       storageBucket: process.env.STORAGE_BUCKET,
       messagingSenderId: process.env.MESSAGING_SENDER_ID,
       appId: process.env.APP_ID,
+      eas: {
+        projectId: "52884eee-d53c-4233-b0da-4fbda6317000",
+      },
     },
     android: {
       package: "com.anonymous.expofirebase",

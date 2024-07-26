@@ -4,11 +4,19 @@ import { Formik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-import { View, TextInput, Logo, Button, FormErrorMessage } from "../components";
-import { Images, Colors, auth } from "../config";
-import { useTogglePasswordVisibility } from "../hooks";
-import { loginValidationSchema } from "../utils";
+import {
+  View,
+  TextInput,
+  Logo,
+  Button,
+  FormErrorMessage,
+} from "../../components";
+import { Images, Colors, auth } from "../../config";
+import { useTogglePasswordVisibility } from "../../hooks";
+import { loginValidationSchema } from "../../utils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import NocapButton from "../../components/NocapButton";
+import { StackNav } from "../../navigation/NavigationKeys";
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -22,32 +30,29 @@ export const LoginScreen = ({ navigation }) => {
     );
   };
   return (
-    <SafeAreaView>
-      <View isSafe style={styles.container}>
-        <KeyboardAwareScrollView enableOnAndroid={true}>
-          {/* LogoContainer: consist app logo and screen title */}
-          <View style={styles.logoContainer}>
-            <Logo uri={Images.logo} />
-            <Text style={styles.screenTitle}>Welcome back!</Text>
-          </View>
-          <Formik
-            initialValues={{
-              email: "",
-              password: "",
-            }}
-            validationSchema={loginValidationSchema}
-            onSubmit={(values) => handleLogin(values)}
-          >
-            {({
-              values,
-              touched,
-              errors,
-              handleChange,
-              handleSubmit,
-              handleBlur,
-            }) => (
-              <>
-                {/* Input fields */}
+    <SafeAreaView style={styles.container}>
+      <KeyboardAwareScrollView enableOnAndroid={true}>
+        {/* LogoContainer: consist app logo and screen title */}
+        <Logo uri={Images.logo} />
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          validationSchema={loginValidationSchema}
+          onSubmit={(values) => handleLogin(values)}
+        >
+          {({
+            values,
+            touched,
+            errors,
+            handleChange,
+            handleSubmit,
+            handleBlur,
+          }) => (
+            <View style={styles.formContainer}>
+              {/* Input fields */}
+              <View style={styles.inputContainer}>
                 <TextInput
                   name="email"
                   leftIconName="email"
@@ -86,33 +91,46 @@ export const LoginScreen = ({ navigation }) => {
                 {errorState !== "" ? (
                   <FormErrorMessage error={errorState} visible={true} />
                 ) : null}
-                {/* Login button */}
-                <Button style={styles.button} onPress={handleSubmit}>
-                  <Text style={styles.buttonText}>Login</Text>
-                </Button>
-              </>
-            )}
-          </Formik>
-          {/* Button to navigate to SignupScreen to create a new account */}
-          <Button
-            style={styles.borderlessButtonContainer}
-            borderless
-            title={"Create a new account?"}
-            onPress={() => navigation.navigate("Signup")}
-          />
-          <Button
-            style={styles.borderlessButtonContainer}
-            borderless
-            title={"Forgot Password"}
-            onPress={() => navigation.navigate("ForgotPassword")}
-          />
-        </KeyboardAwareScrollView>
-      </View>
+              </View>
 
-      {/* App info footer */}
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Expo Firebase Starter App</Text>
-      </View>
+              {/* Login button */}
+              <View style={{ paddingTop: 20 }} />
+              <NocapButton title="Log In" onPress={handleSubmit} />
+            </View>
+          )}
+        </Formik>
+        {/* Button to navigate to SignupScreen to create a new account */}
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ width: 220 }}>
+            <NocapButton
+              title={"Create Account"}
+              onPress={() => navigation.navigate(StackNav.Signup)}
+              titleStyle={{ fontSize: 16 }}
+              containerWidth={220}
+            />
+          </View>
+          <View style={{ width: 220 }}>
+            <NocapButton
+              title={"Forgot Password?"}
+              onPress={() => navigation.navigate(StackNav.ForgotPassword)}
+              titleStyle={{ fontSize: 16 }}
+              containerWidth={220}
+            />
+          </View>
+        </View>
+        {/* <Button
+          style={styles.borderlessButtonContainer}
+          borderless
+          title={"Create a new account?"}
+          onPress={() => navigation.navigate("Signup")}
+        />
+        <Button
+          style={styles.borderlessButtonContainer}
+          borderless
+          title={"Forgot Password"}
+          onPress={() => navigation.navigate("ForgotPassword")}
+        /> */}
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
@@ -120,28 +138,14 @@ export const LoginScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.blackBlue,
     paddingHorizontal: 12,
   },
-  logoContainer: {
-    alignItems: "center",
+  formContainer: {
+    paddingTop: 350,
   },
-  screenTitle: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: Colors.black,
-    paddingTop: 20,
-  },
-  footer: {
-    backgroundColor: Colors.white,
-    paddingHorizontal: 12,
-    paddingBottom: 48,
-    alignItems: "center",
-  },
-  footerText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: Colors.orange,
+  inputContainer: {
+    paddingHorizontal: 60,
   },
   button: {
     width: "100%",
