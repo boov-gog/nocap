@@ -16,6 +16,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
 import GenderButton from "../../components/GenderButton";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const GenderScreen = (props) => {
   const handleNext = (id) => {
@@ -26,44 +27,46 @@ export const GenderScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Choose Your Gender</Text>
+      <KeyboardAwareScrollView>
+        <Logo uri={Images.logo} />
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Choose Your Gender</Text>
 
-        <View style={{ flexDirection: "row", gap: 32, marginTop: 64 }}>
-          <View style={{ alignItems: "center" }}>
-            <GenderButton
-              uri={Images.boy}
-              onPress={() => handleNext(0)}
-              width={dimWidth * 0.4}
-            />
-            <Text style={styles.genderLabel}>Boy</Text>
+          <View style={{ flexDirection: "row", gap: 32, marginTop: 64 }}>
+            <View style={{ alignItems: "center" }}>
+              <GenderButton
+                uri={Images.boy}
+                onPress={() => handleNext(0)}
+                width={dimWidth * 0.4}
+              />
+              <Text style={styles.genderLabel}>Boy</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <GenderButton
+                uri={Images.girl}
+                onPress={() => handleNext(1)}
+                width={dimWidth * 0.4}
+              />
+              <Text style={styles.genderLabel}>Girl</Text>
+            </View>
           </View>
-          <View style={{ alignItems: "center" }}>
-            <GenderButton
-              uri={Images.girl}
-              onPress={() => handleNext(1)}
-              width={dimWidth * 0.4}
-            />
-            <Text style={styles.genderLabel}>Girl</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <View style={{ alignItems: "center" }}>
+              <GenderButton
+                uri={Images.nonBinary}
+                onPress={() => handleNext(2)}
+                width={dimWidth * 0.4}
+              />
+              <Text style={styles.genderLabel}>Non-Binary</Text>
+            </View>
           </View>
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <View style={{ alignItems: "center" }}>
-            <GenderButton
-              uri={Images.nonBinary}
-              onPress={() => handleNext(2)}
-              width={dimWidth * 0.4}
-            />
-            <Text style={styles.genderLabel}>Non-Binary</Text>
-          </View>
-        </View>
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

@@ -15,6 +15,7 @@ import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { Grades, showErrorToast } from "../../utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const GradeScreen = (props) => {
   const { setGrade } = useContext(AuthenticatedUserContext);
@@ -34,27 +35,29 @@ export const GradeScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Choose Your Grade</Text>
-        {arr.map((value) => (
-          <View style={{ marginBottom: -0.09 * windowWidth }}>
-            <NocapButton
-              key={value}
-              title={value}
-              onPress={() => {
-                handleNext(value);
-              }}
-            />
-          </View>
-        ))}
+      <KeyboardAwareScrollView>
+        <Logo uri={Images.logo} />
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Choose Your Grade</Text>
+          {arr.map((value) => (
+            <View style={{ marginBottom: -0.09 * windowWidth }}>
+              <NocapButton
+                key={value}
+                title={value}
+                onPress={() => {
+                  handleNext(value);
+                }}
+              />
+            </View>
+          ))}
 
-        <View style={{ height: 20 }} />
-        <NocapButton
-          title={Grades._Not}
-          onPress={() => handleNext(Grades._Not)}
-        />
-      </View>
+          <View style={{ height: 20 }} />
+          <NocapButton
+            title={Grades._Not}
+            onPress={() => handleNext(Grades._Not)}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

@@ -41,6 +41,9 @@ export const PhoneScreen = (props) => {
     if (phoneNumber == "") {
       showErrorToast("Input your phone number.");
       return;
+    } else if (!isValid) {
+      showErrorToast("Input valid phone number.");
+      return;
     }
 
     setPhone(phoneNumber);

@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    paddingTop: 350,
+    paddingTop: 300,
     alignItems: "center",
   },
   successContainer: {
