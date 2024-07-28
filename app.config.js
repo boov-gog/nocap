@@ -20,6 +20,7 @@ export default {
     assetBundlePatterns: ["**/*"],
     ios: {
       supportsTablet: true,
+      bundleIdentifier: "com.djtalpha.nocap",
     },
     extra: {
       apiKey: process.env.API_KEY,
@@ -33,7 +34,7 @@ export default {
       },
     },
     android: {
-      package: "com.anonymous.expofirebase",
+      package: "com.djtalpha.nocap",
     },
   },
 };
