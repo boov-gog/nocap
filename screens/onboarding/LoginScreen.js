@@ -118,18 +118,6 @@ export const LoginScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        {/* <Button
-          style={styles.borderlessButtonContainer}
-          borderless
-          title={"Create a new account?"}
-          onPress={() => navigation.navigate("Signup")}
-        />
-        <Button
-          style={styles.borderlessButtonContainer}
-          borderless
-          title={"Forgot Password"}
-          onPress={() => navigation.navigate("ForgotPassword")}
-        /> */}
       </KeyboardAwareScrollView>
     </SafeAreaView>
   );
