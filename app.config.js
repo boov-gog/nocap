@@ -35,6 +35,7 @@ export default {
     },
     android: {
       package: "com.djtalpha.nocap",
+      permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
     },
   },
 };

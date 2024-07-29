@@ -6,7 +6,7 @@ import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
-import { showErrorToast } from "../../utils";
+import { checkBadName, showErrorToast } from "../../utils";
 
 export const FirstNameScreen = (props) => {
   const [fName, setFName] = useState("");
@@ -16,6 +16,9 @@ export const FirstNameScreen = (props) => {
   const handleNext = () => {
     if (fName == "") {
       showErrorToast("Input your First Name.");
+      return;
+    } else if (checkBadName(fName)) {
+      showErrorToast("Please don't use bad words.");
       return;
     }
     setFirstName(fName);

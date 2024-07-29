@@ -6,7 +6,7 @@ import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
-import { showErrorToast } from "../../utils";
+import { checkBadName, showErrorToast } from "../../utils";
 
 export const LastNameScreen = (props) => {
   const [lName, setLName] = useState("");
@@ -16,6 +16,9 @@ export const LastNameScreen = (props) => {
   const handleNext = () => {
     if (lName == "") {
       showErrorToast("Input your Last Name.");
+      return;
+    } else if (checkBadName(lName)) {
+      showErrorToast("Please don't use bad words.");
       return;
     }
     setLastName(lName);

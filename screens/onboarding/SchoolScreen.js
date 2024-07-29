@@ -7,21 +7,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Logo, TextInput } from "../../components";
 import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
-import { showErrorToast } from "../../utils";
+import { distanceInMiles, showErrorToast } from "../../utils";
 
 export const SchoolScreen = (props) => {
-  const { setSchool } = useContext(AuthenticatedUserContext);
+  const { setSchool, location } = useContext(AuthenticatedUserContext);
+  const [sortedSchools, setSortedSchools] = useState([]);
 
-  const handleNext = (id) => {
-    setSchool(id);
-    props.navigation.navigate(StackNav.Phone);
+  const handleNext = (school) => {
+    if (school.distance > 30) {
+      showErrorToast("You are too far away from this school.");
+    } else {
+      setSchool(school.id);
+      props.navigation.navigate(StackNav.Phone);
+    }
   };
 
   const schoolList = [
@@ -29,54 +34,89 @@ export const SchoolScreen = (props) => {
       id: 1,
       avatar: Images.school1,
       title: "Name",
+      lat: 40.7128,
+      lon: -74.006,
     },
     {
       id: 2,
       avatar: Images.school2,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 3,
       avatar: Images.school3,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 4,
       avatar: Images.school4,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 5,
       avatar: Images.school5,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 6,
       avatar: Images.school6,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 7,
       avatar: Images.school7,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 8,
       avatar: Images.school8,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
     {
       id: 9,
       avatar: Images.school9,
       title: "Name",
+      lat: 40.7484,
+      lon: -73.9857,
     },
   ];
+
+  useEffect(() => {
+    if (location) {
+      const schoolsWithDistance = schoolList.map((school) => ({
+        ...school,
+        distance: distanceInMiles(
+          location.latitude,
+          location.longitude,
+          school.lat,
+          school.lon
+        ),
+      }));
+
+      schoolsWithDistance.sort((a, b) => a.distance - b.distance);
+      setSortedSchools(schoolsWithDistance);
+    }
+  }, [location]);
 
   const renderItem = ({ item }) => (
     <View style={styles.oneItem}>
       <TouchableOpacity
         style={styles.itemContent}
-        onPress={() => handleNext(item.id)}
+        onPress={() => handleNext(item)}
       >
         <Image
           style={styles.itemAvatar}
@@ -84,6 +124,9 @@ export const SchoolScreen = (props) => {
           resizeMode="contain"
         />
         <Text style={styles.oneItemTitle}>{item.title}</Text>
+        <Text style={styles.distanceText}>
+          {item.distance.toFixed(1)} miles
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -101,7 +144,7 @@ export const SchoolScreen = (props) => {
           />
 
           <FlatList
-            data={schoolList}
+            data={sortedSchools}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             style={styles.flatList}
@@ -166,7 +209,13 @@ const styles = StyleSheet.create({
     marginRight: 25,
   },
   oneItemTitle: {
+    flex: 1,
     fontFamily: "Kanit-Bold",
     fontSize: 26,
+  },
+  distanceText: {
+    fontFamily: "Kanit-Bold",
+    fontSize: 20,
+    color: Colors.gray,
   },
 });

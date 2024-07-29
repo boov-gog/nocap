@@ -40,7 +40,7 @@ export const GradeScreen = (props) => {
         <View style={styles.mainContainer}>
           <Text style={styles.titleStyle}>Choose Your Grade</Text>
           {arr.map((value) => (
-            <View style={{ marginBottom: -0.09 * windowWidth }}>
+            <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
               <NocapButton
                 key={value}
                 title={value}
