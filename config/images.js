@@ -15,4 +15,12 @@ export const Images = {
   girl: require("../assets/images/girl.png"),
   nonBinary: require("../assets/images/non-binary.png"),
   success: require("../assets/images/success.gif"),
+  blueCap: require("../assets/images/blue_cap.png"),
+  inviteFrinedsBtn: require("../assets/images/invite_friends.png"),
+  locker: require("../assets/images/locker.png"),
+  userPerson: require("../assets/images/user_person_flat.png"),
+  playDisabledNormal: require("../assets/images/play_disabled_normal.png"),
+  playDisabledClcked: require("../assets/images/play_disabled_clicked.png"),
+  playEnabledNormal: require("../assets/images/play_enabled_normal.png"),
+  playEnabledClcked: require("../assets/images/play_enabled_clicked.png"),
 };

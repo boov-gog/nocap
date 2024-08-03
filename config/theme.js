@@ -7,4 +7,9 @@ export const Colors = {
   red: "#fc5c65",
   blackBlue: "#000621",
   gray: "#C0C0C0",
+  leaderListBack: "#001894",
+
+  mainBlue: "#4DA5E6",
+  mainGreen: "#63C967",
+  mainPink: "#FF57C4",
 };

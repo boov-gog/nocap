@@ -15,4 +15,5 @@ export const StackNav = {
   ContactsPermission: "ContactsPermission",
   Friends: "Friends",
   Password: "Password",
+  WaitingRoom: "WaitingRoom",
 };

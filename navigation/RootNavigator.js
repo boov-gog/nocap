@@ -21,6 +21,8 @@ export const RootNavigator = () => {
       await Font.loadAsync({
         "Kanit-Regular": require("../assets/font/Kanit-Regular.ttf"),
         "Kanit-Bold": require("../assets/font/Kanit-Bold.ttf"),
+        "MPR-Regular": require("../assets/font/MPLUSRounded1c-Regular.ttf"),
+        "MPR-Bold": require("../assets/font/MPLUSRounded1c-Bold.ttf"),
         // Add other Kanit styles as needed
       });
       console.log("font is loaded.");

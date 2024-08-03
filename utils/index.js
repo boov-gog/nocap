@@ -1,6 +1,11 @@
 import * as Yup from "yup";
 import Toast from "react-native-toast-message";
 import BadWords from "badwords-list";
+export const GENDER_TYPE = {
+  Boy: "Boy",
+  Girl: "Girl",
+  NonBinary: "NonBinary",
+};
 
 export const loginValidationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),

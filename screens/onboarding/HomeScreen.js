@@ -8,8 +8,9 @@ import { Logo } from "../../components";
 import NocapButton from "../../components/NocapButton";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast, showSuccessToast } from "../../utils";
+import { StackNav } from "../../navigation/NavigationKeys";
 
-export const HomeScreen = () => {
+export const HomeScreen = ({ navigation }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -46,6 +47,14 @@ export const HomeScreen = () => {
     const interval = setInterval(checkEmailVerification, 3000); // Check every 5 seconds
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (showSuccess) {
+      setTimeout(() => {
+        navigation.navigate(StackNav.WaitingRoom);
+      }, 3000);
+    }
+  }, [showSuccess]);
 
   const handleLogout = () => {
     signOut(auth).catch((error) => console.log("Error logging out: ", error));

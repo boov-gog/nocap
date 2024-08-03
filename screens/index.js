@@ -14,6 +14,7 @@ import { PhoneScreen } from "./onboarding/PhoneScreen";
 import { ContactsPermissionScreen } from "./onboarding/ContactsPermissionScreen";
 import { FriendScreen } from "./onboarding/FriendScreen";
 import { PasswordScreen } from "./onboarding/PasswordScreen";
+import WaitingRoom from "./WaitingRoom";
 
 export {
   LoginScreen,
@@ -32,4 +33,5 @@ export {
   ContactsPermissionScreen,
   FriendScreen,
   PasswordScreen,
+  WaitingRoom,
 };
