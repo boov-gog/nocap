@@ -15,6 +15,8 @@ import { ContactsPermissionScreen } from "./onboarding/ContactsPermissionScreen"
 import { FriendScreen } from "./onboarding/FriendScreen";
 import { PasswordScreen } from "./onboarding/PasswordScreen";
 import WaitingRoom from "./WaitingRoom";
+import MyCapScreen from "./MyCapScreen";
+import WhatTheySayScreen from "./WhatTheySayScreen";
 
 export {
   LoginScreen,
@@ -34,4 +36,6 @@ export {
   FriendScreen,
   PasswordScreen,
   WaitingRoom,
+  MyCapScreen,
+  WhatTheySayScreen,
 };

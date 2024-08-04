@@ -18,9 +18,13 @@ export const Images = {
   blueCap: require("../assets/images/blue_cap.png"),
   inviteFrinedsBtn: require("../assets/images/invite_friends.png"),
   locker: require("../assets/images/locker.png"),
+  lockerWhite: require("../assets/images/lockerWhite.png"),
   userPerson: require("../assets/images/user_person_flat.png"),
   playDisabledNormal: require("../assets/images/play_disabled_normal.png"),
   playDisabledClcked: require("../assets/images/play_disabled_clicked.png"),
   playEnabledNormal: require("../assets/images/play_enabled_normal.png"),
   playEnabledClcked: require("../assets/images/play_enabled_clicked.png"),
+  blueCapList: require("../assets/images/blueCap.png"),
+  pinkCap: require("../assets/images/pinkCap.png"),
+  greenCap: require("../assets/images/greenCap.png"),
 };

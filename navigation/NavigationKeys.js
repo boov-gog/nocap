@@ -16,4 +16,6 @@ export const StackNav = {
   Friends: "Friends",
   Password: "Password",
   WaitingRoom: "WaitingRoom",
+  MyCaps: "MyCaps",
+  WhatTheySay: "WhatTheySay",
 };

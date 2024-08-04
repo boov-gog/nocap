@@ -11,8 +11,9 @@ import { Colors, Images } from "../config";
 import { GENDER_TYPE } from "../utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PlayButton from "../components/PlayButton";
+import { StackNav } from "../navigation/NavigationKeys";
 
-const WaitingRoom = () => {
+const WaitingRoom = ({ navigation }) => {
   const leaderList = [
     { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
     { name: "Sarah Shneider", avatar: Images.girl, gender: GENDER_TYPE.Girl },
@@ -24,6 +25,10 @@ const WaitingRoom = () => {
   ];
 
   let pollTime = "59:59";
+
+  const handleBlueCapClick = () => {
+    navigation.navigate(StackNav.MyCaps);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,7 +73,7 @@ const WaitingRoom = () => {
         <PlayButton />
       </ScrollView>
       <View style={styles.bottomContainer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleBlueCapClick}>
           <Image style={{ width: 50, height: 35 }} source={Images.blueCap} />
         </TouchableOpacity>
         <TouchableOpacity>
