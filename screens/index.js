@@ -17,6 +17,7 @@ import { PasswordScreen } from "./onboarding/PasswordScreen";
 import WaitingRoom from "./WaitingRoom";
 import MyCapScreen from "./MyCapScreen";
 import WhatTheySayScreen from "./WhatTheySayScreen";
+import SubscriptionScreen from "./SubscriptionScreen";
 
 export {
   LoginScreen,
@@ -38,4 +39,5 @@ export {
   WaitingRoom,
   MyCapScreen,
   WhatTheySayScreen,
+  SubscriptionScreen,
 };

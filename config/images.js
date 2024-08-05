@@ -32,4 +32,9 @@ export const Images = {
   instagram: require("../assets/images/instagram.png"),
   facebook: require("../assets/images/facebook.png"),
   snapchat: require("../assets/images/snapchat.png"),
+  star2: require("../assets/images/star2.png"),
+  proLetter: require("../assets/images/proLetter.png"),
+  star1: require("../assets/images/star1.png"),
+  subscription1: require("../assets/images/subscription1.png"),
+  subscription2: require("../assets/images/subscription2.png"),
 };

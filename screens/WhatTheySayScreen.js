@@ -25,7 +25,7 @@ const WhatTheySayScreen = ({ navigation }) => {
   };
 
   const handleReply = () => {
-    // navigation.navigate(StackNav.Subscription);
+    navigation.navigate(StackNav.Subscription);
   };
 
   return (

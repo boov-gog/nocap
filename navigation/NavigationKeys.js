@@ -18,4 +18,5 @@ export const StackNav = {
   WaitingRoom: "WaitingRoom",
   MyCaps: "MyCaps",
   WhatTheySay: "WhatTheySay",
+  Subscription: "Subscription",
 };
