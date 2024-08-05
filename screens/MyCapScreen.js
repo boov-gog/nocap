@@ -12,6 +12,7 @@ import { TextInput } from "../components";
 import { Colors, Images } from "../config";
 import { GENDER_TYPE } from "../utils";
 import { LinearGradient } from "expo-linear-gradient";
+import { StackNav } from "../navigation/NavigationKeys";
 
 const MyCapScreen = ({ navigation }) => {
   const listData = [
@@ -45,12 +46,21 @@ const MyCapScreen = ({ navigation }) => {
         : Images.greenCap;
 
     return (
-      <TouchableOpacity style={styles.oneListItem}>
+      <TouchableOpacity
+        style={styles.oneListItem}
+        onPress={() => {
+          _onPress(item);
+        }}
+      >
         <Image style={styles.oneItemImage} source={myImage} />
         <Text style={styles.oneItemTitle}>{title}</Text>
         <Text style={styles.oneItemDate}>{item.date}</Text>
       </TouchableOpacity>
     );
+  };
+
+  const _onPress = (item) => {
+    navigation.navigate(StackNav.WhatTheySay, { id: item.id });
   };
 
   const handleBack = () => {

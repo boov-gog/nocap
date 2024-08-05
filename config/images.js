@@ -1,5 +1,6 @@
 export const Images = {
   logo: require("../assets/logo.png"),
+  logoLetter: require("../assets/images/logoLetter.png"),
   buttonBack: require("../assets/buttonBack.png"),
   genderBtnBack: require("../assets/genderBtnBack.png"),
   school1: require("../assets/images/school1.png"),
@@ -18,6 +19,7 @@ export const Images = {
   blueCap: require("../assets/images/blue_cap.png"),
   inviteFrinedsBtn: require("../assets/images/invite_friends.png"),
   locker: require("../assets/images/locker.png"),
+  lockerBlack: require("../assets/images/lockerBlack.png"),
   lockerWhite: require("../assets/images/lockerWhite.png"),
   userPerson: require("../assets/images/user_person_flat.png"),
   playDisabledNormal: require("../assets/images/play_disabled_normal.png"),
@@ -27,4 +29,7 @@ export const Images = {
   blueCapList: require("../assets/images/blueCap.png"),
   pinkCap: require("../assets/images/pinkCap.png"),
   greenCap: require("../assets/images/greenCap.png"),
+  instagram: require("../assets/images/instagram.png"),
+  facebook: require("../assets/images/facebook.png"),
+  snapchat: require("../assets/images/snapchat.png"),
 };
