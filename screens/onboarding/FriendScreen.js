@@ -16,6 +16,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
 import { CheckBox } from "react-native-elements";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const FriendScreen = (props) => {
   const [selected, setSelected] = useState({});
@@ -101,42 +102,47 @@ export const FriendScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 12,
-            paddingTop: 6,
-            paddingBottom: 12,
-          }}
-        >
-          <TouchableOpacity onPress={handleSkip}>
-            <View style={styles.skipBtnBack}>
-              <Text style={styles.skipBtnTxt}>Skip</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleNext}>
-            <View style={styles.skipBtnBack}>
-              <Text style={styles.skipBtnTxt}>Next</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.listContainer}>
-          <TextInput
-            leftIconName={"magnify"}
-            placeholder="Search..."
-            borderLess={true}
-          />
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 12,
+              paddingTop: 6,
+              paddingBottom: 12,
+            }}
+          >
+            <TouchableOpacity onPress={handleSkip}>
+              <View style={styles.skipBtnBack}>
+                <Text style={styles.skipBtnTxt}>Skip</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleNext}>
+              <View style={styles.skipBtnBack}>
+                <Text style={styles.skipBtnTxt}>Next</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.listContainer}>
+            <TextInput
+              leftIconName={"magnify"}
+              placeholder="Search..."
+              borderLess={true}
+            />
 
-          <FlatList
-            data={friendList}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.flatList}
-          />
+            <FlatList
+              data={friendList}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={styles.flatList}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

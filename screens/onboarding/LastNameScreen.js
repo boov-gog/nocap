@@ -7,6 +7,7 @@ import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { checkBadName, showErrorToast } from "../../utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const LastNameScreen = (props) => {
   const [lName, setLName] = useState("");
@@ -27,18 +28,23 @@ export const LastNameScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Enter Your Last Name</Text>
-        <TextInput
-          style={styles.inputStyle}
-          placeholder="Last Name..."
-          placeholderTextColor={Colors.gray}
-          value={lName}
-          onChangeText={setLName}
-        />
-        <NocapButton title="Next" onPress={handleNext} />
-      </View>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Logo uri={Images.logo} />
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Enter Your Last Name</Text>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Last Name..."
+            placeholderTextColor={Colors.gray}
+            value={lName}
+            onChangeText={setLName}
+          />
+          <NocapButton title="Next" onPress={handleNext} />
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

@@ -41,7 +41,10 @@ export const SignupScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView enableOnAndroid={true}>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+      >
         {/* LogoContainer: consist app logo and screen title */}
         <Logo uri={Images.logo} />
 

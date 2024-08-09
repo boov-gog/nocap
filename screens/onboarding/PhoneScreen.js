@@ -7,6 +7,7 @@ import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const PhoneScreen = (props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -52,25 +53,30 @@ export const PhoneScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Enter Your Phone Number</Text>
-        <TextInput
-          style={[styles.inputStyle, !isValid && styles.invalidInput]}
-          placeholder="Phone Number..."
-          placeholderTextColor={Colors.gray}
-          keyboardType="phone-pad"
-          value={phoneNumber}
-          onChangeText={handlePhoneChange}
-          maxLength={12}
-        />
-        {!isValid && phoneNumber.length > 0 && (
-          <Text style={styles.errorText}>
-            Please enter a valid phone number
-          </Text>
-        )}
-        <NocapButton title="Next" onPress={handleNext} />
-      </View>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <Logo uri={Images.logo} />
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Enter Your Phone Number</Text>
+          <TextInput
+            style={[styles.inputStyle, !isValid && styles.invalidInput]}
+            placeholder="Phone Number..."
+            placeholderTextColor={Colors.gray}
+            keyboardType="phone-pad"
+            value={phoneNumber}
+            onChangeText={handlePhoneChange}
+            maxLength={12}
+          />
+          {!isValid && phoneNumber.length > 0 && (
+            <Text style={styles.errorText}>
+              Please enter a valid phone number
+            </Text>
+          )}
+          <NocapButton title="Next" onPress={handleNext} />
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

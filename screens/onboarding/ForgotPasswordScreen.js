@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -32,67 +33,75 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Logo uri={Images.logo} />
-      <View style={styles.innerContainer}>
-        <Text style={styles.screenTitle}>Reset your password</Text>
-      </View>
-      <Formik
-        initialValues={{ email: "" }}
-        validationSchema={passwordResetSchema}
-        onSubmit={(values) => handleSendPasswordResetEmail(values)}
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
       >
-        {({
-          values,
-          touched,
-          errors,
-          handleChange,
-          handleSubmit,
-          handleBlur,
-        }) => (
-          <>
-            <View style={styles.emailContainer}>
-              {/* Email input field */}
-              <TextInput
-                name="email"
-                leftIconName="email"
-                placeholder="Enter email"
-                autoCapitalize="none"
-                keyboardType="email-address"
-                textContentType="emailAddress"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={handleBlur("email")}
-              />
-              <FormErrorMessage error={errors.email} visible={touched.email} />
-              {/* Display Screen Error Mesages */}
-              {errorState !== "" ? (
-                <FormErrorMessage error={errorState} visible={true} />
-              ) : null}
-              {/* Password Reset Send Email  button */}
-              {/* <Button style={styles.button} onPress={handleSubmit}>
+        <Logo uri={Images.logo} />
+        <View style={styles.innerContainer}>
+          <Text style={styles.screenTitle}>Reset your password</Text>
+        </View>
+        <Formik
+          initialValues={{ email: "" }}
+          validationSchema={passwordResetSchema}
+          onSubmit={(values) => handleSendPasswordResetEmail(values)}
+        >
+          {({
+            values,
+            touched,
+            errors,
+            handleChange,
+            handleSubmit,
+            handleBlur,
+          }) => (
+            <>
+              <View style={styles.emailContainer}>
+                {/* Email input field */}
+                <TextInput
+                  name="email"
+                  leftIconName="email"
+                  placeholder="Enter email"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  textContentType="emailAddress"
+                  value={values.email}
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur("email")}
+                />
+                <FormErrorMessage
+                  error={errors.email}
+                  visible={touched.email}
+                />
+                {/* Display Screen Error Mesages */}
+                {errorState !== "" ? (
+                  <FormErrorMessage error={errorState} visible={true} />
+                ) : null}
+                {/* Password Reset Send Email  button */}
+                {/* <Button style={styles.button} onPress={handleSubmit}>
               <Text style={styles.buttonText}>Send Reset Email</Text>
             </Button> */}
-            </View>
-            <View style={{ height: 20 }} />
-            <NocapButton title={"Send Reset Email"} onPress={handleSubmit} />
-          </>
-        )}
-      </Formik>
-      {/* Button to navigate to Login screen */}
-      {/* <Button
+              </View>
+              <View style={{ height: 20 }} />
+              <NocapButton title={"Send Reset Email"} onPress={handleSubmit} />
+            </>
+          )}
+        </Formik>
+        {/* Button to navigate to Login screen */}
+        {/* <Button
         style={styles.borderlessButtonContainer}
         borderless
         title={"Go back to Login"}
         onPress={() => navigation.navigate("Login")}
       /> */}
-      <View style={{ width: 220 }}>
-        <NocapButton
-          title={"Log In"}
-          onPress={() => navigation.navigate(StackNav.Login)}
-          titleStyle={{ fontSize: 16 }}
-          containerWidth={220}
-        />
-      </View>
+        <View style={{ width: 220 }}>
+          <NocapButton
+            title={"Log In"}
+            onPress={() => navigation.navigate(StackNav.Login)}
+            titleStyle={{ fontSize: 16 }}
+            containerWidth={220}
+          />
+        </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

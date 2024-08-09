@@ -15,6 +15,7 @@ import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { distanceInMiles, showErrorToast } from "../../utils";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export const SchoolScreen = (props) => {
   const { setSchool, location } = useContext(AuthenticatedUserContext);
@@ -133,24 +134,29 @@ export const SchoolScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Find Your School</Text>
+      <KeyboardAwareScrollView
+        enableOnAndroid={true}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.mainContainer}>
+          <Text style={styles.titleStyle}>Find Your School</Text>
 
-        <View style={styles.listContainer}>
-          <TextInput
-            leftIconName={"magnify"}
-            placeholder="Search..."
-            borderLess={true}
-          />
+          <View style={styles.listContainer}>
+            <TextInput
+              leftIconName={"magnify"}
+              placeholder="Search..."
+              borderLess={true}
+            />
 
-          <FlatList
-            data={sortedSchools}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.flatList}
-          />
+            <FlatList
+              data={sortedSchools}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={styles.flatList}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };
