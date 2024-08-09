@@ -25,6 +25,10 @@ const WhatTheySayScreen = ({ navigation }) => {
   };
 
   const handleReply = () => {
+    navigation.navigate(StackNav.ReplyTo);
+  };
+
+  const handleSeeWhoSaid = () => {
     navigation.navigate(StackNav.Subscription);
   };
 
@@ -43,7 +47,10 @@ const WhatTheySayScreen = ({ navigation }) => {
         />
         <Image style={styles.avatar} source={Images.girl} />
         <Text style={styles.description}>From a girl in the XXXth grade.</Text>
-        <TouchableOpacity style={styles.whoSayButton}>
+        <TouchableOpacity
+          style={styles.whoSayButton}
+          onPress={handleSeeWhoSaid}
+        >
           <Image style={styles.lockAvatar} source={Images.lockerBlack} />
           <Text style={styles.btnText}>See who said this</Text>
         </TouchableOpacity>

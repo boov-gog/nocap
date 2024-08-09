@@ -18,6 +18,7 @@ import WaitingRoom from "./WaitingRoom";
 import MyCapScreen from "./MyCapScreen";
 import WhatTheySayScreen from "./WhatTheySayScreen";
 import SubscriptionScreen from "./SubscriptionScreen";
+import ReplyScreen from "./ReplyScreen";
 
 export {
   LoginScreen,
@@ -40,4 +41,5 @@ export {
   MyCapScreen,
   WhatTheySayScreen,
   SubscriptionScreen,
+  ReplyScreen,
 };

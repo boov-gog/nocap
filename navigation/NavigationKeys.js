@@ -19,4 +19,5 @@ export const StackNav = {
   MyCaps: "MyCaps",
   WhatTheySay: "WhatTheySay",
   Subscription: "Subscription",
+  ReplyTo: "ReplyTo",
 };

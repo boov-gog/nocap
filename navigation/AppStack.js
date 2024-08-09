@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import {
   HomeScreen,
   MyCapScreen,
+  ReplyScreen,
   SubscriptionScreen,
   WaitingRoom,
   WhatTheySayScreen,
@@ -23,6 +24,7 @@ export const AppStack = () => {
         name={StackNav.Subscription}
         component={SubscriptionScreen}
       />
+      <Stack.Screen name={StackNav.ReplyTo} component={ReplyScreen} />
     </Stack.Navigator>
   );
 };

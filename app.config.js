@@ -6,7 +6,7 @@ export default {
     slug: "expo-firebase",
     privacy: "public",
     platforms: ["ios", "android"],
-    version: "0.19.0",
+    version: "0.19.2",
     orientation: "portrait",
     icon: "./assets/flame.png",
     splash: {
@@ -34,6 +34,7 @@ export default {
       },
     },
     android: {
+      versionCode: 2,
       package: "com.djtalpha.nocap",
       permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
     },

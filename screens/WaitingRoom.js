@@ -37,9 +37,9 @@ const WaitingRoom = ({ navigation }) => {
         <View style={styles.leaderListContainer}>
           {leaderList.map((value, index) => (
             <View style={styles.leaderListOne} key={index}>
-              <Text style={styles.leaderListText}>{`${index + 1}. ${
-                value.name
-              }`}</Text>
+              <Text style={styles.leaderListText} ellipsizeMode="tail">{`${
+                index + 1
+              }. ${value.name}`}</Text>
               <Image
                 style={[
                   styles.leaderListImage,
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    justifyContent: "space-between",
   },
   leaderListText: {
     fontFamily: "Kanit-Bold",
     fontSize: 26,
+    flex: 1,
   },
   leaderListImage: {
     height: 40,
