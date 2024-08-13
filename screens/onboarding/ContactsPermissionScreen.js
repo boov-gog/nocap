@@ -1,16 +1,28 @@
 import { Button, Image, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Logo } from "../../components";
+import { LoadingIndicator, Logo } from "../../components";
 import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
+import * as Contacts from "expo-contacts";
 
 export const ContactsPermissionScreen = (props) => {
-  const handleNext = () => {
-    props.navigation.navigate(StackNav.Friends);
+  const [isGettingPermission, setIsGettingPermission] = useState(false);
+
+  const handleNext = async () => {
+    setIsGettingPermission(true);
+
+    const { status } = await Contacts.requestPermissionsAsync();
+    console.log(status);
+    if (status !== "granted") {
+      showErrorToast("Permission to access contacts was denied");
+    } else {
+      props.navigation.navigate(StackNav.Friends);
+    }
+    setIsGettingPermission(false);
   };
 
   return (
@@ -21,11 +33,15 @@ export const ContactsPermissionScreen = (props) => {
           To find your friends to play with!
         </Text>
 
-        <NocapButton
-          title="Allow Access to Contacts"
-          onPress={handleNext}
-          titleStyle={{ fontSize: 26 }}
-        />
+        {isGettingPermission ? (
+          <LoadingIndicator />
+        ) : (
+          <NocapButton
+            title="Allow Access to Contacts"
+            onPress={handleNext}
+            titleStyle={{ fontSize: 26 }}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

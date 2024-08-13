@@ -7,91 +7,81 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Logo, TextInput } from "../../components";
 import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
-import { showErrorToast } from "../../utils";
+import { showErrorToast, showSuccessToast } from "../../utils";
 import { CheckBox } from "react-native-elements";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import * as Contacts from "expo-contacts";
 
 export const FriendScreen = (props) => {
-  const [selected, setSelected] = useState({});
-
-  const toggleSelect = (id) => {
-    setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
+  const [contacts, setContacts] = useState([]);
+  const [selectedContacts, setSelectedContacts] = useState([]);
 
   const { setFriends } = useContext(AuthenticatedUserContext);
 
   const handleNext = () => {
-    setFriends(selected);
+    if (selectedContacts.length === 0) {
+      showSuccessToast("We'll use your full contacts as a friend list");
+      setFriends(contacts);
+    } else {
+      setFriends(selectedContacts);
+    }
+
     props.navigation.navigate(StackNav.Password);
   };
 
-  const friendList = [
-    {
-      id: 1,
-      avatar: Images.boy,
-      title: "Name",
-    },
-    {
-      id: 2,
-      avatar: Images.girl,
-      title: "Name",
-    },
-    {
-      id: 3,
-      avatar: Images.girl,
-      title: "Name",
-    },
-    {
-      id: 4,
-      avatar: Images.boy,
-      title: "Name",
-    },
-    {
-      id: 5,
-      avatar: Images.nonBinary,
-      title: "Name",
-    },
-    {
-      id: 6,
-      avatar: Images.girl,
-      title: "Name",
-    },
-    {
-      id: 7,
-      avatar: Images.nonBinary,
-      title: "Name",
-    },
-    {
-      id: 8,
-      avatar: Images.boy,
-      title: "Name",
-    },
-    {
-      id: 9,
-      avatar: Images.nonBinary,
-      title: "Name",
-    },
-  ];
+  const fetchContacts = async () => {
+    const { status } = await Contacts.getPermissionsAsync();
+    if (status == "granted") {
+      const { data } = await Contacts.getContactsAsync({
+        fields: [Contacts.Fields.Name, Contacts.Fields.Image],
+      });
+
+      // Extract only id and name
+      const contactsList = data.map((contact) => ({
+        id: contact.id,
+        name: contact.name,
+        avatar: contact.imageAvailable ? { uri: contact.image.uri } : null,
+      }));
+
+      setContacts(contactsList);
+    }
+  };
+
+  useEffect(() => {
+    fetchContacts();
+  }, []);
+
+  const toggleSelectContact = (contactId) => {
+    setSelectedContacts((prevSelected) => {
+      if (prevSelected.includes(contactId)) {
+        return prevSelected.filter((id) => id !== contactId);
+      } else {
+        return [...prevSelected, contactId];
+      }
+    });
+  };
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.oneItem}
-      onPress={() => toggleSelect(item.id)}
+      onPress={() => toggleSelectContact(item.id)}
     >
       <View style={styles.itemContent}>
-        <Image style={styles.itemAvatar} source={item.avatar} />
-        <Text style={styles.oneItemTitle}>{item.title}</Text>
+        <Image
+          style={styles.itemAvatar}
+          source={item.avatar ? item.avatar : Images.nonBinary}
+        />
+        <Text style={styles.oneItemTitle}>{item.name}</Text>
       </View>
       <CheckBox
-        checked={selected[item.id] || false}
-        onPress={() => toggleSelect(item.id)}
+        checked={selectedContacts.includes(item.id)}
+        onPress={() => toggleSelectContact(item.id)}
       />
     </TouchableOpacity>
   );
@@ -102,47 +92,42 @@ export const FriendScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        enableOnAndroid={true}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.mainContainer}>
-          <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 12,
-              paddingTop: 6,
-              paddingBottom: 12,
-            }}
-          >
-            <TouchableOpacity onPress={handleSkip}>
-              <View style={styles.skipBtnBack}>
-                <Text style={styles.skipBtnTxt}>Skip</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleNext}>
-              <View style={styles.skipBtnBack}>
-                <Text style={styles.skipBtnTxt}>Next</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.listContainer}>
-            <TextInput
-              leftIconName={"magnify"}
-              placeholder="Search..."
-              borderLess={true}
-            />
-
-            <FlatList
-              data={friendList}
-              renderItem={renderItem}
-              keyExtractor={(item) => item.id}
-              style={styles.flatList}
-            />
-          </View>
+      <View style={styles.mainContainer}>
+        <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 12,
+            paddingTop: 6,
+            paddingBottom: 12,
+          }}
+        >
+          <TouchableOpacity onPress={handleSkip}>
+            <View style={styles.skipBtnBack}>
+              <Text style={styles.skipBtnTxt}>Skip</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleNext}>
+            <View style={styles.skipBtnBack}>
+              <Text style={styles.skipBtnTxt}>Next</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      </KeyboardAwareScrollView>
+        <View style={styles.listContainer}>
+          <TextInput
+            leftIconName={"magnify"}
+            placeholder="Search..."
+            borderLess={true}
+          />
+
+          <FlatList
+            data={contacts}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+            style={styles.flatList}
+          />
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

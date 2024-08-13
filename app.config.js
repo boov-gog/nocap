@@ -21,8 +21,13 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.djtalpha.nocap",
+      infoPlist: {
+        NSContactsUsageDescription:
+          "This app requires access to your contacts to function properly.",
+      },
     },
     extra: {
+      apiUrl: process.env.API_URL,
       apiKey: process.env.API_KEY,
       authDomain: process.env.AUTH_DOMAIN,
       projectId: process.env.PROJECT_ID,
@@ -36,7 +41,11 @@ export default {
     android: {
       versionCode: 2,
       package: "com.djtalpha.nocap",
-      permissions: ["ACCESS_COARSE_LOCATION", "ACCESS_FINE_LOCATION"],
+      permissions: [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION",
+        "READ_CONTACTS",
+      ],
     },
   },
 };
