@@ -1,10 +1,16 @@
 import * as Yup from "yup";
 import Toast from "react-native-toast-message";
 import BadWords from "badwords-list";
+import Constants from "expo-constants";
+
 export const GENDER_TYPE = {
   Boy: "Boy",
   Girl: "Girl",
   NonBinary: "NonBinary",
+};
+
+export const ENDPOINTS = {
+  API_URL: Constants.expoConfig?.extra?.apiUrl,
 };
 
 export const loginValidationSchema = Yup.object().shape({

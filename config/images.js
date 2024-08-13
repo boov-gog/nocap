@@ -37,4 +37,5 @@ export const Images = {
   star1: require("../assets/images/star1.png"),
   subscription1: require("../assets/images/subscription1.png"),
   subscription2: require("../assets/images/subscription2.png"),
+  highSchool: require("../assets/images/high-school-logo.png"),
 };
