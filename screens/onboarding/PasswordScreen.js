@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   formContainer: {
-    paddingTop: 350,
+    paddingBottom: 50,
   },
   inputContainer: {
     paddingHorizontal: 60,

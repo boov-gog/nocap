@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   formContainer: {
-    paddingTop: 350,
+    paddingTop: 0,
   },
   inputContainer: {
     paddingHorizontal: 60,

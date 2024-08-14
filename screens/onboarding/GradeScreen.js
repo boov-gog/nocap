@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   mainContainer: {
-    paddingTop: 350,
+    paddingBottom: 50,
     alignItems: "center",
   },
   titleStyle: {
