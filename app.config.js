@@ -22,6 +22,9 @@ export default {
       supportsTablet: true,
       bundleIdentifier: "com.djtalpha.nocap",
       infoPlist: {
+        NSAppTransportSecurity: {
+          NSAllowsArbitraryLoads: true
+        },
         NSContactsUsageDescription:
           "This app requires access to your contacts to function properly.",
       },
