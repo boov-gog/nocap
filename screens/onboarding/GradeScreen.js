@@ -57,6 +57,7 @@ export const GradeScreen = (props) => {
           <NocapButton
             title={Grades._Not}
             onPress={() => handleNext(Grades._Not)}
+            titleStyle={{ fontSize: 24 }}
           />
         </View>
       </KeyboardAwareScrollView>
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   mainContainer: {
-    paddingBottom: 50,
+    paddingBottom: 20,
     alignItems: "center",
   },
   titleStyle: {

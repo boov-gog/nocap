@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   mainContainer: {
+    flex: 1,
     paddingTop: 0,
     alignItems: "center",
   },

@@ -16,22 +16,24 @@ export const LocationPermissionScreen = (props) => {
   const { setLocation } = useContext(AuthenticatedUserContext);
 
   const handleNext = async () => {
+    props.navigation.navigate(StackNav.School);
     setIsGettingPermission(true);
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      showErrorToast("Permission to access location was denied");
-      setIsGettingPermission(false);
-      return;
-    } else {
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location.coords);
-      showSuccessToast(
-        `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
-      );
-
-      props.navigation.navigate(StackNav.School);
-      setIsGettingPermission(false);
+    try {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        showErrorToast("Permission to access location was denied");
+      } else {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location.coords);
+        showSuccessToast(
+          `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
+        );
+        props.navigation.navigate(StackNav.School);
+      }
+    } catch (error) {
+      showErrorToast("Error getting location");
     }
+    setIsGettingPermission(false);
   };
 
   return (
@@ -47,7 +49,7 @@ export const LocationPermissionScreen = (props) => {
           <NocapButton
             title="Allow Access to Location"
             onPress={handleNext}
-            titleStyle={{ fontSize: 26 }}
+            titleStyle={{ fontSize: 22 }}
           />
         )}
       </View>
@@ -64,6 +66,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   mainContainer: {
+    flex: 1,
     paddingTop: 0,
     alignItems: "center",
   },

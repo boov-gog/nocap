@@ -36,6 +36,7 @@ export const LoginScreen = ({ navigation }) => {
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.scrollContainer}
       >
         {/* LogoContainer: consist app logo and screen title */}
         <Logo uri={Images.logo} />
@@ -133,6 +134,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.blackBlue,
     paddingHorizontal: 12,
+  },
+  scrollContainer: {
+    paddingBottom: 20,
   },
   formContainer: {
     paddingTop: 0,

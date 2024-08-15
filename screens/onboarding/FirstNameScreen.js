@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     fontFamily: "Kanit-Bold",
     fontSize: 36,
+    textAlign: "center",
     color: Colors.white,
   },
   inputStyle: {

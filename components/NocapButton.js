@@ -42,13 +42,12 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
       backgroundColor: "white",
       alignItems: "center",
       justifyContent: "center",
+      paddingHorizontal: 5,
     },
     pressedContainer: {
       width: "100%",
       aspectRatio: 3.359,
       position: "relative",
-      alignItems: "center",
-      justifyContent: "center",
     },
     buttonBack: {
       width: "100%",
@@ -66,6 +65,13 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
       // fontWeight: "700",
       color: "white",
     },
+    pressedTitleContainer: {
+      width: "100%",
+      height: "100%",
+      paddingHorizontal: paddingBtnHorz + 5,
+      justifyContent: "center",
+      alignItems: "center",
+    },
   });
 
   return (
@@ -82,12 +88,26 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
             style={styles.buttonBack}
             resizeMode="contain"
           />
-          <Text style={[styles.pressedTitle, titleStyle]}>{title}</Text>
+          <View style={styles.pressedTitleContainer}>
+            <Text
+              style={[styles.pressedTitle, titleStyle]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {title}
+            </Text>
+          </View>
         </View>
       ) : (
         <View style={styles.container}>
           <View style={styles.innerContainer}>
-            <Text style={[styles.title, titleStyle]}>{title}</Text>
+            <Text
+              style={[styles.title, titleStyle]}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {title}
+            </Text>
           </View>
         </View>
       )}

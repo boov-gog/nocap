@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   mainContainer: {
-    paddingTop: 60,
+    paddingTop: 20,
     alignItems: "center",
   },
   titleStyle: {

@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopBar from "../../components/TopBar";
 
 export const ForgotPasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -33,6 +34,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
@@ -81,7 +83,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               <Text style={styles.buttonText}>Send Reset Email</Text>
             </Button> */}
               </View>
-              <View style={{ height: 20 }} />
+              <View style={{ height: 0 }} />
               <NocapButton title={"Send Reset Email"} onPress={handleSubmit} />
             </>
           )}
@@ -93,13 +95,15 @@ export const ForgotPasswordScreen = ({ navigation }) => {
         title={"Go back to Login"}
         onPress={() => navigation.navigate("Login")}
       /> */}
-        <View style={{ width: 220 }}>
-          <NocapButton
-            title={"Log In"}
-            onPress={() => navigation.navigate(StackNav.Login)}
-            titleStyle={{ fontSize: 16 }}
-            containerWidth={220}
-          />
+        <View style={{ alignItems: "center" }}>
+          <View style={{ width: 220 }}>
+            <NocapButton
+              title={"Log In"}
+              onPress={() => navigation.navigate(StackNav.Login)}
+              titleStyle={{ fontSize: 16 }}
+              containerWidth={220}
+            />
+          </View>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
@@ -115,16 +119,17 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   innerContainer: {
-    paddingTop: 350,
+    paddingTop: 0,
     alignItems: "center",
   },
   screenTitle: {
     fontSize: 32,
     color: Colors.white,
     fontFamily: "Kanit-Bold",
+    textAlign: "center",
   },
   emailContainer: {
-    paddingTop: 32,
-    paddingHorizontal: 64,
+    paddingTop: 20,
+    paddingHorizontal: 40,
   },
 });
