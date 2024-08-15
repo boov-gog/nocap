@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Bold",
     fontSize: 24,
     color: Colors.white,
+    textAlign: "center"
   },
   inputStyle: {
     marginTop: 33,

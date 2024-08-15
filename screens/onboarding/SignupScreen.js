@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
   checkContainer: {
     flexDirection: "row",
     alignItems: "center",
+    paddingRight: 64
   },
   checkBox: { backgroundColor: "red" },
   checkText: {

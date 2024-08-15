@@ -130,6 +130,6 @@ const styles = StyleSheet.create({
   },
   emailContainer: {
     paddingTop: 20,
-    paddingHorizontal: 40,
+    paddingHorizontal: 64,
   },
 });
