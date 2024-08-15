@@ -8,6 +8,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { checkBadName, showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopBar from "../../components/TopBar";
 
 export const FirstNameScreen = (props) => {
   const [fName, setFName] = useState("");
@@ -28,6 +29,7 @@ export const FirstNameScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"

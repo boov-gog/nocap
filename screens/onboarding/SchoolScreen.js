@@ -17,6 +17,7 @@ import { AuthenticatedUserContext } from "../../providers";
 import { distanceInMiles, showErrorToast } from "../../utils";
 import { fetchSchools, searchSchools } from "../../services/schoolService";
 import { debounce } from "lodash";
+import TopBar from "../../components/TopBar";
 
 export const SchoolScreen = (props) => {
   const { setSchool, location } = useContext(AuthenticatedUserContext);
@@ -121,6 +122,7 @@ export const SchoolScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>Find Your School</Text>
 

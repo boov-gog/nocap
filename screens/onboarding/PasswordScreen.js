@@ -10,6 +10,7 @@ import {
   Logo,
   Button,
   FormErrorMessage,
+  LoadingIndicator,
 } from "../../components";
 import { Images, Colors, auth } from "../../config";
 import { useTogglePasswordVisibility } from "../../hooks";
@@ -18,9 +19,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StackNav } from "../../navigation/NavigationKeys";
 import NocapButton from "../../components/NocapButton";
 import { AuthenticatedUserContext } from "../../providers";
+import TopBar from "../../components/TopBar";
 
 export const PasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
+  const [processing, setProcessing] = useState(false);
 
   const {
     passwordVisibility,
@@ -37,13 +40,18 @@ export const PasswordScreen = ({ navigation }) => {
     const { password } = values;
     console.log("Email", email, "Password", password);
 
-    createUserWithEmailAndPassword(auth, email, password).catch((error) =>
-      setErrorState(error.message)
-    );
+    try {
+      setProcessing(true);
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      setErrorState(error.message);
+    }
+    setProcessing(false);
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
@@ -133,7 +141,13 @@ export const PasswordScreen = ({ navigation }) => {
               {/* <Button style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Signup</Text>
               </Button> */}
-              <NocapButton title={"Done!"} onPress={handleSubmit} />
+              {processing ? (
+                <View style={{ width: "100%", marginTop: 30 }}>
+                  <LoadingIndicator />
+                </View>
+              ) : (
+                <NocapButton title={"Done!"} onPress={handleSubmit} />
+              )}
             </View>
           )}
         </Formik>

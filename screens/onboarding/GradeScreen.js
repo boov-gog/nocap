@@ -16,6 +16,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { Grades, showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopBar from "../../components/TopBar";
 
 export const GradeScreen = (props) => {
   const { setGrade } = useContext(AuthenticatedUserContext);
@@ -35,6 +36,7 @@ export const GradeScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView>
         <Logo uri={Images.logo} />
         <View style={styles.mainContainer}>

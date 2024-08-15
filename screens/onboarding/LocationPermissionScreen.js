@@ -8,6 +8,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast, showSuccessToast } from "../../utils";
 import * as Location from "expo-location";
+import TopBar from "../../components/TopBar";
 
 export const LocationPermissionScreen = (props) => {
   const [isGettingPermission, setIsGettingPermission] = useState(false);
@@ -35,6 +36,7 @@ export const LocationPermissionScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>To find your school</Text>

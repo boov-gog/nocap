@@ -17,6 +17,7 @@ import { loginValidationSchema } from "../../utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
+import TopBar from "../../components/TopBar";
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -31,6 +32,7 @@ export const LoginScreen = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"

@@ -17,6 +17,7 @@ import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
 import GenderButton from "../../components/GenderButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopBar from "../../components/TopBar";
 
 export const GenderScreen = (props) => {
   const handleNext = (id) => {
@@ -27,6 +28,7 @@ export const GenderScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView>
         <Logo uri={Images.logo} />
         <View style={styles.mainContainer}>

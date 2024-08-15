@@ -17,6 +17,7 @@ import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast, showSuccessToast } from "../../utils";
 import { CheckBox } from "react-native-elements";
 import * as Contacts from "expo-contacts";
+import TopBar from "../../components/TopBar";
 
 export const FriendScreen = (props) => {
   const [contacts, setContacts] = useState([]);
@@ -92,6 +93,7 @@ export const FriendScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
         <View

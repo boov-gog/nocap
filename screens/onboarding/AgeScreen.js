@@ -8,6 +8,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import TopBar from "../../components/TopBar";
 
 export const AgeScreen = (props) => {
   const [age, setLocalAge] = useState("");
@@ -33,6 +34,7 @@ export const AgeScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"

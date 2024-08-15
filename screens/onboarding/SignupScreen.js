@@ -17,6 +17,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import NocapButton from "../../components/NocapButton";
 import { CheckBox } from "react-native-elements";
 import { AuthenticatedUserContext } from "../../providers";
+import TopBar from "../../components/TopBar";
 
 export const SignupScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -41,6 +42,7 @@ export const SignupScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"

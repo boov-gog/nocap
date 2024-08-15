@@ -8,6 +8,7 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast } from "../../utils";
 import * as Contacts from "expo-contacts";
+import TopBar from "../../components/TopBar";
 
 export const ContactsPermissionScreen = (props) => {
   const [isGettingPermission, setIsGettingPermission] = useState(false);
@@ -27,6 +28,7 @@ export const ContactsPermissionScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>
