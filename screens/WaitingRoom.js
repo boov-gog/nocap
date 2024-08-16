@@ -30,6 +30,10 @@ const WaitingRoom = ({ navigation }) => {
     navigation.navigate(StackNav.MyCaps);
   };
 
+  const handlePlay = () => {
+    navigation.navigate(StackNav.GamePage);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollViewer}>
@@ -70,7 +74,7 @@ const WaitingRoom = ({ navigation }) => {
           />
           <Text style={styles.inviteBtnText}>Invite a friend</Text>
         </TouchableOpacity>
-        <PlayButton />
+        <PlayButton onPress={handlePlay} />
       </ScrollView>
       <View style={styles.bottomContainer}>
         <TouchableOpacity onPress={handleBlueCapClick}>

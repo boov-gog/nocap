@@ -6,6 +6,7 @@ const AnswerButton = ({
   selected = false,
   name,
   onPress,
+  normalState,
 }) => {
   const handlePress = () => {
     if (clickable && onPress) onPress();
@@ -14,11 +15,17 @@ const AnswerButton = ({
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity
-        style={selected ? styles.selectedContainer : styles.normalContainer}
+        style={
+          selected
+            ? styles.selectedContainer
+            : [styles.normalContainer, normalState]
+        }
         onPress={handlePress}
         disabled={!clickable}
       >
-        <Text>{name}</Text>
+        <Text numberOfLines={3} ellipsizeMode="tail">
+          {name}
+        </Text>
       </TouchableOpacity>
     </View>
   );

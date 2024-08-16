@@ -21,4 +21,5 @@ export const StackNav = {
   Subscription: "Subscription",
   ReplyTo: "ReplyTo",
   Profile: "Profile",
+  GamePage: "GamePage",
 };

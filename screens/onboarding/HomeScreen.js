@@ -51,7 +51,10 @@ export const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     if (showSuccess) {
       setTimeout(() => {
-        navigation.navigate(StackNav.WaitingRoom);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: StackNav.WaitingRoom }],
+        });
       }, 3000);
     }
   }, [showSuccess]);
@@ -92,7 +95,6 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    paddingTop: 300,
     alignItems: "center",
   },
   successContainer: {

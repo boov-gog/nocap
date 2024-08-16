@@ -19,6 +19,7 @@ import MyCapScreen from "./MyCapScreen";
 import WhatTheySayScreen from "./WhatTheySayScreen";
 import SubscriptionScreen from "./SubscriptionScreen";
 import ReplyScreen from "./ReplyScreen";
+import GameScreen from "./GameScreen";
 
 export {
   LoginScreen,
@@ -42,4 +43,5 @@ export {
   WhatTheySayScreen,
   SubscriptionScreen,
   ReplyScreen,
+  GameScreen,
 };

@@ -4,13 +4,15 @@ import { Colors, Images } from "../config";
 import { useNavigation } from "@react-navigation/native";
 import { StackNav } from "../navigation/NavigationKeys";
 
-const TopBar = ({ style, profileShow = false }) => {
+const TopBar = ({ style, profileShow = false, handlePressBack }) => {
   const navigation = useNavigation();
 
   return (
     <View style={[styles.topBar, style]}>
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={() => {
+          handlePressBack ? handlePressBack() : navigation.goBack();
+        }}
         style={{ flexDirection: "row", alignItems: "center" }}
       >
         <Image style={{ width: 36, height: 36 }} source={Images.backIcon} />

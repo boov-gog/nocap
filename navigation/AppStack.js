@@ -8,6 +8,7 @@ import {
   SubscriptionScreen,
   WaitingRoom,
   WhatTheySayScreen,
+  GameScreen,
 } from "../screens";
 import { StackNav } from "./NavigationKeys";
 
@@ -15,7 +16,10 @@ const Stack = createStackNavigator();
 
 export const AppStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={StackNav.WaitingRoom}
+    >
       <Stack.Screen name={StackNav.Home} component={HomeScreen} />
       <Stack.Screen name={StackNav.WaitingRoom} component={WaitingRoom} />
       <Stack.Screen name={StackNav.MyCaps} component={MyCapScreen} />
@@ -25,6 +29,7 @@ export const AppStack = () => {
         component={SubscriptionScreen}
       />
       <Stack.Screen name={StackNav.ReplyTo} component={ReplyScreen} />
+      <Stack.Screen name={StackNav.GamePage} component={GameScreen} />
     </Stack.Navigator>
   );
 };
