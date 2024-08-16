@@ -1,8 +1,6 @@
 import React from "react";
 import { Dimensions, Image, StyleSheet } from "react-native";
 
-import { Images } from "../config";
-
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 

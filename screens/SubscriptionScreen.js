@@ -25,7 +25,7 @@ const SubscriptionScreen = () => {
       >
         <Image style={styles.starLogo} source={Images.star2} />
         <Image style={styles.proLetter} source={Images.proLetter} />
-        <Image style={styles.logo} source={Images.logoLetter} />
+        <Image style={styles.logo} source={Images.logoNoback} />
 
         <Carousel images={carouselImages} />
         <Text style={styles.price}>$4/WK</Text>

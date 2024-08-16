@@ -1,6 +1,6 @@
 export const Images = {
   logo: require("../assets/logo.png"),
-  logoLetter: require("../assets/images/logoLetter.png"),
+  logoNoback: require("../assets/images/logoNoback.png"),
   buttonBack: require("../assets/buttonBack.png"),
   genderBtnBack: require("../assets/genderBtnBack.png"),
   school1: require("../assets/images/school1.png"),

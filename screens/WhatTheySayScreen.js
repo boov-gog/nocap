@@ -40,11 +40,7 @@ const WhatTheySayScreen = ({ navigation }) => {
         style={styles.scrollViewer}
         contentContainerStyle={styles.scrollViewContainer}
       >
-        <Image
-          style={styles.logo}
-          source={Images.logoLetter}
-          resizeMode="contain"
-        />
+        <Logo uri={Images.logoNoback} />
         <Image style={styles.avatar} source={Images.girl} />
         <Text style={styles.description}>From a girl in the XXXth grade.</Text>
         <TouchableOpacity
@@ -107,6 +103,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     alignItems: "center",
+    paddingBottom: 20,
   },
   logo: {
     marginTop: 200,
@@ -142,8 +139,9 @@ const styles = StyleSheet.create({
   },
   question: {
     width: "90%",
+    height: 60,
     fontWeight: "700",
-    paddingVertical: 14,
+    marginVertical: 14,
     textAlign: "center",
   },
   answersContainer: {
@@ -189,8 +187,6 @@ const styles = StyleSheet.create({
     height: 30,
   },
   bottomBar: {
-    position: "absolute",
-    bottom: 0,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",

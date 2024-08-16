@@ -6,7 +6,7 @@ export default {
     slug: "expo-firebase",
     privacy: "public",
     platforms: ["ios", "android"],
-    version: "0.19.2",
+    version: "0.19.3",
     orientation: "portrait",
     icon: "./assets/flame.png",
     splash: {
@@ -23,7 +23,7 @@ export default {
       bundleIdentifier: "com.djtalpha.nocap",
       infoPlist: {
         NSAppTransportSecurity: {
-          NSAllowsArbitraryLoads: true
+          NSAllowsArbitraryLoads: true,
         },
         NSContactsUsageDescription:
           "This app requires access to your contacts to function properly.",
@@ -42,7 +42,7 @@ export default {
       },
     },
     android: {
-      versionCode: 2,
+      versionCode: 3,
       package: "com.djtalpha.nocap",
       permissions: [
         "ACCESS_COARSE_LOCATION",
