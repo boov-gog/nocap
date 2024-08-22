@@ -1,19 +1,40 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { onAuthStateChanged } from "firebase/auth";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import { AuthStack } from "./AuthStack";
-import { AppStack } from "./AppStack";
-import { AuthenticatedUserContext } from "../providers";
 import { LoadingIndicator } from "../components";
-import { auth } from "../config";
 
 import * as Font from "expo-font";
+import { StackNav } from "./NavigationKeys";
+
+import {
+  LoginScreen,
+  SignupScreen,
+  ForgotPasswordScreen,
+  StartScreen,
+  AgeScreen,
+  FirstNameScreen,
+  LastNameScreen,
+  GenderScreen,
+  PasswordScreen,
+  FriendScreen,
+  ContactsPermissionScreen,
+  PhoneScreen,
+  SchoolScreen,
+  LocationPermissionScreen,
+  GradeScreen,
+  HomeScreen,
+  MyCapScreen,
+  ReplyScreen,
+  SubscriptionScreen,
+  WaitingRoom,
+  WhatTheySayScreen,
+  GameScreen,
+} from "../screens";
+
+const Stack = createStackNavigator();
 
 export const RootNavigator = () => {
-  const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [isLoading, setIsLoading] = useState(true);
-
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
@@ -31,27 +52,55 @@ export const RootNavigator = () => {
     loadFonts();
   }, []);
 
-  useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      (authenticatedUser) => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
-        setIsLoading(false);
-      }
-    );
-
-    // unsubscribe auth listener on unmount
-    return unsubscribeAuthStateChanged;
-  }, [user]);
-
-  if (isLoading || !fontsLoaded) {
+  if (!fontsLoaded) {
     return <LoadingIndicator />;
   }
 
   return (
     <NavigationContainer>
-      {user ? <AppStack /> : <AuthStack />}
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={StackNav.Start}
+      >
+        <Stack.Screen name={StackNav.Start} component={StartScreen} />
+        <Stack.Screen name={StackNav.Login} component={LoginScreen} />
+        <Stack.Screen name={StackNav.Signup} component={SignupScreen} />
+        <Stack.Screen name={StackNav.Age} component={AgeScreen} />
+        <Stack.Screen name={StackNav.FirstName} component={FirstNameScreen} />
+        <Stack.Screen name={StackNav.LastName} component={LastNameScreen} />
+        <Stack.Screen name={StackNav.Gender} component={GenderScreen} />
+        <Stack.Screen name={StackNav.Grade} component={GradeScreen} />
+        <Stack.Screen
+          name={StackNav.LocationPermission}
+          component={LocationPermissionScreen}
+        />
+        <Stack.Screen name={StackNav.School} component={SchoolScreen} />
+        <Stack.Screen name={StackNav.Phone} component={PhoneScreen} />
+        <Stack.Screen
+          name={StackNav.ContactsPermission}
+          component={ContactsPermissionScreen}
+        />
+        <Stack.Screen name={StackNav.Friends} component={FriendScreen} />
+        <Stack.Screen name={StackNav.Password} component={PasswordScreen} />
+        <Stack.Screen
+          name={StackNav.ForgotPassword}
+          component={ForgotPasswordScreen}
+        />
+
+        <Stack.Screen name={StackNav.Home} component={HomeScreen} />
+        <Stack.Screen name={StackNav.WaitingRoom} component={WaitingRoom} />
+        <Stack.Screen name={StackNav.MyCaps} component={MyCapScreen} />
+        <Stack.Screen
+          name={StackNav.WhatTheySay}
+          component={WhatTheySayScreen}
+        />
+        <Stack.Screen
+          name={StackNav.Subscription}
+          component={SubscriptionScreen}
+        />
+        <Stack.Screen name={StackNav.ReplyTo} component={ReplyScreen} />
+        <Stack.Screen name={StackNav.GamePage} component={GameScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
