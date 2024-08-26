@@ -30,6 +30,7 @@ import {
   WaitingRoom,
   WhatTheySayScreen,
   GameScreen,
+  ProfileScreen,
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -100,6 +101,7 @@ export const RootNavigator = () => {
         />
         <Stack.Screen name={StackNav.ReplyTo} component={ReplyScreen} />
         <Stack.Screen name={StackNav.GamePage} component={GameScreen} />
+        <Stack.Screen name={StackNav.Profile} component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

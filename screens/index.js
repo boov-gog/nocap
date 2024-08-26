@@ -20,6 +20,7 @@ import WhatTheySayScreen from "./WhatTheySayScreen";
 import SubscriptionScreen from "./SubscriptionScreen";
 import ReplyScreen from "./ReplyScreen";
 import GameScreen from "./GameScreen";
+import { ProfileScreen } from "./ProfileScreen";
 
 export {
   LoginScreen,
@@ -44,4 +45,5 @@ export {
   SubscriptionScreen,
   ReplyScreen,
   GameScreen,
+  ProfileScreen,
 };

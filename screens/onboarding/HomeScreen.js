@@ -17,6 +17,7 @@ export const HomeScreen = ({ navigation }) => {
   const { user } = useContext(AuthenticatedUserContext);
 
   useEffect(() => {
+    console.log("HomeScreen User:", user);
     if (user) {
       setIsEmailVerified(user.emailVerified);
       if (user.emailVerified) setShowSuccess(true);
@@ -44,7 +45,7 @@ export const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const interval = setInterval(checkEmailVerification, 3000); // Check every 5 seconds
+    const interval = setInterval(checkEmailVerification, 3000); // Check every 3 seconds
     return () => clearInterval(interval);
   }, []);
 
@@ -55,13 +56,9 @@ export const HomeScreen = ({ navigation }) => {
           index: 0,
           routes: [{ name: StackNav.WaitingRoom }],
         });
-      }, 3000);
+      }, 2000);
     }
   }, [showSuccess]);
-
-  const handleLogout = () => {
-    signOut(auth).catch((error) => console.log("Error logging out: ", error));
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +76,6 @@ export const HomeScreen = ({ navigation }) => {
             <Image source={Images.success} style={styles.successGif} />
           </View>
         )}
-        <NocapButton title={"Sign Out"} onPress={handleLogout} />
       </View>
     </SafeAreaView>
   );
