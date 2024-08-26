@@ -2,13 +2,18 @@ import { Image, StyleSheet, TouchableWithoutFeedback } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Images } from "../config";
 
-const PlayButton = ({ onPress }) => {
+const PlayButton = ({ onPress, playEnabled }) => {
   const [clicked, setClicked] = useState(false);
-  const [imageSrc, setImageSrc] = useState("");
-  const playEnalbed = true;
+  const [imageSrc, setImageSrc] = useState(Images.playEnabledNormal);
+
+  const handlePress = () => {
+    if (playEnabled) {
+      onPress();
+    }
+  };
 
   useEffect(() => {
-    if (playEnalbed) {
+    if (playEnabled) {
       setImageSrc(
         clicked ? Images.playEnabledClcked : Images.playEnabledNormal
       );
@@ -17,7 +22,7 @@ const PlayButton = ({ onPress }) => {
         clicked ? Images.playDisabledClcked : Images.playDisabledNormal
       );
     }
-  }, [clicked, playEnalbed]);
+  }, [clicked, playEnabled]);
 
   const styles = StyleSheet.create({
     image: {
@@ -28,7 +33,7 @@ const PlayButton = ({ onPress }) => {
 
   return (
     <TouchableWithoutFeedback
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={() => setClicked(true)}
       onPressOut={() => setClicked(false)}
     >
