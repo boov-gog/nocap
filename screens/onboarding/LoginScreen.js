@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Text, StyleSheet } from "react-native";
 import { Formik } from "formik";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -18,17 +18,29 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import TopBar from "../../components/TopBar";
+import { AuthenticatedUserContext } from "../../providers";
 
 export const LoginScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
   const { passwordVisibility, handlePasswordVisibility, rightIcon } =
     useTogglePasswordVisibility();
 
-  const handleLogin = (values) => {
+  const { setUser } = useContext(AuthenticatedUserContext);
+
+  const handleLogin = async (values) => {
     const { email, password } = values;
-    signInWithEmailAndPassword(auth, email, password).catch((error) =>
-      setErrorState(error.message)
-    );
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      if (auth.currentUser) {
+        setUser(auth.currentUser);
+        navigation.reset({
+          index: 0,
+          routes: [{ name: StackNav.Home }],
+        });
+      }
+    } catch (error) {
+      setErrorState(error.message);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>

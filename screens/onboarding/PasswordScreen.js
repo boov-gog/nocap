@@ -1,7 +1,12 @@
 import React, { useContext, useState } from "react";
 import { Text, StyleSheet } from "react-native";
 import { Formik } from "formik";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  deleteUser,
+  getAuth,
+  signOut,
+} from "firebase/auth";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import {
@@ -14,12 +19,22 @@ import {
 } from "../../components";
 import { Images, Colors, auth } from "../../config";
 import { useTogglePasswordVisibility } from "../../hooks";
-import { emailValidationSchema, signupValidationSchema } from "../../utils";
+import {
+  showErrorToast,
+  showSuccessToast,
+  signupValidationSchema,
+} from "../../utils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StackNav } from "../../navigation/NavigationKeys";
+// import { StackNav } from "../../navigation/NavigationKeys";
 import NocapButton from "../../components/NocapButton";
 import { AuthenticatedUserContext } from "../../providers";
 import TopBar from "../../components/TopBar";
+import {
+  deleteUserByEmail,
+  insertFriends,
+  registerUser,
+} from "../../services/userService";
+import { StackNav } from "../../navigation/NavigationKeys";
 
 export const PasswordScreen = ({ navigation }) => {
   const [errorState, setErrorState] = useState("");
@@ -34,7 +49,69 @@ export const PasswordScreen = ({ navigation }) => {
     confirmPasswordVisibility,
   } = useTogglePasswordVisibility();
 
-  const { email } = useContext(AuthenticatedUserContext);
+  const {
+    user,
+    setUser,
+    email,
+    age,
+    firstName,
+    lastName,
+    gender,
+    grade,
+    school,
+    phone,
+    friends,
+  } = useContext(AuthenticatedUserContext);
+
+  const signUp = async () => {
+    const userData = {
+      email,
+      age,
+      firstName,
+      lastName,
+      gender,
+      grade,
+      school,
+      phone,
+    };
+
+    try {
+      const createdUser = await registerUser(userData);
+
+      setUser({ ...user, ...createdUser });
+
+      if (friends.length > 0) {
+        try {
+          await insertFriends(createdUser.id, friends);
+        } catch (error) {
+          console.error("Error inserting friends:", error);
+          showErrorToast("Error inserting friends. Please try again later.");
+        }
+      }
+
+      showSuccessToast("You are registered successfully!");
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: StackNav.Home }],
+      });
+    } catch (error) {
+      console.error("Error signing up user:", error);
+      showErrorToast(error);
+
+      deleteUser(auth.currentUser).catch((error) => {
+        console.error("Error deleting firebase user:", error);
+      });
+
+      try {
+        console.log("Deleting backend user:", email);
+        const res = await deleteUserByEmail(email);
+        console.log("Delete user response:", res);
+      } catch (error) {
+        console.error("Error deleting backend user:", error);
+      }
+    }
+  };
 
   const handleSignup = async (values) => {
     const { password } = values;
@@ -43,6 +120,11 @@ export const PasswordScreen = ({ navigation }) => {
     try {
       setProcessing(true);
       await createUserWithEmailAndPassword(auth, email, password);
+      const user = await getAuth().currentUser;
+      if (user) {
+        setUser(getAuth().currentUser);
+        signUp();
+      }
     } catch (error) {
       setErrorState(error.message);
     }
