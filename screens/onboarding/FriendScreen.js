@@ -28,7 +28,10 @@ export const FriendScreen = (props) => {
   const handleNext = () => {
     if (selectedContacts.length === 0) {
       showSuccessToast("We'll use your full contacts as a friend list");
-      setFriends(contacts);
+
+      const contactIds = contacts.map((value) => value.id);
+
+      setFriends(contactIds);
     } else {
       setFriends(selectedContacts);
     }
@@ -78,15 +81,21 @@ export const FriendScreen = (props) => {
           style={styles.itemAvatar}
           source={item.avatar ? item.avatar : Images.nonBinary}
         />
-        <Text style={styles.oneItemTitle} numberOfLines={2} ellipsizeMode="tail">{item.name}</Text>
+        <Text
+          style={styles.oneItemTitle}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {item.name}
+        </Text>
       </View>
       <View>
-        <View style={{marginRight: -20}}>
-      <CheckBox
-        checked={selectedContacts.includes(item.id)}
-        onPress={() => toggleSelectContact(item.id)}
-      />
-      </View>
+        <View style={{ marginRight: -20 }}>
+          <CheckBox
+            checked={selectedContacts.includes(item.id)}
+            onPress={() => toggleSelectContact(item.id)}
+          />
+        </View>
       </View>
     </TouchableOpacity>
   );
