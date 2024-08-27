@@ -11,19 +11,20 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LoadingIndicator, Logo, TextInput } from "../../components";
 import { Colors, Images } from "../../config";
-import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
-import { AuthenticatedUserContext } from "../../providers";
 import { distanceInMiles, showErrorToast } from "../../utils";
 import { fetchSchools, searchSchools } from "../../services/schoolService";
 import { debounce } from "lodash";
 import TopBar from "../../components/TopBar";
+import { useRoute } from "@react-navigation/native";
+import { AuthenticatedUserContext } from "../../providers";
 
 export const SchoolScreen = (props) => {
-  const { setSchool, location } = useContext(AuthenticatedUserContext);
+  const { setSchool } = useContext(AuthenticatedUserContext);
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+  const location = useRoute().params.location;
 
   let sortedAllSchools;
 
@@ -104,7 +105,7 @@ export const SchoolScreen = (props) => {
 
   useEffect(() => {
     loadSchools();
-  }, [location]);
+  }, []);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.oneItem} onPress={() => handleNext(item)}>

@@ -13,10 +13,7 @@ import TopBar from "../../components/TopBar";
 export const LocationPermissionScreen = (props) => {
   const [isGettingPermission, setIsGettingPermission] = useState(false);
 
-  const { setLocation } = useContext(AuthenticatedUserContext);
-
   const handleNext = async () => {
-    props.navigation.navigate(StackNav.School);
     setIsGettingPermission(true);
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -24,11 +21,14 @@ export const LocationPermissionScreen = (props) => {
         showErrorToast("Permission to access location was denied");
       } else {
         let location = await Location.getCurrentPositionAsync({});
-        setLocation(location.coords);
+
         showSuccessToast(
           `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
         );
-        props.navigation.navigate(StackNav.School);
+
+        props.navigation.navigate(StackNav.School, {
+          location: location.coords,
+        });
       }
     } catch (error) {
       showErrorToast("Error getting location");
