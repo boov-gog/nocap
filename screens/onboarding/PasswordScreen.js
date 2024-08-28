@@ -123,7 +123,7 @@ export const PasswordScreen = ({ navigation }) => {
       const user = await getAuth().currentUser;
       if (user) {
         setUser(getAuth().currentUser);
-        signUp();
+        await signUp();
       }
     } catch (error) {
       setErrorState(error.message);

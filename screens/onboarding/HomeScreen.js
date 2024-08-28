@@ -4,25 +4,55 @@ import { sendEmailVerification, signOut } from "firebase/auth";
 
 import { auth, Colors, Images } from "../../config";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Logo } from "../../components";
+import { LoadingIndicator, Logo } from "../../components";
 import NocapButton from "../../components/NocapButton";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast, showSuccessToast } from "../../utils";
 import { StackNav } from "../../navigation/NavigationKeys";
+import { signinUser } from "../../services/userService";
 
 export const HomeScreen = ({ navigation }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isSigning, setIsSigning] = useState(false);
 
-  const { user } = useContext(AuthenticatedUserContext);
+  const { user, setUser } = useContext(AuthenticatedUserContext);
 
-  useEffect(() => {
+  const checkUser = async () => {
     console.log("HomeScreen User:", user);
+
     if (user) {
       setIsEmailVerified(user.emailVerified);
-      if (user.emailVerified) setShowSuccess(true);
+      if (user.id) {
+        if (user.emailVerified) {
+          setShowSuccess(true);
+        }
+      } else {
+        setIsSigning(true);
+        try {
+          const registeredUser = await signinUser(user.email);
+
+          setUser({ ...user, ...registeredUser });
+        } catch (error) {
+          console.error("Error signing in to backend:", error);
+
+          await signOut(auth);
+          setUser(null);
+        }
+        setIsSigning(false);
+      }
+    } else {
+      showErrorToast("Failed to sign in. Please try again.");
+      navigation.reset({
+        index: 0,
+        routes: [{ name: StackNav.Start }],
+      });
     }
-  }, []);
+  };
+
+  useEffect(() => {
+    checkUser();
+  }, [user]);
 
   const handleSendVerificationEmail = async () => {
     try {
@@ -34,13 +64,19 @@ export const HomeScreen = ({ navigation }) => {
     }
   };
 
+  const handleGoToProfile = () => {
+    navigation.replace(StackNav.Profile, {});
+  };
+
   const checkEmailVerification = async () => {
     if (isEmailVerified) return;
 
     await auth.currentUser.reload();
     if (auth.currentUser.emailVerified) {
       setIsEmailVerified(true);
-      setShowSuccess(true);
+      if (user.id) {
+        setShowSuccess(true);
+      }
     }
   };
 
@@ -63,20 +99,27 @@ export const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
-        {!isEmailVerified && (
-          <NocapButton
-            title="Verify your email"
-            onPress={handleSendVerificationEmail}
-          />
-        )}
-        {showSuccess && (
-          <View style={styles.successContainer}>
-            <Text style={styles.successText}>Verified!</Text>
-            <Image source={Images.success} style={styles.successGif} />
-          </View>
-        )}
-      </View>
+      {isSigning ? (
+        <LoadingIndicator />
+      ) : (
+        <View style={styles.mainContainer}>
+          {!isEmailVerified && (
+            <>
+              <NocapButton
+                title="Verify your email"
+                onPress={handleSendVerificationEmail}
+              />
+              <NocapButton title="My Profile" onPress={handleGoToProfile} />
+            </>
+          )}
+          {showSuccess && (
+            <View style={styles.successContainer}>
+              <Text style={styles.successText}>Verified!</Text>
+              <Image source={Images.success} style={styles.successGif} />
+            </View>
+          )}
+        </View>
+      )}
     </SafeAreaView>
   );
 };
