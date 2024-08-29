@@ -1,13 +1,13 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Colors } from "../config";
 import { View } from "./View";
+import { BarIndicator } from "react-native-indicators";
 
 export const LoadingIndicator = ({ extraStyle }) => {
   return (
     <View style={[styles.container, extraStyle]}>
-      <ActivityIndicator size="large" color={Colors.orange} />
+      <BarIndicator color="#FF9922" size={50} count={6} />
     </View>
   );
 };
