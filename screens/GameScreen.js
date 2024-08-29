@@ -6,7 +6,13 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useRef,
+} from "react";
 import { LoadingIndicator, Logo } from "../components";
 import { Images } from "../config";
 import AnswerButton from "../components/AnswerButton";
@@ -34,9 +40,23 @@ const GameScreen = ({ navigation }) => {
   const [skipEnable, setSkipEnable] = useState(true);
   const [percentage, setPercentage] = useState([-1, -1, -1, -1]);
 
+  const questionRef = useRef(question);
+  const friendsRef = useRef(friends);
+  const selectedRef = useRef(selected);
+
+  useEffect(() => {
+    questionRef.current = question;
+    friendsRef.current = friends;
+    selectedRef.current = selected;
+  }, [question, friends, selected]);
+
   // Function to save the answer and move to the next question
   const saveAnswer_Move2Next = async () => {
     try {
+      const question = questionRef.current;
+      const friends = friendsRef.current;
+      const selected = selectedRef.current;
+
       // Get the roundId from AsyncStorage
       const roundId = await AsyncStorage.getItem("roundId");
 
