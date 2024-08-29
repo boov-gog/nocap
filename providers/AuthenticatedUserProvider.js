@@ -13,7 +13,6 @@ export const AuthenticatedUserProvider = ({ children }) => {
   const [school, setSchool] = useState("");
   const [phone, setPhone] = useState("");
   const [friends, setFriends] = useState({});
-  const [location, setLocation] = useState(null);
 
   return (
     <AuthenticatedUserContext.Provider
@@ -38,8 +37,6 @@ export const AuthenticatedUserProvider = ({ children }) => {
         setPhone,
         friends,
         setFriends,
-        location,
-        setLocation,
       }}
     >
       {children}
