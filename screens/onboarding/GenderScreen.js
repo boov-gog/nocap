@@ -14,13 +14,18 @@ import { Colors, Images } from "../../config";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../../providers";
-import { showErrorToast } from "../../utils";
+import { GENDER_TYPE, showErrorToast } from "../../utils";
 import GenderButton from "../../components/GenderButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
 export const GenderScreen = (props) => {
+  const { setGender } = useContext(AuthenticatedUserContext);
+
   const handleNext = (id) => {
+    const gender = id == 0 ? "B" : id == 1 ? "G" : "N";
+    setGender(gender);
+
     props.navigation.navigate(StackNav.Grade);
   };
 
