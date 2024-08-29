@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAnsweredPercentage, saveCap } from "../services/gameService";
 import { AuthenticatedUserContext } from "../providers";
 import * as Contacts from "expo-contacts";
+import { updateUser } from "../services/userService";
 
 let timer = null;
 
@@ -38,7 +39,8 @@ const GameScreen = ({ navigation }) => {
   const [initializing, setInitializing] = useState(true);
   const [shuffleEnable, setShuffleEnable] = useState(true);
   const [skipEnable, setSkipEnable] = useState(true);
-  const [percentage, setPercentage] = useState([-1, -1, -1, -1]);
+  const [percentage, setPercentage] = useState([25, 25, 25, 25]);
+  const [answerNums, setAnswerNums] = useState([0, 0, 0, 0]);
 
   const questionRef = useRef(question);
   const friendsRef = useRef(friends);
@@ -67,7 +69,7 @@ const GameScreen = ({ navigation }) => {
       const cap = {
         questionId: question.id,
         gamer: user.id,
-        userInAnswer: friends[selected].id,
+        userInAnswer: friends[selected].email ? friends[selected].id : null,
         nameInAnswer: friends[selected].name,
         noanswer1: unselectedFriends[0].name,
         noanswer2: unselectedFriends[1].name,
@@ -164,8 +166,8 @@ const GameScreen = ({ navigation }) => {
     }
   };
 
-  // Function to set the answered percentages for the friends
-  const setPercentages = async () => {
+  // Function to set the answered numbers for the friends
+  const setAnswerNumbers = async () => {
     try {
       // Get the roundId from AsyncStorage
       const roundId = await AsyncStorage.getItem("roundId");
@@ -173,32 +175,22 @@ const GameScreen = ({ navigation }) => {
       // Get the candidateIds from the friends array
       const candidateIds = friends.map((f) => f.id);
 
-      // Get the answered percentages using the getAnsweredPercentage function
-      const answeredPercentages = await getAnsweredPercentage(
+      // Get the answered numbers using the getAnsweredPercentage function
+      const answeredNumbers = await getAnsweredPercentage(
         Number(roundId),
         question.id,
         candidateIds
       );
 
-      console.log("Answered percentages:", answeredPercentages);
+      console.log("Answered numbers:", answeredNumbers);
 
-      let totalAnswered = 0;
-      // Update the percentage state with the answered percentages
-      let updatedPercentage = friends.map((friend) => {
-        const percentage = answeredPercentages.find((p) => p.id === friend.id);
-        const num = percentage ? percentage.answeredNumber : 0;
-
-        totalAnswered += num;
-        return num;
+      // Update the percentage state with the answered numbers
+      let updatedAnswerNums = friends.map((friend) => {
+        const numbers = answeredNumbers.find((p) => p.id === friend.id);
+        return (num = numbers ? numbers.answeredNumber : 0);
       });
-      if (totalAnswered === 0) {
-        setPercentage([25, 25, 25, 25]); // If no answers are given, set equal percentages for all friends
-      } else {
-        updatedPercentage = updatedPercentage.map((num) =>
-          Math.floor((num / totalAnswered) * 100)
-        );
-        setPercentage(updatedPercentage); // Set the updated percentages based on the answered numbers
-      }
+
+      setAnswerNums(updatedAnswerNums);
     } catch (error) {
       console.error("Error getting answered percentage:", error);
       showErrorToast("Failed to get answered percentage. Please try again.");
@@ -210,9 +202,8 @@ const GameScreen = ({ navigation }) => {
   }, [percentage]);
 
   useEffect(() => {
-    // Call the setPercentages function when the question and friends are set
-    if (question && friends.length > 0 && friends[0].id) {
-      setPercentages();
+    if (question && friends.length > 0 && friends[0].email) {
+      setAnswerNumbers();
     }
   }, [question, friends]);
 
@@ -259,12 +250,29 @@ const GameScreen = ({ navigation }) => {
     saveAnswer_Move2Next();
   };
 
-  // Array of possible answers
-  const answers = ["Adrian Martin", "Jacob Smith", "Sarah Johnson", "John Doe"];
-
   // Function to handle the selection of an answer
   const handleAnswerSelect = (index) => {
     setSelected(index);
+
+    let totalAnswered = 1;
+    answerNums.forEach((num) => {
+      totalAnswered += num;
+    });
+
+    let updatedAnsNums = [
+      answerNums[0],
+      answerNums[1],
+      answerNums[2],
+      answerNums[3],
+    ];
+
+    updatedAnsNums[index] += 1;
+
+    updatedAnsNums = updatedAnsNums.map((num) => {
+      return Math.round((num / totalAnswered) * 100);
+    });
+
+    setPercentage(updatedAnsNums);
   };
 
   useEffect(() => {
@@ -311,6 +319,10 @@ const GameScreen = ({ navigation }) => {
     const initialize = async () => {
       setInitializing(true);
       try {
+        //update user info
+        // const updatedUser = await updateUser(user.id, { school_id: 26413 });
+        // console.log("updated user", updatedUser);
+
         // Set the page color randomly
         setPageColor(
           GamePageColors[
@@ -487,11 +499,7 @@ const GameScreen = ({ navigation }) => {
             <View style={styles.answerRow}>
               <View style={styles.oneAnswerContainer}>
                 <Text style={styles.percentText}>
-                  {selected == -1
-                    ? ""
-                    : percentage[0] == -1
-                    ? "?"
-                    : percentage[0] + "%"}
+                  {selected == -1 ? "" : percentage[0] + "%"}
                 </Text>
                 <AnswerButton
                   clickable={true}
@@ -503,11 +511,7 @@ const GameScreen = ({ navigation }) => {
               </View>
               <View style={styles.oneAnswerContainer}>
                 <Text style={styles.percentText}>
-                  {selected == -1
-                    ? ""
-                    : percentage[1] == -1
-                    ? "?"
-                    : percentage[1] + "%"}
+                  {selected == -1 ? "" : percentage[1] + "%"}
                 </Text>
                 <AnswerButton
                   clickable={true}
@@ -528,11 +532,7 @@ const GameScreen = ({ navigation }) => {
                   onPress={() => handleAnswerSelect(2)}
                 />
                 <Text style={styles.percentText}>
-                  {selected == -1
-                    ? ""
-                    : percentage[2] == -1
-                    ? "?"
-                    : percentage[2] + "%"}
+                  {selected == -1 ? "" : percentage[2] + "%"}
                 </Text>
               </View>
               <View style={styles.oneAnswerContainer}>
@@ -544,11 +544,7 @@ const GameScreen = ({ navigation }) => {
                   onPress={() => handleAnswerSelect(3)}
                 />
                 <Text style={styles.percentText}>
-                  {selected == -1
-                    ? ""
-                    : percentage[3] == -1
-                    ? "?"
-                    : percentage[3] + "%"}
+                  {selected == -1 ? "" : percentage[3] + "%"}
                 </Text>
               </View>
             </View>

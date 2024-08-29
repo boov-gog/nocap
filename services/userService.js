@@ -47,3 +47,13 @@ export const deleteUserByEmail = async (email) => {
     throw error;
   }
 };
+
+export const updateUser = async (user_id, data) => {
+  try {
+    const response = await axios.put(`${SIGNUP_API_URL}/${user_id}`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating user:", error);
+    throw error;
+  }
+};
