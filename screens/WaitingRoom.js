@@ -6,14 +6,24 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Colors, Images } from "../config";
-import { GENDER_TYPE } from "../utils";
+import { GENDER_TYPE, showErrorToast } from "../utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PlayButton from "../components/PlayButton";
 import { StackNav } from "../navigation/NavigationKeys";
+import { AuthenticatedUserContext } from "../providers";
+import { fetchGameData } from "../services/gameService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoadingIndicator } from "../components";
 
 const WaitingRoom = ({ navigation }) => {
+  const [pollTime, setPollTime] = useState("59:59");
+  const [playEnable, setPlayEnable] = useState(true);
+  const [checking, setChecking] = useState(true);
+
+  const { user } = useContext(AuthenticatedUserContext);
+
   const leaderList = [
     { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
     { name: "Sarah Shneider", avatar: Images.girl, gender: GENDER_TYPE.Girl },
@@ -24,14 +34,103 @@ const WaitingRoom = ({ navigation }) => {
     },
   ];
 
-  let pollTime = "59:59";
+  let timer = null;
+
+  const calculatePollTime = () => {
+    // Calculate left time to the next right hour in UTC + 0.00 timezone
+    const now = new Date();
+    const nextHour = new Date(now);
+    nextHour.setUTCHours(nextHour.getUTCHours() + 1);
+    nextHour.setUTCMinutes(0);
+    nextHour.setUTCSeconds(0);
+    nextHour.setUTCMilliseconds(0);
+    const leftTime = nextHour.getTime() - now.getTime();
+    const leftTimeInSeconds = Math.ceil(leftTime / 1000);
+    const leftMinutes = Math.floor(leftTimeInSeconds / 60);
+    const leftSeconds = leftTimeInSeconds % 60;
+    setPollTime(
+      `${leftMinutes.toString().padStart(2, "0")}:${leftSeconds
+        .toString()
+        .padStart(2, "0")}`
+    );
+
+    if (leftMinutes == 0 && leftSeconds == 0) {
+      checkGame();
+    }
+  };
+
+  const checkGame = async () => {
+    setChecking(true);
+    try {
+      // check the game has already completed
+      const roundId = await AsyncStorage.getItem("roundId");
+      const gameData = await fetchGameData(user.id);
+      if (roundId != gameData.roundId) {
+        setPlayEnable(true);
+      } else {
+        let questions = await AsyncStorage.getItem("questions");
+        questions = JSON.parse(questions);
+
+        const unselectedQuestions = questions.filter(
+          (q) => q.selected == false
+        );
+
+        if (unselectedQuestions.length == 0) {
+          setPlayEnable(false);
+        } else {
+          setPlayEnable(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking the game:", error);
+      showErrorToast("Failed to initialize the game. Please try again.");
+      setPlayEnable(false);
+    }
+    setChecking(false);
+  };
+
+  useEffect(() => {
+    checkGame();
+
+    // Countdown timer for the poll time
+    timer = setInterval(() => {
+      calculatePollTime();
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const handleBlueCapClick = () => {
     navigation.navigate(StackNav.MyCaps);
   };
 
-  const handlePlay = () => {
-    navigation.navigate(StackNav.GamePage);
+  const handlePlay = async () => {
+    try {
+      const gameData = await fetchGameData(user.id);
+      const roundId = await AsyncStorage.getItem("roundId");
+
+      if (roundId != gameData.roundId) {
+        await AsyncStorage.setItem("roundId", gameData.roundId.toString());
+        await AsyncStorage.setItem(
+          "questions",
+          JSON.stringify(
+            gameData.questions.map((q) => ({ ...q, selected: false }))
+          )
+        );
+        await AsyncStorage.setItem("friends", JSON.stringify(gameData.friends));
+        await AsyncStorage.setItem("shuffle", "3");
+        await AsyncStorage.setItem("skip", "3");
+      }
+
+      navigation.replace(StackNav.GamePage, {});
+    } catch (error) {
+      console.error("Error starting the game:", error);
+      showErrorToast("Failed to start the game. Please try again.");
+    }
+  };
+
+  const handleProfile = () => {
+    navigation.navigate(StackNav.Profile);
   };
 
   return (
@@ -74,13 +173,17 @@ const WaitingRoom = ({ navigation }) => {
           />
           <Text style={styles.inviteBtnText}>Invite a friend</Text>
         </TouchableOpacity>
-        <PlayButton onPress={handlePlay} />
+        {checking ? (
+          <LoadingIndicator />
+        ) : (
+          <PlayButton onPress={handlePlay} playEnabled={playEnable} />
+        )}
       </ScrollView>
       <View style={styles.bottomContainer}>
         <TouchableOpacity onPress={handleBlueCapClick}>
           <Image style={{ width: 50, height: 35 }} source={Images.blueCap} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleProfile}>
           <Image
             style={{ width: 20, height: 26, marginTop: 2 }}
             source={Images.userPerson}

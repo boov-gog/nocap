@@ -13,7 +13,7 @@ const AnswerButton = ({
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View>
       <TouchableOpacity
         style={
           selected
