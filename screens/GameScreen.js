@@ -1,18 +1,12 @@
 import {
   Alert,
   BackHandler,
-  SafeAreaView,
+  Dimensions,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-  useRef,
-} from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { LoadingIndicator, Logo } from "../components";
 import { Images } from "../config";
 import AnswerButton from "../components/AnswerButton";
@@ -22,10 +16,12 @@ import TopBar from "../components/TopBar";
 import { showErrorToast, showSuccessToast } from "../utils";
 import { StackNav } from "../navigation/NavigationKeys";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getAnsweredPercentage, saveCap } from "../services/gameService";
+import { getAnsweredPercentage } from "../services/gameService";
 import { AuthenticatedUserContext } from "../providers";
 import * as Contacts from "expo-contacts";
 import { updateUser } from "../services/userService";
+import { saveCap } from "../services/capService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 let timer = null;
 
@@ -63,7 +59,9 @@ const GameScreen = ({ navigation }) => {
       const roundId = await AsyncStorage.getItem("roundId");
 
       // Filter out the selected friend from the friends array
-      const unselectedFriends = friends.filter((index) => index !== selected);
+      const unselectedFriends = friends.filter(
+        (_, index) => index !== selected
+      );
 
       // Create a cap object with the necessary data
       const cap = {
@@ -252,6 +250,8 @@ const GameScreen = ({ navigation }) => {
 
   // Function to handle the selection of an answer
   const handleAnswerSelect = (index) => {
+    if (selected != -1) return;
+
     setSelected(index);
 
     let totalAnswered = 1;
@@ -411,10 +411,11 @@ const GameScreen = ({ navigation }) => {
     },
     question: {
       width: "90%",
-      height: 60,
+      height: 90,
       fontWeight: "700",
       marginBottom: 7,
       textAlign: "center",
+      fontSize: 24,
     },
     answersContainer: {
       width: "100%",
@@ -484,9 +485,15 @@ const GameScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TopBar handlePressBack={handlePressBack} />
+      <TopBar
+        handlePressBack={handlePressBack}
+        textStyle={{ color: "black" }}
+      />
       <View style={styles.logoContainer}>
-        <Logo uri={Images.logoNoback} />
+        <Logo
+          uri={Images.logoNoback}
+          style={Dimensions.get("window").width <= 360 ? { height: 0 } : null}
+        />
       </View>
       {initializing ? (
         <LoadingIndicator />
