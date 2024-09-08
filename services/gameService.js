@@ -2,7 +2,6 @@ import axios from "axios";
 import { ENDPOINTS } from "../utils";
 
 const GAME_API_URL = ENDPOINTS.API_URL + "/game";
-const CAP_API_URL = ENDPOINTS.API_URL + "/cap";
 
 export const fetchGameData = async (user_id) => {
   console.log("fetchGameData user_id:", user_id);
@@ -12,16 +11,6 @@ export const fetchGameData = async (user_id) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching game data:", error);
-    throw error;
-  }
-};
-
-export const saveCap = async (cap) => {
-  try {
-    const response = await axios.post(CAP_API_URL, cap);
-    return response.data;
-  } catch (error) {
-    console.error("Error saving cap:", error);
     throw error;
   }
 };

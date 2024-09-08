@@ -1,47 +1,50 @@
 import {
   FlatList,
   Image,
-  SafeAreaView,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { TextInput } from "../components";
+import { Icon, LoadingIndicator } from "../components";
 import { Colors, Images } from "../config";
-import { GENDER_TYPE } from "../utils";
+import { formatDate, GENDER_TYPE, showErrorToast } from "../utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { StackNav } from "../navigation/NavigationKeys";
+import { AuthenticatedUserContext } from "../providers";
+import { getRestCaps, getRestFollowings } from "../services/capService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const MyCapScreen = ({ navigation }) => {
-  const listData = [
-    { id: 1, name: "", gender: GENDER_TYPE.Girl, date: "08/01/24" },
-    { id: 2, name: "", gender: GENDER_TYPE.Boy, date: "08/01/24" },
-    { id: 3, name: "", gender: GENDER_TYPE.NonBinary, date: "08/01/24" },
-    { id: 4, name: "", gender: GENDER_TYPE.Girl, date: "08/01/24" },
-    { id: 5, name: "", gender: GENDER_TYPE.Boy, date: "08/01/24" },
-    { id: 6, name: "", gender: GENDER_TYPE.Girl, date: "08/02/24" },
-    { id: 7, name: "", gender: GENDER_TYPE.Boy, date: "08/02/24" },
-    { id: 8, name: "", gender: GENDER_TYPE.Girl, date: "08/02/24" },
-    { id: 9, name: "", gender: GENDER_TYPE.Boy, date: "08/02/24" },
-    { id: 10, name: "", gender: GENDER_TYPE.NonBinary, date: "08/02/24" },
-  ];
+  const [followers, setFollowers] = useState(0);
+  const [followings, setFollowings] = useState(0);
+  const [caps, setCaps] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [listRefreshing, setListRefreshing] = useState(false);
+
+  const { user } = useContext(AuthenticatedUserContext);
 
   const capListItem = ({ item }) => {
-    let title = item.name;
-    if (title == "") {
+    let title =
+      item.userGamer?.firstName +
+      (item.userGamer?.firstName ? " " : "") +
+      item.userGamer?.lastName;
+    const gender = item.userGamer?.gender;
+
+    if (item.isUnlocked == false) {
       title =
-        item.gender == GENDER_TYPE.Boy
+        gender == GENDER_TYPE.Boy
           ? "From a Boy"
-          : item.gender == GENDER_TYPE.Girl
+          : gender == GENDER_TYPE.Girl
           ? "From a Girl"
           : "From Someone";
     }
     const myImage =
-      item.gender == GENDER_TYPE.Boy
+      gender == GENDER_TYPE.Boy
         ? Images.blueCapList
-        : item.gender == GENDER_TYPE.Girl
+        : gender == GENDER_TYPE.Girl
         ? Images.pinkCap
         : Images.greenCap;
 
@@ -54,7 +57,7 @@ const MyCapScreen = ({ navigation }) => {
       >
         <Image style={styles.oneItemImage} source={myImage} />
         <Text style={styles.oneItemTitle}>{title}</Text>
-        <Text style={styles.oneItemDate}>{item.date}</Text>
+        <Text style={styles.oneItemDate}>{formatDate(item.createdAt)}</Text>
       </TouchableOpacity>
     );
   };
@@ -63,27 +66,109 @@ const MyCapScreen = ({ navigation }) => {
     navigation.navigate(StackNav.WhatTheySay, { id: item.id });
   };
 
+  const handleProfile = () => {
+    navigation.navigate(StackNav.Profile);
+  };
+
   const handleBack = () => {
     navigation.goBack();
   };
 
+  const handleSearchFriend = () => {
+    navigation.navigate(StackNav.SearchFriend);
+  };
+
+  const avatarImage =
+    user?.gender == GENDER_TYPE.Boy
+      ? Images.boy
+      : user?.gender == GENDER_TYPE.Girl
+      ? Images.girl
+      : Images.nonBinary;
+
+  const getCaps = async () => {
+    try {
+      const caps = await getRestCaps(user.id);
+      // console.log("caps: ", caps);
+      setCaps(caps);
+
+      setFollowers(caps.length);
+    } catch (error) {
+      console.log("Error getting followers: ", error);
+      showErrorToast("Error getting followers");
+    }
+  };
+
+  const getFollowings = async () => {
+    try {
+      const followings = await getRestFollowings(user.id);
+      console.log("followings: ", followings);
+      setFollowings(followings);
+    } catch (error) {
+      console.log("Error getting followings: ", error);
+      showErrorToast("Error getting followings");
+    }
+  };
+
+  useEffect(() => {
+    const initialLoading = async () => {
+      setIsLoading(true);
+      await getCaps();
+      setIsLoading(false);
+
+      getFollowings();
+    };
+    initialLoading();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.mainContainer}>
-        <Text style={styles.title}>Your Caps</Text>
-        <TextInput
-          leftIconName={"magnify"}
-          placeholder="Search..."
-          borderLess={true}
-        />
-        <FlatList
-          data={listData}
-          renderItem={capListItem}
-          keyExtractor={(item) => item.id}
-          style={styles.listStyle}
-          contentContainerStyle={{ paddingBottom: 150 }}
-        />
-        <TouchableOpacity></TouchableOpacity>
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.displayName}>
+              {user?.firstName + (user?.firstName ? " " : "") + user?.lastName}
+            </Text>
+            <View style={styles.followersContainer}>
+              <Text
+                style={styles.followersText}
+              >{`${followers} Followers`}</Text>
+              <Text
+                style={styles.followersText}
+              >{`${followings} Following`}</Text>
+            </View>
+          </View>
+          <View style={styles.headerRight}>
+            <Image style={styles.avatar} source={avatarImage} />
+          </View>
+        </View>
+        {isLoading ? (
+          <LoadingIndicator />
+        ) : caps.length == 0 ? (
+          <Text style={styles.title}>No Caps Yet</Text>
+        ) : (
+          <FlatList
+            data={caps}
+            renderItem={capListItem}
+            keyExtractor={(item) => item.id}
+            style={styles.listStyle}
+            contentContainerStyle={{ paddingBottom: 150 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={listRefreshing}
+                onRefresh={async () => {
+                  setListRefreshing(true);
+                  await getCaps();
+                  setListRefreshing(false);
+
+                  getFollowings();
+                }}
+                colors={[Colors.mainBlue]}
+                tintColor={Colors.mainBlue}
+                progressBackgroundColor={Colors.blackBlue}
+              />
+            }
+          />
+        )}
       </View>
 
       <LinearGradient
@@ -92,11 +177,14 @@ const MyCapScreen = ({ navigation }) => {
         style={styles.blurViewOverlay}
       />
       <View style={styles.bottomBar}>
-        <TouchableOpacity onPress={handleBack}>
-          <Text style={styles.bottomLeft}>Back</Text>
-        </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleProfile}>
           <Image style={styles.bottomRight} source={Images.userPerson}></Image>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleBack}>
+          <Text style={styles.bottomMiddle}>Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleSearchFriend}>
+          <Icon name={"magnify"} size={30} />
         </TouchableOpacity>
       </View>
       <View style={styles.whoButtonContainer}>
@@ -115,13 +203,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: Colors.blackBlue,
   },
   mainContainer: {
     flex: 1,
     width: "100%",
     alignItems: "center",
     paddingHorizontal: 18,
-    backgroundColor: Colors.blackBlue,
+  },
+  header: {
+    paddingVertical: 20,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  displayName: {
+    fontFamily: "Kanit-Regular",
+    fontSize: 24,
+    color: "white",
+  },
+  followersContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  followersText: {
+    fontFamily: "Kanit-Regular",
+    fontSize: 16,
+    color: "white",
+  },
+  headerRight: {
+    backgroundColor: "white",
+    padding: 5,
+    borderRadius: 100,
+  },
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
   },
   title: {
     marginTop: 68,
@@ -171,12 +293,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
-    paddingLeft: 15,
-    paddingRight: 34,
+    paddingHorizontal: 30,
     paddingVertical: 6,
   },
-  bottomLeft: {
+  bottomMiddle: {
+    fontFamily: "MPR-Bold",
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderRadius: 100,
     fontSize: 24,
+    backgroundColor: "#EDEDED",
   },
   bottomRight: {
     width: 20,
