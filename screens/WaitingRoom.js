@@ -1,12 +1,5 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Colors, Images } from "../config";
 import { GENDER_TYPE, showErrorToast } from "../utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -16,6 +9,8 @@ import { AuthenticatedUserContext } from "../providers";
 import { fetchGameData } from "../services/gameService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadingIndicator } from "../components";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 const WaitingRoom = ({ navigation }) => {
   const [pollTime, setPollTime] = useState("59:59");
@@ -45,7 +40,7 @@ const WaitingRoom = ({ navigation }) => {
     nextHour.setUTCSeconds(0);
     nextHour.setUTCMilliseconds(0);
     const leftTime = nextHour.getTime() - now.getTime();
-    const leftTimeInSeconds = Math.ceil(leftTime / 1000);
+    const leftTimeInSeconds = Math.floor(leftTime / 1000);
     const leftMinutes = Math.floor(leftTimeInSeconds / 60);
     const leftSeconds = leftTimeInSeconds % 60;
     setPollTime(
@@ -65,6 +60,12 @@ const WaitingRoom = ({ navigation }) => {
       // check the game has already completed
       const roundId = await AsyncStorage.getItem("roundId");
       const gameData = await fetchGameData(user.id);
+
+      //remove me in friends list
+      gameData.friends = gameData.friends.filter((f) => f.id !== user.id);
+
+      await AsyncStorage.setItem("friends", JSON.stringify(gameData.friends));
+
       if (roundId != gameData.roundId) {
         setPlayEnable(true);
       } else {
@@ -89,10 +90,16 @@ const WaitingRoom = ({ navigation }) => {
     setChecking(false);
   };
 
-  useEffect(() => {
-    checkGame();
+  useFocusEffect(
+    useCallback(() => {
+      checkGame();
+    }, [])
+  );
 
+  useEffect(() => {
     // Countdown timer for the poll time
+    if (timer) clearInterval(timer);
+
     timer = setInterval(() => {
       calculatePollTime();
     }, 1000);
@@ -117,7 +124,6 @@ const WaitingRoom = ({ navigation }) => {
             gameData.questions.map((q) => ({ ...q, selected: false }))
           )
         );
-        await AsyncStorage.setItem("friends", JSON.stringify(gameData.friends));
         await AsyncStorage.setItem("shuffle", "3");
         await AsyncStorage.setItem("skip", "3");
       }
@@ -206,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    marginTop: 70,
+    marginTop: 50,
     fontFamily: "Kanit-Bold",
     fontSize: 32,
   },
