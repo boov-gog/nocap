@@ -31,6 +31,9 @@ import {
   WhatTheySayScreen,
   GameScreen,
   ProfileScreen,
+  SearchFriendScreen,
+  CapOfFriend,
+  FriendCapDetail,
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -102,6 +105,15 @@ export const RootNavigator = () => {
         <Stack.Screen name={StackNav.ReplyTo} component={ReplyScreen} />
         <Stack.Screen name={StackNav.GamePage} component={GameScreen} />
         <Stack.Screen name={StackNav.Profile} component={ProfileScreen} />
+        <Stack.Screen
+          name={StackNav.SearchFriend}
+          component={SearchFriendScreen}
+        />
+        <Stack.Screen name={StackNav.CapOfFriend} component={CapOfFriend} />
+        <Stack.Screen
+          name={StackNav.FriendCapDetail}
+          component={FriendCapDetail}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

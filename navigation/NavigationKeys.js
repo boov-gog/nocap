@@ -22,4 +22,7 @@ export const StackNav = {
   ReplyTo: "ReplyTo",
   Profile: "Profile",
   GamePage: "GamePage",
+  SearchFriend: "SearchFriend",
+  CapOfFriend: "CapOfFriend",
+  FriendCapDetail: "FriendCapDetail",
 };

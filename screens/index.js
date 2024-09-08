@@ -21,6 +21,9 @@ import SubscriptionScreen from "./SubscriptionScreen";
 import ReplyScreen from "./ReplyScreen";
 import GameScreen from "./GameScreen";
 import { ProfileScreen } from "./ProfileScreen";
+import { SearchFriendScreen } from "./SearchFriendScreen";
+import CapOfFriend from "./CapOfFriend";
+import FriendCapDetail from "./FriendCapDetail";
 
 export {
   LoginScreen,
@@ -46,4 +49,7 @@ export {
   ReplyScreen,
   GameScreen,
   ProfileScreen,
+  SearchFriendScreen,
+  CapOfFriend,
+  FriendCapDetail,
 };
