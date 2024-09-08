@@ -36,13 +36,17 @@ export const VerifyScreen = ({ navigation }) => {
         } catch (error) {
           console.error("Error signing in to backend:", error);
 
-          await signOut(auth);
-          setUser(null);
+          try {
+            await signOut(auth);
+            setUser(null);
+          } catch (error) {
+            console.error("Error signing out:", error);
+          }
         }
         setIsSigning(false);
       }
     } else {
-      showErrorToast("Failed to sign in. Please try again.");
+      showErrorToast("You are signed out.");
       navigation.reset({
         index: 0,
         routes: [{ name: StackNav.Start }],
@@ -64,8 +68,13 @@ export const VerifyScreen = ({ navigation }) => {
     }
   };
 
-  const handleGoToProfile = () => {
-    navigation.replace(StackNav.Profile, {});
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   const checkEmailVerification = async () => {
@@ -109,7 +118,7 @@ export const VerifyScreen = ({ navigation }) => {
                 title="Verify your email"
                 onPress={handleSendVerificationEmail}
               />
-              <NocapButton title="My Profile" onPress={handleGoToProfile} />
+              <NocapButton title="Sign Out" onPress={handleSignOut} />
             </>
           )}
           {showSuccess && (
