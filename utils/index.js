@@ -4,9 +4,9 @@ import BadWords from "badwords-list";
 import Constants from "expo-constants";
 
 export const GENDER_TYPE = {
-  Boy: "Boy",
-  Girl: "Girl",
-  NonBinary: "NonBinary",
+  Boy: "B",
+  Girl: "G",
+  NonBinary: "N",
 };
 
 export const ENDPOINTS = {
@@ -94,4 +94,18 @@ export const distanceInMiles = (lat1, lon1, lat2, lon2) => {
     Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return earthRadiusKm * c * 0.621371; // Convert km to miles
+};
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const month = date.getMonth() + 1; // getMonth() returns 0-11
+  const day = date.getDate(); // getDate() returns 1-31
+  const year = date.getFullYear(); // getFullYear() returns the year
+
+  // Pad the month and day with leading zeros if necessary
+  const formattedMonth = month < 10 ? `0${month}` : month;
+  const formattedDay = day < 10 ? `0${day}` : day;
+
+  // Return the formatted date string
+  return `${formattedMonth}/${formattedDay}/${year}`;
 };
