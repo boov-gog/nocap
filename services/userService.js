@@ -16,6 +16,16 @@ export const registerUser = async (user) => {
   }
 };
 
+export const getUserById = async (userId) => {
+  try {
+    const response = await axios.get(`${SIGNUP_API_URL}/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting user by id[${userId}]:`, error);
+    throw error;
+  }
+};
+
 export const signinUser = async (email) => {
   try {
     const response = await axios.post(`${SIGNIN_API_URL}`, { email });
