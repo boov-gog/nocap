@@ -93,7 +93,7 @@ export const PasswordScreen = ({ navigation }) => {
 
       navigation.reset({
         index: 0,
-        routes: [{ name: StackNav.Home }],
+        routes: [{ name: StackNav.Verify }],
       });
     } catch (error) {
       console.error("Error signing up user:", error);

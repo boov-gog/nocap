@@ -2,7 +2,7 @@ import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import {
-  HomeScreen,
+  VerifyScreen,
   MyCapScreen,
   ReplyScreen,
   SubscriptionScreen,
@@ -20,7 +20,7 @@ export const AppStack = () => {
       screenOptions={{ headerShown: false }}
       initialRouteName={StackNav.WaitingRoom}
     >
-      <Stack.Screen name={StackNav.Home} component={HomeScreen} />
+      <Stack.Screen name={StackNav.Verify} component={VerifyScreen} />
       <Stack.Screen name={StackNav.WaitingRoom} component={WaitingRoom} />
       <Stack.Screen name={StackNav.MyCaps} component={MyCapScreen} />
       <Stack.Screen name={StackNav.WhatTheySay} component={WhatTheySayScreen} />

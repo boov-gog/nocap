@@ -39,7 +39,7 @@ export const StartScreen = (props) => {
 
       props.navigation.reset({
         index: 0,
-        routes: [{ name: StackNav.Home }],
+        routes: [{ name: StackNav.Verify }],
       });
     }
   }, [firebaseUser]);

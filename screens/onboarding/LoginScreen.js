@@ -40,7 +40,7 @@ export const LoginScreen = ({ navigation }) => {
         setUser(auth.currentUser);
         navigation.reset({
           index: 0,
-          routes: [{ name: StackNav.Home }],
+          routes: [{ name: StackNav.Verify }],
         });
       }
     } catch (error) {

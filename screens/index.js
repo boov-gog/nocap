@@ -1,6 +1,6 @@
 import { LoginScreen } from "./onboarding/LoginScreen";
 import { SignupScreen } from "./onboarding/SignupScreen";
-import { HomeScreen } from "./onboarding/HomeScreen";
+import { VerifyScreen } from "./onboarding/VerifyScreen";
 import { StartScreen } from "./StartScreen";
 import { ForgotPasswordScreen } from "./onboarding/ForgotPasswordScreen";
 import { AgeScreen } from "./onboarding/AgeScreen";
@@ -26,7 +26,7 @@ export {
   LoginScreen,
   StartScreen,
   SignupScreen,
-  HomeScreen,
+  VerifyScreen,
   ForgotPasswordScreen,
   AgeScreen,
   FirstNameScreen,

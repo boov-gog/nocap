@@ -23,7 +23,7 @@ import {
   SchoolScreen,
   LocationPermissionScreen,
   GradeScreen,
-  HomeScreen,
+  VerifyScreen,
   MyCapScreen,
   ReplyScreen,
   SubscriptionScreen,
@@ -88,7 +88,7 @@ export const RootNavigator = () => {
           component={ForgotPasswordScreen}
         />
 
-        <Stack.Screen name={StackNav.Home} component={HomeScreen} />
+        <Stack.Screen name={StackNav.Verify} component={VerifyScreen} />
         <Stack.Screen name={StackNav.WaitingRoom} component={WaitingRoom} />
         <Stack.Screen name={StackNav.MyCaps} component={MyCapScreen} />
         <Stack.Screen

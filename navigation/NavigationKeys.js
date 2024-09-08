@@ -2,7 +2,7 @@ export const StackNav = {
   Login: "Login",
   Signup: "Signup",
   ForgotPassword: "ForgotPassword",
-  Home: "Home",
+  Verify: "Verify",
   Start: "Start",
   Age: "Age",
   FirstName: "FirstName",

@@ -11,7 +11,7 @@ import { showErrorToast, showSuccessToast } from "../../utils";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { signinUser } from "../../services/userService";
 
-export const HomeScreen = ({ navigation }) => {
+export const VerifyScreen = ({ navigation }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSigning, setIsSigning] = useState(false);
@@ -19,7 +19,7 @@ export const HomeScreen = ({ navigation }) => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
 
   const checkUser = async () => {
-    console.log("HomeScreen User:", user);
+    console.log("VerifyScreen User:", user);
 
     if (user) {
       setIsEmailVerified(user.emailVerified);
