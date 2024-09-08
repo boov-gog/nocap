@@ -1,7 +1,6 @@
 import {
   Dimensions,
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,8 @@ import {
 import React from "react";
 import { Colors, Images } from "../config";
 import Carousel from "../components/Carousel";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../components/TopBar";
 
 const deviceWidth = Dimensions.get("window").width;
 
@@ -19,6 +20,7 @@ const SubscriptionScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContentContainer}
@@ -59,16 +61,16 @@ const styles = StyleSheet.create({
   },
   starLogo: {
     position: "absolute",
-    top: 200,
+    top: 130,
     width: 152,
     height: 112,
   },
   proLetter: {
     position: "absolute",
-    top: 230,
+    top: 160,
   },
   logo: {
-    marginTop: 150,
+    marginTop: 80,
     width: deviceWidth * 0.7,
     height: deviceWidth * 0.7 * 0.3,
   },

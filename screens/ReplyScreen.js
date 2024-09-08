@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -11,6 +10,8 @@ import {
 import { Colors, Images } from "../config";
 import { TextInput } from "../components";
 import { FlatList } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
+import TopBar from "../components/TopBar";
 
 const ReplyScreen = ({ navigation }) => {
   const avatar = Images.girl;

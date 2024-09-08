@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { View, StyleSheet } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { View, StyleSheet, BackHandler } from "react-native";
 import { signOut } from "firebase/auth";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +8,7 @@ import { Logo } from "../components";
 import { Images, Colors, auth } from "../config";
 import NocapButton from "../components/NocapButton";
 import { StackNav } from "../navigation/NavigationKeys";
+import TopBar from "../components/TopBar";
 
 export const ProfileScreen = ({ navigation }) => {
   const { setUser } = useContext(AuthenticatedUserContext);
@@ -28,6 +29,7 @@ export const ProfileScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TopBar />
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
         <NocapButton title={"Sign Out"} onPress={handleLogout} />

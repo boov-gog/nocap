@@ -40,4 +40,5 @@ export const Images = {
   highSchool: require("../assets/images/high-school-logo.png"),
   userIcon: require("../assets/images/user.png"),
   backIcon: require("../assets/images/back.png"),
+  custombackIcon: require("../assets/images/custom_back.png"),
 };

@@ -4,7 +4,7 @@ import { Colors, Images } from "../config";
 import { useNavigation } from "@react-navigation/native";
 import { StackNav } from "../navigation/NavigationKeys";
 
-const TopBar = ({ style, profileShow = false, handlePressBack }) => {
+const TopBar = ({ style, textStyle, profileShow = false, handlePressBack }) => {
   const navigation = useNavigation();
 
   return (
@@ -13,10 +13,10 @@ const TopBar = ({ style, profileShow = false, handlePressBack }) => {
         onPress={() => {
           handlePressBack ? handlePressBack() : navigation.goBack();
         }}
-        style={{ flexDirection: "row", alignItems: "center" }}
+        style={{ flexDirection: "row", alignItems: "center", left: 30 }}
       >
-        <Image style={{ width: 36, height: 36 }} source={Images.backIcon} />
-        <Text style={styles.text}>Back</Text>
+        {/* <Image style={{ width: 36, height: 36 }} source={Images.backIcon} /> */}
+        <Text style={[styles.text, textStyle]}>Back</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.navigate(StackNav.Profile)}>
@@ -38,13 +38,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 2,
     paddingVertical: 2,
-    borderBottomColor: Colors.mainBlue,
-    borderBottomWidth: 1,
   },
   text: {
     fontFamily: "Kanit-Regular",
     fontWeight: "600",
     fontSize: 24,
-    color: Colors.mainBlue,
+    color: Colors.white,
   },
 });
