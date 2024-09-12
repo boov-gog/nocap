@@ -1,21 +1,47 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Colors, Images } from "../config";
 import { TextInput } from "../components";
 import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TopBar from "../components/TopBar";
+import { useRoute } from "@react-navigation/native";
+import { GENDER_TYPE } from "../utils";
 
 const ReplyScreen = ({ navigation }) => {
-  const avatar = Images.girl;
-  const nameGrade = "From a girl in the XXXth grade.";
+  const { cap } = useRoute().params;
+
+  const gamer = cap?.userGamer;
+  const gender = gamer?.gender;
+
+  let title =
+    gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName;
+
+  if (cap?.isUnlocked == false) {
+    title =
+      gender == GENDER_TYPE.Boy
+        ? "From a Boy"
+        : gender == GENDER_TYPE.Girl
+        ? "From a Girl"
+        : "From Someone";
+  }
+
+  title = `${title} in the ${gamer?.grade} grade.`;
+
+  const gamerAvatar =
+    gender == GENDER_TYPE.Boy
+      ? Images.boy
+      : gender == GENDER_TYPE.Girl
+      ? Images.girl
+      : Images.nonBinary;
+
+  const mainBackColor =
+    gender == GENDER_TYPE.Boy
+      ? Colors.mainBlue
+      : gender == GENDER_TYPE.Girl
+      ? Colors.mainPink
+      : gender == GENDER_TYPE.NonBinary
+      ? Colors.mainGreen
+      : Colors.blackBlue;
 
   const predefinedReplies = [
     "Back at ya <3",
@@ -47,14 +73,17 @@ const ReplyScreen = ({ navigation }) => {
   const handleSend = () => {};
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: mainBackColor }]}
+    >
       <View style={styles.mainContainer}>
         <Text style={styles.title}>Reply To</Text>
         <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
-          Question Text (Can be up to 3 lines, centered)
+          {cap?.question?.value}
         </Text>
-        <Image style={styles.avatar} source={avatar} />
-        <Text style={styles.nameGrade}>{nameGrade}</Text>
+        <Image style={styles.avatar} source={gamerAvatar} />
+        <Text style={styles.nameGrade}>{title}</Text>
+
         <View style={styles.answerListContainer}>
           <View style={{ paddingHorizontal: 10 }}>
             <TextInput
@@ -95,12 +124,9 @@ const ReplyScreen = ({ navigation }) => {
 
 export default ReplyScreen;
 
-const deviceHeight = Dimensions.get("window").height;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.mainPink,
   },
   mainContainer: {
     flex: 1,
@@ -111,22 +137,22 @@ const styles = StyleSheet.create({
     fontSize: 24,
     paddingHorizontal: 71,
     paddingVertical: 10,
-    marginTop: deviceHeight * 0.1,
+    marginTop: 30,
   },
   question: {
     marginTop: 5,
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 20,
     textAlign: "center",
   },
   avatar: {
-    width: 60,
-    height: 60,
+    width: 80,
+    height: 80,
     marginTop: 30,
   },
   nameGrade: {
     fontWeight: "700",
-    fontSize: 14,
+    fontSize: 16,
     paddingHorizontal: 50,
     paddingVertical: 10,
     textAlign: "center",
