@@ -237,13 +237,12 @@ const styles = StyleSheet.create({
   },
   headerRight: {
     backgroundColor: "white",
-    padding: 5,
+    padding: 15,
     borderRadius: 100,
   },
   avatar: {
     width: 80,
     height: 80,
-    borderRadius: 50,
   },
   title: {
     marginTop: 68,

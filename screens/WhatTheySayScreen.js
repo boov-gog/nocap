@@ -49,7 +49,7 @@ const WhatTheySayScreen = ({ navigation }) => {
   };
 
   const handleReply = () => {
-    navigation.navigate(StackNav.ReplyTo);
+    navigation.navigate(StackNav.ReplyTo, { cap });
   };
 
   const handleSeeWhoSaid = () => {
