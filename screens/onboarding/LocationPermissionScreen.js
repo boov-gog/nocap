@@ -22,9 +22,9 @@ export const LocationPermissionScreen = (props) => {
       } else {
         let location = await Location.getCurrentPositionAsync({});
 
-        showSuccessToast(
-          `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
-        );
+        // showSuccessToast(
+        //   `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
+        // );
 
         props.navigation.navigate(StackNav.School, {
           location: location.coords,
