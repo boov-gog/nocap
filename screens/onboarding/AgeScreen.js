@@ -35,25 +35,25 @@ export const AgeScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
-      >
-        <Logo uri={Images.logo} />
-        <View style={styles.mainContainer}>
-          <Text style={styles.titleStyle}>Enter Your Age</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Age..."
-            placeholderTextColor={Colors.gray}
-            keyboardType="decimal-pad"
-            value={age}
-            onChangeText={handleAgeChange}
-            maxLength={3}
-          />
-          <NocapButton title="Next" onPress={handleNext} />
-        </View>
-      </KeyboardAwareScrollView>
+      > */}
+      <Logo uri={Images.logo} />
+      <View style={styles.mainContainer}>
+        <Text style={styles.titleStyle}>Enter Your Age</Text>
+        <TextInput
+          style={styles.inputStyle}
+          placeholder="Age..."
+          placeholderTextColor={Colors.gray}
+          keyboardType="decimal-pad"
+          value={age}
+          onChangeText={handleAgeChange}
+          maxLength={3}
+        />
+        <NocapButton title="Next" onPress={handleNext} />
+      </View>
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };

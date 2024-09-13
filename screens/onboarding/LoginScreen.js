@@ -50,104 +50,104 @@ export const LoginScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.scrollContainer}
-      >
-        {/* LogoContainer: consist app logo and screen title */}
-        <Logo uri={Images.logo} />
-        {isSigning ? (
-          <LoadingIndicator />
-        ) : (
-          <>
-            <Formik
-              initialValues={{
-                email: "",
-                password: "",
-              }}
-              validationSchema={loginValidationSchema}
-              onSubmit={(values) => handleLogin(values)}
-            >
-              {({
-                values,
-                touched,
-                errors,
-                handleChange,
-                handleSubmit,
-                handleBlur,
-              }) => (
-                <View style={styles.formContainer}>
-                  {/* Input fields */}
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      name="email"
-                      leftIconName="email"
-                      placeholder="Enter email"
-                      autoCapitalize="none"
-                      keyboardType="email-address"
-                      textContentType="emailAddress"
-                      autoFocus={true}
-                      value={values.email}
-                      onChangeText={handleChange("email")}
-                      onBlur={handleBlur("email")}
-                    />
-                    <FormErrorMessage
-                      error={errors.email}
-                      visible={touched.email}
-                    />
-                    <TextInput
-                      name="password"
-                      leftIconName="key-variant"
-                      placeholder="Enter password"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      secureTextEntry={passwordVisibility}
-                      textContentType="password"
-                      rightIcon={rightIcon}
-                      handlePasswordVisibility={handlePasswordVisibility}
-                      value={values.password}
-                      onChangeText={handleChange("password")}
-                      onBlur={handleBlur("password")}
-                    />
-                    <FormErrorMessage
-                      error={errors.password}
-                      visible={touched.password}
-                    />
-                    {/* Display Screen Error Messages */}
-                    {errorState !== "" ? (
-                      <FormErrorMessage error={errorState} visible={true} />
-                    ) : null}
-                  </View>
-
-                  {/* Login button */}
-                  <View style={{ paddingTop: 20 }} />
-                  <NocapButton title="Log In" onPress={handleSubmit} />
+      > */}
+      {/* LogoContainer: consist app logo and screen title */}
+      <Logo uri={Images.logo} />
+      {isSigning ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          <Formik
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            validationSchema={loginValidationSchema}
+            onSubmit={(values) => handleLogin(values)}
+          >
+            {({
+              values,
+              touched,
+              errors,
+              handleChange,
+              handleSubmit,
+              handleBlur,
+            }) => (
+              <View style={styles.formContainer}>
+                {/* Input fields */}
+                <View style={styles.inputContainer}>
+                  <TextInput
+                    name="email"
+                    leftIconName="email"
+                    placeholder="Enter email"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    textContentType="emailAddress"
+                    autoFocus={true}
+                    value={values.email}
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur("email")}
+                  />
+                  <FormErrorMessage
+                    error={errors.email}
+                    visible={touched.email}
+                  />
+                  <TextInput
+                    name="password"
+                    leftIconName="key-variant"
+                    placeholder="Enter password"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    secureTextEntry={passwordVisibility}
+                    textContentType="password"
+                    rightIcon={rightIcon}
+                    handlePasswordVisibility={handlePasswordVisibility}
+                    value={values.password}
+                    onChangeText={handleChange("password")}
+                    onBlur={handleBlur("password")}
+                  />
+                  <FormErrorMessage
+                    error={errors.password}
+                    visible={touched.password}
+                  />
+                  {/* Display Screen Error Messages */}
+                  {errorState !== "" ? (
+                    <FormErrorMessage error={errorState} visible={true} />
+                  ) : null}
                 </View>
-              )}
-            </Formik>
-            {/* Button to navigate to SignupScreen to create a new account */}
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View style={{ width: 220 }}>
-                <NocapButton
-                  title={"Create Account"}
-                  onPress={() => navigation.navigate(StackNav.Signup)}
-                  titleStyle={{ fontSize: 16 }}
-                  containerWidth={220}
-                />
+
+                {/* Login button */}
+                <View style={{ paddingTop: 20 }} />
+                <NocapButton title="Log In" onPress={handleSubmit} />
               </View>
-              <View style={{ width: 220 }}>
-                <NocapButton
-                  title={"Forgot Password?"}
-                  onPress={() => navigation.navigate(StackNav.ForgotPassword)}
-                  titleStyle={{ fontSize: 16 }}
-                  containerWidth={220}
-                />
-              </View>
+            )}
+          </Formik>
+          {/* Button to navigate to SignupScreen to create a new account */}
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ width: 220 }}>
+              <NocapButton
+                title={"Create Account"}
+                onPress={() => navigation.navigate(StackNav.Signup)}
+                titleStyle={{ fontSize: 16 }}
+                containerWidth={220}
+              />
             </View>
-          </>
-        )}
-      </KeyboardAwareScrollView>
+            <View style={{ width: 220 }}>
+              <NocapButton
+                title={"Forgot Password?"}
+                onPress={() => navigation.navigate(StackNav.ForgotPassword)}
+                titleStyle={{ fontSize: 16 }}
+                containerWidth={220}
+              />
+            </View>
+          </View>
+        </>
+      )}
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };

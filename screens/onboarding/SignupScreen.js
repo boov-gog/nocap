@@ -43,82 +43,79 @@ export const SignupScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={styles.scrollContainer}
+      > */}
+      {/* LogoContainer: consist app logo and screen title */}
+      <Logo uri={Images.logo} />
+
+      {/* Formik Wrapper */}
+      <Formik
+        initialValues={{
+          email: "",
+        }}
+        validationSchema={emailValidationSchema}
+        onSubmit={(values) => handleSignup(values)}
       >
-        {/* LogoContainer: consist app logo and screen title */}
-        <Logo uri={Images.logo} />
-
-        {/* Formik Wrapper */}
-        <Formik
-          initialValues={{
-            email: "",
-          }}
-          validationSchema={emailValidationSchema}
-          onSubmit={(values) => handleSignup(values)}
-        >
-          {({
-            values,
-            touched,
-            errors,
-            handleChange,
-            handleSubmit,
-            handleBlur,
-          }) => (
-            <View style={styles.formContainer}>
-              {/* Input fields */}
-              <View style={styles.inputContainer}>
-                <TextInput
-                  name="email"
-                  leftIconName="email"
-                  placeholder="Enter email"
-                  autoCapitalize="none"
-                  keyboardType="email-address"
-                  textContentType="emailAddress"
-                  autoFocus={true}
-                  value={values.email}
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur("email")}
+        {({
+          values,
+          touched,
+          errors,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+        }) => (
+          <View style={styles.formContainer}>
+            {/* Input fields */}
+            <View style={styles.inputContainer}>
+              <TextInput
+                name="email"
+                leftIconName="email"
+                placeholder="Enter email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoFocus={true}
+                value={values.email}
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+              />
+              <View style={styles.checkContainer}>
+                <CheckBox
+                  checked={checked}
+                  onPress={handleChecked}
+                  style={styles.checkBox}
                 />
-                <View style={styles.checkContainer}>
-                  <CheckBox
-                    checked={checked}
-                    onPress={handleChecked}
-                    style={styles.checkBox}
-                  />
-                  <Text style={styles.checkText}>
-                    You agree to our privacy policy
-                  </Text>
-                </View>
-                <FormErrorMessage
-                  error={errors.email}
-                  visible={touched.email}
-                />
-                {/* Display Screen Error Messages */}
-                {errorState !== "" ? (
-                  <FormErrorMessage error={errorState} visible={true} />
-                ) : null}
+                <Text style={styles.checkText}>
+                  You agree to our privacy policy
+                </Text>
               </View>
-
-              {/* Signup button */}
-              <NocapButton title={"Create Account"} onPress={handleSubmit} />
+              <FormErrorMessage error={errors.email} visible={touched.email} />
+              {/* Display Screen Error Messages */}
+              {errorState !== "" ? (
+                <FormErrorMessage error={errorState} visible={true} />
+              ) : null}
             </View>
-          )}
-        </Formik>
-        {/* Button to navigate to Login screen */}
-        <View style={{ alignItems: "center" }}>
-          <View style={{ width: 220 }}>
-            <NocapButton
-              title={"Log In"}
-              titleStyle={{ fontSize: 16 }}
-              onPress={() => navigation.navigate(StackNav.Login)}
-              containerWidth={220}
-            />
+
+            {/* Signup button */}
+            <NocapButton title={"Create Account"} onPress={handleSubmit} />
           </View>
+        )}
+      </Formik>
+      {/* Button to navigate to Login screen */}
+      <View style={{ alignItems: "center" }}>
+        <View style={{ width: 220 }}>
+          <NocapButton
+            title={"Log In"}
+            titleStyle={{ fontSize: 16 }}
+            onPress={() => navigation.navigate(StackNav.Login)}
+            containerWidth={220}
+          />
         </View>
-      </KeyboardAwareScrollView>
+      </View>
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };
@@ -141,7 +138,7 @@ const styles = StyleSheet.create({
   checkContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingRight: 64
+    paddingRight: 64,
   },
   checkBox: { backgroundColor: "red" },
   checkText: {

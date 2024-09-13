@@ -30,23 +30,23 @@ export const LastNameScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
-      >
-        <Logo uri={Images.logo} />
-        <View style={styles.mainContainer}>
-          <Text style={styles.titleStyle}>Enter Your Last Name</Text>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Last Name..."
-            placeholderTextColor={Colors.gray}
-            value={lName}
-            onChangeText={setLName}
-          />
-          <NocapButton title="Next" onPress={handleNext} />
-        </View>
-      </KeyboardAwareScrollView>
+      > */}
+      <Logo uri={Images.logo} />
+      <View style={styles.mainContainer}>
+        <Text style={styles.titleStyle}>Enter Your Last Name</Text>
+        <TextInput
+          style={styles.inputStyle}
+          placeholder="Last Name..."
+          placeholderTextColor={Colors.gray}
+          value={lName}
+          onChangeText={setLName}
+        />
+        <NocapButton title="Next" onPress={handleNext} />
+      </View>
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };

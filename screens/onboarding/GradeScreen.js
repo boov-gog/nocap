@@ -37,30 +37,30 @@ export const GradeScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView>
-        <Logo uri={Images.logo} />
-        <View style={styles.mainContainer}>
-          <Text style={styles.titleStyle}>Choose Your Grade</Text>
-          {arr.map((value) => (
-            <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
-              <NocapButton
-                key={value}
-                title={value}
-                onPress={() => {
-                  handleNext(value);
-                }}
-              />
-            </View>
-          ))}
+      {/* <KeyboardAwareScrollView> */}
+      <Logo uri={Images.logo} />
+      <View style={styles.mainContainer}>
+        <Text style={styles.titleStyle}>Choose Your Grade</Text>
+        {arr.map((value) => (
+          <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
+            <NocapButton
+              key={value}
+              title={value}
+              onPress={() => {
+                handleNext(value);
+              }}
+            />
+          </View>
+        ))}
 
-          <View style={{ height: 20 }} />
-          <NocapButton
-            title={Grades._Not}
-            onPress={() => handleNext(Grades._Not)}
-            titleStyle={{ fontSize: 24 }}
-          />
-        </View>
-      </KeyboardAwareScrollView>
+        <View style={{ height: 20 }} />
+        <NocapButton
+          title={Grades._Not}
+          onPress={() => handleNext(Grades._Not)}
+          titleStyle={{ fontSize: 24 }}
+        />
+      </View>
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };

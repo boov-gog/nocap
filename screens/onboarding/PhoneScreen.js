@@ -55,30 +55,30 @@ export const PhoneScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <KeyboardAwareScrollView
+      {/* <KeyboardAwareScrollView
         enableOnAndroid={true}
         keyboardShouldPersistTaps="handled"
-      >
-        <Logo uri={Images.logo} />
-        <View style={styles.mainContainer}>
-          <Text style={styles.titleStyle}>Enter Your Phone Number</Text>
-          <TextInput
-            style={[styles.inputStyle, !isValid && styles.invalidInput]}
-            placeholder="Phone Number..."
-            placeholderTextColor={Colors.gray}
-            keyboardType="phone-pad"
-            value={phoneNumber}
-            onChangeText={handlePhoneChange}
-            maxLength={12}
-          />
-          {!isValid && phoneNumber.length > 0 && (
-            <Text style={styles.errorText}>
-              Please enter a valid phone number
-            </Text>
-          )}
-          <NocapButton title="Next" onPress={handleNext} />
-        </View>
-      </KeyboardAwareScrollView>
+      > */}
+      <Logo uri={Images.logo} />
+      <View style={styles.mainContainer}>
+        <Text style={styles.titleStyle}>Enter Your Phone Number</Text>
+        <TextInput
+          style={[styles.inputStyle, !isValid && styles.invalidInput]}
+          placeholder="Phone Number..."
+          placeholderTextColor={Colors.gray}
+          keyboardType="phone-pad"
+          value={phoneNumber}
+          onChangeText={handlePhoneChange}
+          maxLength={12}
+        />
+        {!isValid && phoneNumber.length > 0 && (
+          <Text style={styles.errorText}>
+            Please enter a valid phone number
+          </Text>
+        )}
+        <NocapButton title="Next" onPress={handleNext} />
+      </View>
+      {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
   );
 };
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Bold",
     fontSize: 36,
     color: Colors.white,
-    textAlign: "center"
+    textAlign: "center",
   },
   inputStyle: {
     marginTop: 33,
