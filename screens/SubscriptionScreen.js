@@ -75,13 +75,13 @@ const styles = StyleSheet.create({
     height: deviceWidth * 0.7 * 0.3,
   },
   price: {
-    marginTop: 5,
+    marginTop: 15,
     color: "white",
-    fontSize: 14,
+    fontSize: 24,
   },
   buttonContainer: {
     position: "relative",
-    marginTop: 72,
+    marginTop: 60,
     width: 350,
     height: 175,
     justifyContent: "center",

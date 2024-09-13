@@ -3,12 +3,17 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Colors, Images } from "../config";
 import { TextInput } from "../components";
 import { FlatList } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
 import { GENDER_TYPE } from "../utils";
 
 const ReplyScreen = ({ navigation }) => {
   const { cap } = useRoute().params;
+
+  const bottomInset = useSafeAreaInsets().bottom;
 
   const gamer = cap?.userGamer;
   const gender = gamer?.gender;
@@ -73,10 +78,8 @@ const ReplyScreen = ({ navigation }) => {
   const handleSend = () => {};
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: mainBackColor }]}
-    >
-      <View style={styles.mainContainer}>
+    <View style={[styles.container, { backgroundColor: mainBackColor }]}>
+      <SafeAreaView style={styles.mainContainer}>
         <Text style={styles.title}>Reply To</Text>
         <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
           {cap?.question?.value}
@@ -102,9 +105,12 @@ const ReplyScreen = ({ navigation }) => {
             contentContainerStyle={styles.answerListContent}
           />
         </View>
-        <View style={styles.bottomBar}>
+        <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
           <TouchableOpacity onPress={handleBack}>
-            <Text style={styles.bottomLeft}>Back</Text>
+            <Image
+              style={styles.bottomLeft}
+              source={Images.custombackIcon}
+            ></Image>
           </TouchableOpacity>
           <TouchableOpacity>
             <Image
@@ -114,11 +120,13 @@ const ReplyScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.sendBtn}>
+        <TouchableOpacity
+          style={[styles.sendBtn, { bottom: 60 + bottomInset }]}
+        >
           <Text style={styles.sendBtnTxt}>SEND</Text>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </View>
   );
 };
 
@@ -127,6 +135,7 @@ export default ReplyScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
   },
   mainContainer: {
     flex: 1,
@@ -170,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   answerListContent: {
-    paddingBottom: 16,
+    paddingBottom: 56,
   },
   oneReplyItem: {
     borderRadius: 10,
@@ -199,7 +208,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   bottomLeft: {
-    fontSize: 24,
+    width: 36,
+    height: 26,
   },
   bottomRight: {
     width: 20,
@@ -207,7 +217,6 @@ const styles = StyleSheet.create({
   },
   sendBtn: {
     position: "absolute",
-    bottom: 60,
     backgroundColor: "black",
     borderRadius: 50,
     width: "80%",

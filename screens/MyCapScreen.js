@@ -15,7 +15,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { StackNav } from "../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../providers";
 import { getRestCaps, getRestFollowings } from "../services/capService";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const MyCapScreen = ({ navigation }) => {
   const [followers, setFollowers] = useState(0);
@@ -25,6 +28,7 @@ const MyCapScreen = ({ navigation }) => {
   const [listRefreshing, setListRefreshing] = useState(false);
 
   const { user } = useContext(AuthenticatedUserContext);
+  const bottomInset = useSafeAreaInsets().bottom;
 
   const capListItem = ({ item }) => {
     let title =
@@ -174,20 +178,23 @@ const MyCapScreen = ({ navigation }) => {
       <LinearGradient
         // Background Linear Gradient
         colors={["transparent", "rgb(255,255,255)"]}
-        style={styles.blurViewOverlay}
+        style={[styles.blurViewOverlay, { bottom: bottomInset }]}
       />
-      <View style={styles.bottomBar}>
+      <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
         <TouchableOpacity onPress={handleProfile}>
           <Image style={styles.bottomRight} source={Images.userPerson}></Image>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleBack}>
-          <Text style={styles.bottomMiddle}>Back</Text>
+          <Image
+            style={styles.bottomMiddle}
+            source={Images.custombackIcon}
+          ></Image>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSearchFriend}>
           <Icon name={"magnify"} size={30} />
         </TouchableOpacity>
       </View>
-      <View style={styles.whoButtonContainer}>
+      <View style={[styles.whoButtonContainer, { bottom: 70 + bottomInset }]}>
         <TouchableOpacity style={styles.whoButton}>
           <Image style={styles.lockImage} source={Images.lockerWhite} />
           <Text style={styles.whoBtnText}>See who said this</Text>
@@ -204,6 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: Colors.blackBlue,
+    position: "relative",
   },
   mainContainer: {
     flex: 1,
@@ -280,7 +288,6 @@ const styles = StyleSheet.create({
   },
   blurViewOverlay: {
     position: "absolute",
-    bottom: 0,
     width: "100%",
     height: 100,
   },
@@ -293,16 +300,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     paddingHorizontal: 30,
-    paddingVertical: 6,
+    paddingTop: 6,
   },
   bottomMiddle: {
-    fontFamily: "MPR-Bold",
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderRadius: 100,
-    fontSize: 24,
-    backgroundColor: "#EDEDED",
+    width: 36,
+    height: 26,
   },
   bottomRight: {
     width: 20,
@@ -310,7 +312,6 @@ const styles = StyleSheet.create({
   },
   whoButtonContainer: {
     position: "absolute",
-    bottom: 70,
     width: "100%",
     alignItems: "center",
   },

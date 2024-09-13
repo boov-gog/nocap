@@ -14,7 +14,10 @@ import { formatDate, GENDER_TYPE, showErrorToast } from "../utils";
 import { LinearGradient } from "expo-linear-gradient";
 import { StackNav } from "../navigation/NavigationKeys";
 import { getCapsOfFriend, getRestFollowings } from "../services/capService";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { getUserById } from "../services/userService";
 import { useRoute } from "@react-navigation/native";
 
@@ -27,6 +30,8 @@ const CapOfFriend = ({ navigation }) => {
   const [listRefreshing, setListRefreshing] = useState(false);
 
   const friendId = useRoute().params.id;
+
+  const bottomInset = useSafeAreaInsets().bottom;
 
   const capListItem = ({ item }) => {
     let title =
@@ -188,11 +193,14 @@ const CapOfFriend = ({ navigation }) => {
       <LinearGradient
         // Background Linear Gradient
         colors={["transparent", "rgb(255,255,255)"]}
-        style={styles.blurViewOverlay}
+        style={[styles.blurViewOverlay, { bottom: bottomInset }]}
       />
-      <View style={styles.bottomBar}>
+      <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
         <TouchableOpacity onPress={handleBack}>
-          <Text style={styles.bottomMiddle}>Back</Text>
+          <Image
+            style={styles.bottomMiddle}
+            source={Images.custombackIcon}
+          ></Image>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -206,6 +214,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: Colors.blackBlue,
+    position: "relative",
   },
   mainContainer: {
     flex: 1,
@@ -283,9 +292,8 @@ const styles = StyleSheet.create({
   },
   blurViewOverlay: {
     position: "absolute",
-    bottom: 0,
     width: "100%",
-    height: 100,
+    height: 60,
   },
   bottomBar: {
     position: "absolute",
@@ -298,13 +306,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   bottomMiddle: {
-    fontFamily: "MPR-Bold",
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderRadius: 100,
-    fontSize: 24,
-    backgroundColor: "#EDEDED",
+    width: 36,
+    height: 26,
   },
   whoButtonContainer: {
     position: "absolute",

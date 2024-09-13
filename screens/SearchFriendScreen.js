@@ -7,7 +7,10 @@ import {
   View,
 } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 import { TextInput } from "../components";
 import { Colors, Images } from "../config";
 import { StackNav } from "../navigation/NavigationKeys";
@@ -26,6 +29,8 @@ let friendsMap = null;
 export const SearchFriendScreen = (props) => {
   const [friends, setFriends] = useState([]);
   const [query, setQuery] = useState("");
+
+  const bottomInset = useSafeAreaInsets().bottom;
 
   const handleSearch = async (query) => {
     console.log("Searching friends for: ", query);
@@ -143,7 +148,7 @@ export const SearchFriendScreen = (props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TopBar />
+      {/* <TopBar /> */}
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>Search for friends</Text>
 
@@ -161,13 +166,16 @@ export const SearchFriendScreen = (props) => {
             renderItem={renderItem}
             keyExtractor={(item) => item.id}
             style={styles.flatList}
-            contentContainerStyle={{ paddingBottom: 150 }}
+            contentContainerStyle={{ paddingBottom: 100 }}
           />
         </View>
       </View>
-      <View style={styles.bottomBar}>
+      <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
         <TouchableOpacity onPress={handleBack}>
-          <Text style={styles.bottomMiddle}>Back</Text>
+          <Image
+            style={styles.bottomMiddle}
+            source={Images.custombackIcon}
+          ></Image>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -235,15 +243,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     paddingHorizontal: 30,
-    paddingVertical: 6,
+    paddingTop: 6,
   },
   bottomMiddle: {
-    fontFamily: "MPR-Bold",
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    borderWidth: 1,
-    borderRadius: 100,
-    fontSize: 24,
-    backgroundColor: "#EDEDED",
+    width: 36,
+    height: 26,
   },
 });
