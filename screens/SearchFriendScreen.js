@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import lunr from "lunr";
 
-lunr.tokenizer.minLength = 1;
+lunr.tokenizer.minLength = 2;
 
 let lunrIdx = null;
 let friendsMap = null;
@@ -35,10 +35,6 @@ export const SearchFriendScreen = (props) => {
   const handleSearch = async (query) => {
     console.log("Searching friends for: ", query);
     const searchQuery = `*${query.toLowerCase()}*`;
-
-    if (lunrIdx === null) {
-      await initLunrIndex();
-    }
 
     const searchResults = lunrIdx.search(searchQuery).slice(0, 1000);
     const topResults = searchResults
@@ -98,6 +94,10 @@ export const SearchFriendScreen = (props) => {
     lunrIdx = lunr(function () {
       this.ref("id");
       this.field("name");
+
+      // Ensure to use a pipeline suitable for stemming
+      this.pipeline.remove(lunr.stemmer);
+      this.pipeline.remove(lunr.stopWordFilter);
 
       // Add each school to the index
       friendsMap.forEach((friend) => {

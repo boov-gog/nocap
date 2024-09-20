@@ -13,11 +13,17 @@ import { LoadingIndicator, Logo, TextInput } from "../../components";
 import { Colors, Images } from "../../config";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { distanceInMiles, showErrorToast } from "../../utils";
-import { fetchSchools, searchSchools } from "../../services/schoolService";
+import { fetchSchools } from "../../services/schoolService";
 import { debounce } from "lodash";
 import TopBar from "../../components/TopBar";
 import { useRoute } from "@react-navigation/native";
 import { AuthenticatedUserContext } from "../../providers";
+import lunr from "lunr";
+
+lunr.tokenizer.minLength = 3;
+
+let lunrIdx = null;
+let schoolsMap = null;
 
 export const SchoolScreen = (props) => {
   const { setSchool } = useContext(AuthenticatedUserContext);
@@ -28,6 +34,34 @@ export const SchoolScreen = (props) => {
 
   let sortedAllSchools;
 
+  // Initialize lunr index
+  const initLunrIndex = async (_schools) => {
+    schoolsMap = new Map(
+      _schools.map((school) => [school.id.toString(), school])
+    );
+
+    if (!schoolsMap || schoolsMap.length === 0) {
+      return;
+    }
+
+    // Initialize lunr index synchronously
+    lunrIdx = lunr(function () {
+      this.ref("id");
+      this.field("title");
+
+      // Ensure to use a pipeline suitable for stemming
+      this.pipeline.remove(lunr.stemmer);
+      // this.pipeline.remove(lunr.stopWordFilter);
+
+      // Add each school to the index
+      schoolsMap.forEach((school) => {
+        this.add(school);
+      });
+    });
+
+    console.log("Lunr index initialized");
+  };
+
   const handleSearch = async (query) => {
     console.log("Searching for: ", query);
     //Implement search logic here
@@ -35,28 +69,35 @@ export const SchoolScreen = (props) => {
       setSortedSchools(sortedAllSchools);
       return;
     }
+    const searchQuery = `*${query.toLowerCase()}*`;
 
-    setLoading(true);
-    try {
-      const schools = await searchSchools(query);
-      const schoolsWithDistance = schools.map((school) => ({
-        ...school,
-        distance: distanceInMiles(
-          location.latitude,
-          location.longitude,
-          school.latitude,
-          school.longitude
-        ),
-      }));
+    const searchResults = lunrIdx.search(searchQuery).slice(0, 1000);
+    const results = searchResults.map((result) => schoolsMap.get(result.ref));
 
-      schoolsWithDistance.sort((a, b) =>
-        a.score != b.score ? b.score - a.score : a.distance - b.distance
-      );
-      setSortedSchools(schoolsWithDistance);
-    } catch (error) {
-      showErrorToast(error.body.message);
-    }
-    setLoading(false);
+    results.sort((a, b) => a.distance - b.distance);
+    setSortedSchools(results);
+
+    // setLoading(true);
+    // try {
+    //   const schools = await searchSchools(query);
+    //   const schoolsWithDistance = schools.map((school) => ({
+    //     ...school,
+    //     distance: distanceInMiles(
+    //       location.latitude,
+    //       location.longitude,
+    //       school.latitude,
+    //       school.longitude
+    //     ),
+    //   }));
+
+    //   schoolsWithDistance.sort((a, b) =>
+    //     a.score != b.score ? b.score - a.score : a.distance - b.distance
+    //   );
+    //   setSortedSchools(schoolsWithDistance);
+    // } catch (error) {
+    //   showErrorToast(error.body.message);
+    // }
+    // setLoading(false);
   };
 
   // Create a debounced version of handleSearch
@@ -96,6 +137,8 @@ export const SchoolScreen = (props) => {
         schoolsWithDistance.sort((a, b) => a.distance - b.distance);
         setSortedSchools(schoolsWithDistance);
         sortedAllSchools = schoolsWithDistance;
+
+        await initLunrIndex(schoolsWithDistance);
       } catch (error) {
         showErrorToast(error.body.message);
       }
