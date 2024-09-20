@@ -56,7 +56,10 @@ export const GradeScreen = (props) => {
         <View style={{ height: 20 }} />
         <NocapButton
           title={Grades._Not}
-          onPress={() => handleNext(Grades._Not)}
+          onPress={() =>
+            // handleNext(Grades._Not)
+            showErrorToast("This feature is not available yet.")
+          }
           titleStyle={{ fontSize: 24 }}
         />
       </View>

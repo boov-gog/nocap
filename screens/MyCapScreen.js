@@ -182,28 +182,38 @@ const MyCapScreen = ({ navigation }) => {
         ) : caps.length == 0 ? (
           <Text style={styles.title}>No Caps Yet</Text>
         ) : (
-          <FlatList
-            data={caps}
-            renderItem={capListItem}
-            keyExtractor={(item) => item.id}
-            style={styles.listStyle}
-            contentContainerStyle={{ paddingBottom: 150 }}
-            refreshControl={
-              <RefreshControl
-                refreshing={listRefreshing}
-                onRefresh={async () => {
-                  setListRefreshing(true);
-                  await getCaps();
-                  setListRefreshing(false);
+          <>
+            <FlatList
+              data={caps}
+              renderItem={capListItem}
+              keyExtractor={(item) => item.id}
+              style={styles.listStyle}
+              contentContainerStyle={{ paddingBottom: 150 }}
+              refreshControl={
+                <RefreshControl
+                  refreshing={listRefreshing}
+                  onRefresh={async () => {
+                    setListRefreshing(true);
+                    await getCaps();
+                    setListRefreshing(false);
 
-                  getFollowings();
-                }}
-                colors={[Colors.mainBlue]}
-                tintColor={Colors.mainBlue}
-                progressBackgroundColor={Colors.blackBlue}
-              />
-            }
-          />
+                    getFollowings();
+                  }}
+                  colors={[Colors.mainBlue]}
+                  tintColor={Colors.mainBlue}
+                  progressBackgroundColor={Colors.blackBlue}
+                />
+              }
+            />
+            <View
+              style={[styles.whoButtonContainer, { bottom: 70 + bottomInset }]}
+            >
+              <TouchableOpacity style={styles.whoButton}>
+                <Image style={styles.lockImage} source={Images.lockerWhite} />
+                <Text style={styles.whoBtnText}>See who said this</Text>
+              </TouchableOpacity>
+            </View>
+          </>
         )}
       </View>
 
@@ -224,12 +234,6 @@ const MyCapScreen = ({ navigation }) => {
             style={styles.bottomMiddle}
             source={Images.custombackIcon}
           ></Image>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.whoButtonContainer, { bottom: 70 + bottomInset }]}>
-        <TouchableOpacity style={styles.whoButton}>
-          <Image style={styles.lockImage} source={Images.lockerWhite} />
-          <Text style={styles.whoBtnText}>See who said this</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -343,6 +347,7 @@ const styles = StyleSheet.create({
     height: 26,
   },
   whoButtonContainer: {
+    zIndex: 1,
     position: "absolute",
     width: "100%",
     alignItems: "center",

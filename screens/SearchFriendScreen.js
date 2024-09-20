@@ -161,13 +161,19 @@ export const SearchFriendScreen = (props) => {
             value={query}
           />
 
-          <FlatList
-            data={friends}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            style={styles.flatList}
-            contentContainerStyle={{ paddingBottom: 100 }}
-          />
+          {friends.length === 0 ? (
+            <Text style={styles.noFriendsText}>
+              There are no friends at the same school.
+            </Text>
+          ) : (
+            <FlatList
+              data={friends}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={styles.flatList}
+              contentContainerStyle={{ paddingBottom: 100 }}
+            />
+          )}
         </View>
       </View>
       <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
@@ -205,6 +211,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "500",
     color: Colors.white,
+  },
+  noFriendsText: {
+    marginTop: 68,
+    fontFamily: "Kanit-Bold",
+    fontSize: 24,
+    color: "white",
   },
   listContainer: {
     flex: 1,

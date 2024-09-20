@@ -115,7 +115,7 @@ export const VerifyScreen = ({ navigation }) => {
           {!isEmailVerified && (
             <>
               <NocapButton
-                title="Verify your email"
+                title="Verify Your Email"
                 onPress={handleSendVerificationEmail}
               />
               <NocapButton title="Sign Out" onPress={handleSignOut} />
