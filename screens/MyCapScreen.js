@@ -80,7 +80,13 @@ const MyCapScreen = ({ navigation }) => {
           style={styles.oneItemImage}
           source={myImage}
         />
-        <Text style={styles.oneItemTitle}>{title}</Text>
+        <Text
+          style={styles.oneItemTitle}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {title}
+        </Text>
         <Text style={styles.oneItemDate}>{formatDate(item.createdAt)}</Text>
       </TouchableOpacity>
     );
@@ -304,7 +310,7 @@ const styles = StyleSheet.create({
   },
   oneItemTitle: {
     flex: 1,
-    marginLeft: 20,
+    marginHorizontal: 20,
     fontFamily: "Kanit-Bold",
     fontSize: 26,
   },
