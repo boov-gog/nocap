@@ -216,14 +216,14 @@ const MyCapScreen = ({ navigation }) => {
         <TouchableOpacity onPress={handleProfile}>
           <Image style={styles.bottomRight} source={Images.userPerson}></Image>
         </TouchableOpacity>
+        <TouchableOpacity onPress={handleSearchFriend}>
+          <Icon name={"magnify"} size={30} />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleBack}>
           <Image
             style={styles.bottomMiddle}
             source={Images.custombackIcon}
           ></Image>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleSearchFriend}>
-          <Icon name={"magnify"} size={30} />
         </TouchableOpacity>
       </View>
       <View style={[styles.whoButtonContainer, { bottom: 70 + bottomInset }]}>

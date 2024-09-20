@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-end",
     backgroundColor: "white",
     paddingHorizontal: 30,
     paddingTop: 6,

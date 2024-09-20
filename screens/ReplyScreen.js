@@ -204,16 +204,16 @@ const ReplyScreen = ({ navigation }) => {
           )}
         </View>
         <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
-          <TouchableOpacity onPress={handleBack}>
-            <Image
-              style={styles.bottomLeft}
-              source={Images.custombackIcon}
-            ></Image>
-          </TouchableOpacity>
           <TouchableOpacity>
             <Image
               style={styles.bottomRight}
               source={Images.userPerson}
+            ></Image>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleBack}>
+            <Image
+              style={styles.bottomLeft}
+              source={Images.custombackIcon}
             ></Image>
           </TouchableOpacity>
         </View>
@@ -312,9 +312,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "white",
-    paddingLeft: 15,
-    paddingRight: 34,
-    paddingVertical: 6,
+    paddingHorizontal: 30,
+    paddingTop: 6,
   },
   bottomLeft: {
     width: 36,
