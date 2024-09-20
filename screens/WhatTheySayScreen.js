@@ -23,6 +23,7 @@ const { width: deviceWidth } = Dimensions.get("window");
 const WhatTheySayScreen = ({ navigation }) => {
   const { id } = useRoute().params;
   const [isLoading, setIsLoading] = useState(false);
+  const [isToggling, setIsToggling] = useState(false);
   const [cap, setCap] = useState(null);
   const [toggleState, setToggleState] = useState(false);
 
@@ -59,7 +60,7 @@ const WhatTheySayScreen = ({ navigation }) => {
   };
 
   const handleToggle = async () => {
-    setIsLoading(true);
+    setIsToggling(true);
     try {
       await updateCapPublicity(id, !toggleState);
       setToggleState(!toggleState);
@@ -67,7 +68,7 @@ const WhatTheySayScreen = ({ navigation }) => {
       console.error(`Error update cap by id: ${id}`, error);
       showErrorToast("Error update cap. Please try again.");
     }
-    setIsLoading(false);
+    setIsToggling(false);
   };
 
   const gamer = cap?.userGamer;
@@ -113,14 +114,18 @@ const WhatTheySayScreen = ({ navigation }) => {
           contentContainerStyle={styles.scrollViewContainer}
         >
           <View style={styles.showToOthers}>
-            <ToggleSwitch
-              isOn={toggleState}
-              onColor="green"
-              label="Show to others"
-              labelStyle={{ fontFamily: "MPR-Bold", fontSize: 20 }}
-              size="large"
-              onToggle={handleToggle}
-            />
+            {isToggling ? (
+              <LoadingIndicator indicatorSize={40} />
+            ) : (
+              <ToggleSwitch
+                isOn={toggleState}
+                onColor="green"
+                label="Show to others"
+                labelStyle={{ fontFamily: "MPR-Bold", fontSize: 20 }}
+                size="large"
+                onToggle={handleToggle}
+              />
+            )}
           </View>
           <Logo
             uri={Images.logoNoback}

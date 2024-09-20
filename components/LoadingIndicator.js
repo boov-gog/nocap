@@ -4,10 +4,14 @@ import { StyleSheet } from "react-native";
 import { View } from "./View";
 import { BarIndicator } from "react-native-indicators";
 
-export const LoadingIndicator = ({ extraStyle }) => {
+export const LoadingIndicator = ({ extraStyle, indicatorSize }) => {
   return (
     <View style={[styles.container, extraStyle]}>
-      <BarIndicator color="#FF9922" size={50} count={6} />
+      <BarIndicator
+        color="#FF9922"
+        size={indicatorSize ? indicatorSize : 50}
+        count={6}
+      />
     </View>
   );
 };
