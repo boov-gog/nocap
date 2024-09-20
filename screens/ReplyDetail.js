@@ -14,24 +14,22 @@ import { Colors, Images } from "../config";
 import AnswerButton from "../components/AnswerButton";
 import { StackNav } from "../navigation/NavigationKeys";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getRestCap, updateCapPublicity } from "../services/capService";
+import { getRestCap } from "../services/capService";
 import { GENDER_TYPE, showErrorToast } from "../utils";
-import ToggleSwitch from "toggle-switch-react-native";
 
 const { width: deviceWidth } = Dimensions.get("window");
 
-const WhatTheySayScreen = ({ navigation }) => {
+const ReplyDetail = ({ navigation }) => {
   const { id } = useRoute().params;
   const [isLoading, setIsLoading] = useState(false);
   const [cap, setCap] = useState(null);
-  const [toggleState, setToggleState] = useState(false);
 
   const init = async () => {
     setIsLoading(true);
     try {
       const cap = await getRestCap(id);
+      console.log("ReplyDetail cap", cap);
       setCap(cap);
-      setToggleState(cap?.showToOthers);
     } catch (error) {
       console.error(`Error getting cap by id: ${id}`, error);
       showErrorToast("Error getting cap. Please try again.");
@@ -58,32 +56,11 @@ const WhatTheySayScreen = ({ navigation }) => {
     navigation.navigate(StackNav.Subscription);
   };
 
-  const handleToggle = async () => {
-    setIsLoading(true);
-    try {
-      await updateCapPublicity(id, !toggleState);
-      setToggleState(!toggleState);
-    } catch (error) {
-      console.error(`Error update cap by id: ${id}`, error);
-      showErrorToast("Error update cap. Please try again.");
-    }
-    setIsLoading(false);
-  };
-
-  const gamer = cap?.userGamer;
+  const gamer = cap?.userAnswer;
   const gender = gamer?.gender;
 
   let title =
     gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName;
-
-  if (cap?.isUnlocked == false) {
-    title =
-      gender == GENDER_TYPE.Boy
-        ? "From a Boy"
-        : gender == GENDER_TYPE.Girl
-        ? "From a Girl"
-        : "From Someone";
-  }
 
   const gamerAvatar =
     gender == GENDER_TYPE.Boy
@@ -112,16 +89,6 @@ const WhatTheySayScreen = ({ navigation }) => {
           style={styles.scrollViewer}
           contentContainerStyle={styles.scrollViewContainer}
         >
-          <View style={styles.showToOthers}>
-            <ToggleSwitch
-              isOn={toggleState}
-              onColor="green"
-              label="Show to others"
-              labelStyle={{ fontFamily: "MPR-Bold", fontSize: 20 }}
-              size="large"
-              onToggle={handleToggle}
-            />
-          </View>
           <Logo
             uri={Images.logoNoback}
             style={Dimensions.get("window").width <= 360 ? { height: 0 } : null}
@@ -130,15 +97,17 @@ const WhatTheySayScreen = ({ navigation }) => {
           <Text style={styles.description}>
             {title} in the {gamer?.grade} grade.
           </Text>
-          <TouchableOpacity
-            style={styles.whoSayButton}
-            onPress={handleSeeWhoSaid}
-          >
-            <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-            <Text style={styles.btnText}>See who said this</Text>
-          </TouchableOpacity>
-          <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
-            {cap?.question?.value}
+          <View style={styles.replyTextContainer}>
+            <Text
+              style={styles.replyText}
+              ellipsizeMode="tail"
+              numberOfLines={3}
+            >
+              {cap?.replySentence?.content}
+            </Text>
+          </View>
+          <Text style={styles.question} numberOfLines={4} ellipsizeMode="tail">
+            {"You said\n" + cap?.question?.value}
           </Text>
           <View style={styles.answersContainer}>
             <View style={styles.answerRow}>
@@ -163,21 +132,6 @@ const WhatTheySayScreen = ({ navigation }) => {
             </View>
           </View>
 
-          {cap?.reply == null ? (
-            <TouchableOpacity style={styles.replyBtn} onPress={handleReply}>
-              <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-              <Text style={styles.replyBtnText}>Reply</Text>
-            </TouchableOpacity>
-          ) : (
-            <Text
-              style={styles.replyText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {"You replied : " + cap?.replySentence?.content}
-            </Text>
-          )}
-
           <TouchableOpacity style={styles.shareBtn}>
             <Text style={styles.shareBtnTxt}>Share</Text>
             <Image style={styles.shareBtnImage} source={Images.instagram} />
@@ -198,7 +152,7 @@ const WhatTheySayScreen = ({ navigation }) => {
   );
 };
 
-export default WhatTheySayScreen;
+export default ReplyDetail;
 
 const styles = StyleSheet.create({
   container: {
@@ -232,23 +186,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     padding: 10,
   },
-  whoSayButton: {
-    backgroundColor: "white",
-    borderWidth: 1,
-    borderRadius: 50,
-    paddingVertical: 7,
-    paddingHorizontal: 18.5,
-    flexDirection: "row",
+  replyTextContainer: {
+    backgroundColor: "rgba(255, 255, 255, 0.5)",
+    width: 200,
+    height: 125,
+    borderRadius: 10,
+    padding: 10,
+    justifyContent: "center",
     alignItems: "center",
-    gap: 8,
   },
   lockAvatar: {
     width: 22,
     height: 30,
   },
-  btnText: {
-    fontFamily: "MPR-Bold",
-    fontSize: 20,
+  replyText: {
+    fontFamily: "Kanit-Bold",
+    fontSize: 24,
+    textAlign: "center",
   },
   question: {
     width: "90%",
@@ -256,7 +210,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginVertical: 14,
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 18,
   },
   answersContainer: {
     width: "100%",
@@ -280,13 +234,6 @@ const styles = StyleSheet.create({
   replyBtnText: {
     fontWeight: "600",
     fontSize: 20,
-  },
-  replyText: {
-    fontFamily: "Kanit-Bold",
-    fontSize: 20,
-    textAlign: "center",
-    width: "90%",
-    paddingVertical: 10,
   },
   shareBtn: {
     flexDirection: "row",

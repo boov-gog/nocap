@@ -25,4 +25,5 @@ export const StackNav = {
   SearchFriend: "SearchFriend",
   CapOfFriend: "CapOfFriend",
   FriendCapDetail: "FriendCapDetail",
+  ReplyDetail: "ReplyDetail",
 };

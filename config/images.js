@@ -41,4 +41,7 @@ export const Images = {
   userIcon: require("../assets/images/user.png"),
   backIcon: require("../assets/images/back.png"),
   custombackIcon: require("../assets/images/custom_back.png"),
+  pinkBack: require("../assets/images/pinkBack.png"),
+  blueBack: require("../assets/images/blueBack.png"),
+  greenBack: require("../assets/images/greenBack.png"),
 };

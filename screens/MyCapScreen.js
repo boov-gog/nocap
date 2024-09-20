@@ -35,7 +35,7 @@ const MyCapScreen = ({ navigation }) => {
       item.userGamer?.firstName +
       (item.userGamer?.firstName ? " " : "") +
       item.userGamer?.lastName;
-    const gender = item.userGamer?.gender;
+    let gender = item.userGamer?.gender;
 
     if (item.isUnlocked == false) {
       title =
@@ -45,12 +45,28 @@ const MyCapScreen = ({ navigation }) => {
           ? "From a Girl"
           : "From Someone";
     }
-    const myImage =
+    let myImage =
       gender == GENDER_TYPE.Boy
         ? Images.blueCapList
         : gender == GENDER_TYPE.Girl
         ? Images.pinkCap
         : Images.greenCap;
+
+    if (item.gamer == user.id) {
+      title =
+        item.userAnswer?.firstName +
+        (item.userAnswer?.firstName ? " " : "") +
+        item.userAnswer?.lastName;
+
+      gender = item.userAnswer?.gender;
+
+      myImage =
+        gender == GENDER_TYPE.Boy
+          ? Images.blueBack
+          : gender == GENDER_TYPE.Girl
+          ? Images.pinkBack
+          : Images.greenBack;
+    }
 
     return (
       <TouchableOpacity
@@ -59,7 +75,11 @@ const MyCapScreen = ({ navigation }) => {
           _onPress(item);
         }}
       >
-        <Image style={styles.oneItemImage} source={myImage} />
+        <Image
+          resizeMode="contain"
+          style={styles.oneItemImage}
+          source={myImage}
+        />
         <Text style={styles.oneItemTitle}>{title}</Text>
         <Text style={styles.oneItemDate}>{formatDate(item.createdAt)}</Text>
       </TouchableOpacity>
@@ -67,6 +87,10 @@ const MyCapScreen = ({ navigation }) => {
   };
 
   const _onPress = (item) => {
+    if (item.gamer == user.id) {
+      navigation.navigate(StackNav.ReplyDetail, { id: item.id });
+      return;
+    }
     navigation.navigate(StackNav.WhatTheySay, { id: item.id });
   };
 
@@ -95,7 +119,9 @@ const MyCapScreen = ({ navigation }) => {
       // console.log("caps: ", caps);
       setCaps(caps);
 
-      setFollowers(caps.length);
+      //only count that userInAnswer is mine
+      const myCaps = caps.filter((cap) => cap.userInAnswer == user.id);
+      setFollowers(myCaps.length);
     } catch (error) {
       console.log("Error getting followers: ", error);
       showErrorToast("Error getting followers");

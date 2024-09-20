@@ -98,8 +98,12 @@ const GameScreen = ({ navigation }) => {
       // Replace the current screen with the GamePage screen
       navigation.replace(StackNav.GamePage, {});
     } catch (error) {
-      console.error("Error saving cap:", error);
-      showErrorToast("Error saving cap");
+      if (error.response.status == 409) {
+        showErrorToast("You already answered to this question");
+      } else {
+        console.error("Error saving cap:", error);
+        showErrorToast("Error saving cap");
+      }
     }
   };
 

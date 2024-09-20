@@ -34,6 +34,7 @@ import {
   SearchFriendScreen,
   CapOfFriend,
   FriendCapDetail,
+  ReplyDetail,
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -114,6 +115,7 @@ export const RootNavigator = () => {
           name={StackNav.FriendCapDetail}
           component={FriendCapDetail}
         />
+        <Stack.Screen name={StackNav.ReplyDetail} component={ReplyDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

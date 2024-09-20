@@ -1,17 +1,31 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Colors, Images } from "../config";
-import { TextInput } from "../components";
+import { LoadingIndicator, TextInput } from "../components";
 import { FlatList } from "react-native-gesture-handler";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { useRoute } from "@react-navigation/native";
-import { GENDER_TYPE } from "../utils";
+import { GENDER_TYPE, showErrorToast } from "../utils";
+import { getReplies } from "../services/replyService";
+import { debounce } from "lodash";
+import lunr from "lunr";
+import { updateCapWithReply } from "../services/capService";
+
+lunr.tokenizer.minLength = 2;
+
+let lunrIdx = null;
+let replies = [];
 
 const ReplyScreen = ({ navigation }) => {
   const { cap } = useRoute().params;
+  const [filteredReplies, setFilteredReplies] = useState([]);
+  const [select, setSelect] = useState(-1);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const bottomInset = useSafeAreaInsets().bottom;
 
@@ -48,34 +62,112 @@ const ReplyScreen = ({ navigation }) => {
       ? Colors.mainGreen
       : Colors.blackBlue;
 
-  const predefinedReplies = [
-    "Back at ya <3",
-    "On that rizz",
-    "Say less",
-    "Bet",
-    "Tell me more;)",
-    "This fits you more than me;)",
-    "You made my day",
-    "You’re too kind",
-  ];
-
   const oneReplyItem = ({ item }) => (
-    <View style={styles.oneReplyItem}>
+    <TouchableOpacity
+      onPress={() => setSelect(item.id)}
+      style={[
+        styles.oneReplyItem,
+        select == item.id && { backgroundColor: mainBackColor },
+      ]}
+    >
       <Text
         style={styles.oneReplyItemText}
         numberOfLines={3}
         ellipsizeMode="tail"
       >
-        {item}
+        {item.content}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 
   const handleBack = () => {
     navigation.goBack();
   };
 
-  const handleSend = () => {};
+  const handleSend = async () => {
+    if (select == -1) return;
+
+    setSaving(true);
+    // Send the selected reply to the server
+    try {
+      const reply = replies.find((r) => r.id == select);
+      const replyId = reply?.id;
+
+      const response = await updateCapWithReply(cap.id, replyId);
+      console.log("send Reply response", response);
+      navigation.goBack();
+    } catch (error) {
+      if (error.response.status == 409) {
+        showErrorToast("You have already replied to this CAP");
+      } else {
+        console.log("send Reply error", error);
+        showErrorToast("Failed to send reply");
+      }
+    }
+    setSaving(false);
+  };
+
+  // Initialize lunr index
+  const initLunrIndex = async (replySentences) => {
+    // Initialize lunr index synchronously
+    lunrIdx = lunr(function () {
+      this.ref("id");
+      this.field("content");
+
+      // Ensure to use a pipeline suitable for stemming
+      this.pipeline.remove(lunr.stemmer);
+      this.pipeline.remove(lunr.stopWordFilter);
+
+      replySentences.forEach((one) => {
+        this.add(one);
+      });
+    });
+
+    console.log("Lunr index initialized");
+  };
+
+  const handleSearch = async (query) => {
+    console.log("Searching reply sentences for: ", query);
+    if (query == "") {
+      setFilteredReplies(replies);
+      return;
+    }
+    const searchQuery = `${query.toLowerCase()}*`;
+
+    const searchResults = lunrIdx.search(searchQuery);
+    const topResults = searchResults
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 20);
+
+    const results = topResults.map((result) =>
+      replies.find((r) => r.id == result.ref)
+    );
+    setFilteredReplies(results);
+  };
+
+  // Create a debounced version of handleSearch
+  const debouncedSearch = useCallback(debounce(handleSearch, 500), []);
+
+  const handleQueryChange = (query) => {
+    setQuery(query);
+    debouncedSearch(query);
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      setLoading(true);
+      try {
+        replies = await getReplies();
+        initLunrIndex(replies);
+        setFilteredReplies(replies);
+      } catch (error) {
+        console.log("getReplies error", error);
+      }
+      setLoading(false);
+    };
+
+    init();
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: mainBackColor }]}>
@@ -93,17 +185,23 @@ const ReplyScreen = ({ navigation }) => {
               leftIconName={"magnify"}
               placeholder="Search..."
               borderLess={true}
+              onChangeText={handleQueryChange}
+              value={query}
             />
           </View>
 
-          <FlatList
-            numColumns={2}
-            data={predefinedReplies}
-            renderItem={oneReplyItem}
-            keyExtractor={(item, index) => index}
-            style={styles.answerList}
-            contentContainerStyle={styles.answerListContent}
-          />
+          {loading ? (
+            <LoadingIndicator />
+          ) : (
+            <FlatList
+              numColumns={2}
+              data={filteredReplies}
+              renderItem={oneReplyItem}
+              keyExtractor={(item) => item.id}
+              style={styles.answerList}
+              contentContainerStyle={styles.answerListContent}
+            />
+          )}
         </View>
         <View style={[styles.bottomBar, { paddingBottom: bottomInset + 6 }]}>
           <TouchableOpacity onPress={handleBack}>
@@ -120,11 +218,22 @@ const ReplyScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity
-          style={[styles.sendBtn, { bottom: 60 + bottomInset }]}
-        >
-          <Text style={styles.sendBtnTxt}>SEND</Text>
-        </TouchableOpacity>
+        {saving ? (
+          <LoadingIndicator />
+        ) : (
+          <TouchableOpacity
+            disabled={select == -1}
+            onPress={handleSend}
+            style={[
+              styles.sendBtn,
+              select == -1 && { backgroundColor: "rgba(0,0,0,0.5)" },
+              ,
+              { bottom: 60 + bottomInset },
+            ]}
+          >
+            <Text style={styles.sendBtnTxt}>SEND</Text>
+          </TouchableOpacity>
+        )}
       </SafeAreaView>
     </View>
   );

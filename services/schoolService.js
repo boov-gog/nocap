@@ -15,12 +15,12 @@ export const fetchSchools = async () => {
   }
 };
 
-export const searchSchools = async (query) => {
-  try {
-    const response = await axios.get(`${SCHOOL_SEARCH_URL}?query=${query}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error searching schools:", error);
-    throw error;
-  }
-};
+// export const searchSchools = async (query) => {
+//   try {
+//     const response = await axios.get(`${SCHOOL_SEARCH_URL}?query=${query}`);
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error searching schools:", error);
+//     throw error;
+//   }
+// };

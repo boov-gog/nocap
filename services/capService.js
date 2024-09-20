@@ -61,3 +61,16 @@ export const updateCapPublicity = async (capId, isPublic) => {
     throw error;
   }
 };
+
+export const updateCapWithReply = async (capId, replyId) => {
+  try {
+    const response = await axios.put(`${CAP_API_URL}/${capId}`, {
+      cap: {
+        reply: replyId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
