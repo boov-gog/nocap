@@ -13,14 +13,31 @@ import TopBar from "../../components/TopBar";
 export const LocationPermissionScreen = (props) => {
   const [isGettingPermission, setIsGettingPermission] = useState(false);
 
+  const getCurrentLocationWithTimeout = async () => {
+    const locationPromise = Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High,
+    });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Location request timed out")), 10000)
+    );
+
+    return Promise.race([locationPromise, timeoutPromise]);
+  };
+
   const handleNext = async () => {
     setIsGettingPermission(true);
     try {
+      let isLocationServicesEnabled = await Location.hasServicesEnabledAsync();
+      if (!isLocationServicesEnabled) {
+        showErrorToast("Location services are disabled");
+      }
+
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         showErrorToast("Permission to access location was denied");
       } else {
-        let location = await Location.getCurrentPositionAsync({});
+        let location = await getCurrentLocationWithTimeout();
 
         // showSuccessToast(
         //   `Your location is ${location.coords.latitude}, ${location.coords.longitude}`
@@ -31,7 +48,8 @@ export const LocationPermissionScreen = (props) => {
         });
       }
     } catch (error) {
-      showErrorToast("Error getting location");
+      console.log(error.message);
+      showErrorToast("Unable to fetch location: " + error.message);
     }
     setIsGettingPermission(false);
   };
