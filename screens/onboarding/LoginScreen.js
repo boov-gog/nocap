@@ -31,10 +31,9 @@ export const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async (values) => {
     const { email, password } = values;
+    setIsSigning(true);
     try {
-      setIsSigning(true);
       await signInWithEmailAndPassword(auth, email, password);
-      setIsSigning(false);
 
       if (auth.currentUser) {
         setUser(auth.currentUser);
@@ -46,6 +45,7 @@ export const LoginScreen = ({ navigation }) => {
     } catch (error) {
       setErrorState(error.message);
     }
+    setIsSigning(false);
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -87,7 +87,7 @@ export const LoginScreen = ({ navigation }) => {
                     autoCapitalize="none"
                     keyboardType="email-address"
                     textContentType="emailAddress"
-                    autoFocus={true}
+                    autoFocus={false}
                     value={values.email}
                     onChangeText={handleChange("email")}
                     onBlur={handleBlur("email")}
