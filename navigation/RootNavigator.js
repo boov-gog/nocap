@@ -35,6 +35,8 @@ import {
   CapOfFriend,
   FriendCapDetail,
   ReplyDetail,
+  ChangePasswordScreen,
+  ChangeSchoolScreen,
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -116,6 +118,14 @@ export const RootNavigator = () => {
           component={FriendCapDetail}
         />
         <Stack.Screen name={StackNav.ReplyDetail} component={ReplyDetail} />
+        <Stack.Screen
+          name={StackNav.ChangePassword}
+          component={ChangePasswordScreen}
+        />
+        <Stack.Screen
+          name={StackNav.ChangeSchool}
+          component={ChangeSchoolScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

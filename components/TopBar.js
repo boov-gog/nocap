@@ -2,9 +2,16 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Colors, Images } from "../config";
 import { useNavigation } from "@react-navigation/native";
-import { StackNav } from "../navigation/NavigationKeys";
+import { Icon } from "./Icon";
 
-const TopBar = ({ style, textStyle, profileShow = false, handlePressBack }) => {
+const TopBar = ({
+  style,
+  textStyle,
+  rightIconShow = false,
+  rightIconName,
+  handlePressBack,
+  handlePressRight,
+}) => {
   const navigation = useNavigation();
 
   return (
@@ -19,9 +26,14 @@ const TopBar = ({ style, textStyle, profileShow = false, handlePressBack }) => {
         <Text style={[styles.text, textStyle]}>Back</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate(StackNav.Profile)}>
-        {profileShow && (
-          <Image style={{ width: 32, height: 32 }} source={Images.userIcon} />
+      <TouchableOpacity onPress={handlePressRight}>
+        {rightIconShow && (
+          <Icon
+            name={rightIconName}
+            size={32}
+            color={Colors.white}
+            style={{ marginRight: 20 }}
+          />
         )}
       </TouchableOpacity>
     </View>

@@ -26,4 +26,6 @@ export const StackNav = {
   CapOfFriend: "CapOfFriend",
   FriendCapDetail: "FriendCapDetail",
   ReplyDetail: "ReplyDetail",
+  ChangePassword: "ChangePassword",
+  ChangeSchool: "ChangeSchool",
 };

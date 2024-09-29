@@ -25,6 +25,8 @@ import { SearchFriendScreen } from "./SearchFriendScreen";
 import CapOfFriend from "./CapOfFriend";
 import FriendCapDetail from "./FriendCapDetail";
 import ReplyDetail from "./ReplyDetail";
+import ChangePasswordScreen from "./Profile/ChangePasswordScreen";
+import { ChangeSchoolScreen } from "./ChangeSchoolScreen";
 
 export {
   LoginScreen,
@@ -54,4 +56,6 @@ export {
   CapOfFriend,
   FriendCapDetail,
   ReplyDetail,
+  ChangePasswordScreen,
+  ChangeSchoolScreen,
 };

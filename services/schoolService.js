@@ -15,6 +15,16 @@ export const fetchSchools = async () => {
   }
 };
 
+export const getSchoolById = async (schoolId) => {
+  try {
+    const response = await axios.get(`${SCHOOL_API_URL}/${schoolId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error getting school by id[${schoolId}]:`, error);
+    throw error;
+  }
+};
+
 // export const searchSchools = async (query) => {
 //   try {
 //     const response = await axios.get(`${SCHOOL_SEARCH_URL}?query=${query}`);

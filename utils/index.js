@@ -3,6 +3,20 @@ import Toast from "react-native-toast-message";
 import BadWords from "badwords-list";
 import Constants from "expo-constants";
 
+const cache = {};
+
+export const setCache = (key, value) => {
+  cache[key] = value;
+};
+
+export const getCache = (key) => {
+  return cache[key] || null;
+};
+
+export const clearCache = () => {
+  Object.keys(cache).forEach((key) => delete cache[key]);
+};
+
 export const GENDER_TYPE = {
   Boy: "B",
   Girl: "G",
