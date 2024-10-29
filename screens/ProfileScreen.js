@@ -162,6 +162,20 @@ export const ProfileScreen = ({ navigation }) => {
                 onToggle={handleToggle}
               />
             </View>
+            <TouchableOpacity 
+              style={styles.settingBtn} 
+              onPress={() => {
+                navigation.navigate(StackNav.ChangePassword);
+              }}
+            >
+              <Text
+                style={styles.settingText}
+                numberOfLines={1}
+                ellipsizeMode="head"
+              >
+                Pro Mode
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.settingBtn}>
               <Text
                 style={styles.settingText}
