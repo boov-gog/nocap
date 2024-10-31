@@ -165,7 +165,7 @@ export const ProfileScreen = ({ navigation }) => {
             <TouchableOpacity 
               style={styles.settingBtn} 
               onPress={() => {
-                navigation.navigate(StackNav.ChangePassword);
+                navigation.navigate(StackNav.Subscription);
               }}
             >
               <Text

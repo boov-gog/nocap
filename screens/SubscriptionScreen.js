@@ -33,7 +33,6 @@ const SubscriptionScreen = () => {
         <Text style={styles.price}>$4/WK</Text>
 
         <View style={styles.buttonContainer}>
-          <Image style={styles.starBack} source={Images.star1} />
           <TouchableOpacity style={styles.unlockBtn}>
             <Image style={styles.lockAvatar} source={Images.lockerBlack} />
             <Text style={styles.unlockBtnTxt}>UNLOCK</Text>
@@ -89,7 +88,6 @@ const styles = StyleSheet.create({
   },
   unlockBtn: {
     borderWidth: 3,
-    borderColor: "#FF8A00",
     borderRadius: 50,
     flexDirection: "row",
     alignItems: "center",
