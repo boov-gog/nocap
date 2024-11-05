@@ -13,16 +13,21 @@ import { getSchoolById } from "../services/schoolService";
 import ToggleSwitch from "toggle-switch-react-native";
 import { Provider } from "react-native-paper";
 import ChangeUserInfoModal from "../components/ChangeUserInfoModal";
-import { Icon } from "../components";
+import { Icon } from "../components"; 
+
+import { getAuth } from "firebase/auth"; 
+import { showErrorToast, showSuccessToast } from "../utils"; 
+import { updateUser } from "../services/userService"; 
 
 export const ProfileScreen = ({ navigation }) => {
-  const { user, setUser } = useContext(AuthenticatedUserContext);
+  const { user, setUser, onAudio, setOnAudio } = useContext(AuthenticatedUserContext);
   const [schoolTitle, setSchoolTitle] = useState("");
   const [toggleState, setToggleState] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleToggle = () => {
-    setToggleState(!toggleState);
+    setToggleState(!toggleState); 
+    setOnAudio(!onAudio); 
   };
 
   const handleLogout = () => {
@@ -55,7 +60,25 @@ export const ProfileScreen = ({ navigation }) => {
 
   const onDismissModal = () => {
     setModalVisible(false);
-  };
+  }; 
+
+  const handleSubscription = () => { 
+    if (user.isSubscribed) {
+      showErrorToast("You are already subscribed!"); 
+    } else {
+      navigation.navigate(StackNav.Subscription);
+    }
+  } 
+
+  const handleDowngrade = async () => { 
+    if (!user.isSubscribed) {
+      showErrorToast("You have no subscription!"); 
+    } else {
+      const updatedUser = await updateUser(user.id, { isSubscribed: false }); 
+      setUser({ ...user, ...updatedUser }); 
+      showSuccessToast("You downgraded subscription successfully!"); 
+    }
+  }
 
   const avatarImage =
     user?.gender == GENDER_TYPE.Boy
@@ -64,7 +87,9 @@ export const ProfileScreen = ({ navigation }) => {
       ? Images.girl
       : Images.nonBinary;
 
-  useEffect(() => {
+  useEffect(() => { 
+    const auth = getAuth(); 
+
     const getSchool = async (schoolId) => {
       try {
         const school = await getSchoolById(schoolId);
@@ -156,17 +181,15 @@ export const ProfileScreen = ({ navigation }) => {
                 Sounds
               </Text>
               <ToggleSwitch
-                isOn={toggleState}
+                isOn={onAudio}
                 onColor="green"
                 size="large"
                 onToggle={handleToggle}
               />
             </View>
             <TouchableOpacity 
-              style={styles.settingBtn} 
-              onPress={() => {
-                navigation.navigate(StackNav.Subscription);
-              }}
+              style={user?.isSubscribed? styles.proModeBtn: styles.settingBtn} 
+              onPress={handleSubscription}
             >
               <Text
                 style={styles.settingText}
@@ -176,7 +199,10 @@ export const ProfileScreen = ({ navigation }) => {
                 Pro Mode
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.settingBtn}>
+            <TouchableOpacity 
+              style={styles.settingBtn}
+              onPress={handleDowngrade}
+            >
               <Text
                 style={styles.settingText}
                 numberOfLines={1}
@@ -297,5 +323,16 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     justifyContent: "center",
     alignItems: "center",
+  }, 
+  proModeBtn: {
+    alignItems: "center",
+    borderRadius: 50,
+    backgroundColor: "cyan",
+    flexDirection: "row",
+    gap: 8,
+    height: 50,
+    justifyContent: "space-between",
+    width: "100%",
+    paddingHorizontal: 20,
   },
 });

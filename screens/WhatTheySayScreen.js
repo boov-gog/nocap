@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useContext, useEffect } from "react";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import { LoadingIndicator, Logo } from "../components";
 import { Colors, Images } from "../config";
@@ -16,16 +16,23 @@ import { StackNav } from "../navigation/NavigationKeys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getRestCap, updateCapPublicity } from "../services/capService";
 import { GENDER_TYPE, showErrorToast } from "../utils";
-import ToggleSwitch from "toggle-switch-react-native";
+import ToggleSwitch from "toggle-switch-react-native"; 
+
+import { AuthenticatedUserContext } from "../providers"; 
+import { updateUser } from "../services/userService"; 
 
 const { width: deviceWidth } = Dimensions.get("window");
 
 const WhatTheySayScreen = ({ navigation }) => {
+  const { user, setUser } = useContext(AuthenticatedUserContext);
+
   const { id } = useRoute().params;
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [cap, setCap] = useState(null);
-  const [toggleState, setToggleState] = useState(false);
+  const [toggleState, setToggleState] = useState(false); 
+
+  const [gamerDescription, setGamerDescription] = useState(''); 
 
   const init = async () => {
     setIsLoading(true);
@@ -43,7 +50,7 @@ const WhatTheySayScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      init();
+      init(); 
     }, [])
   );
 
@@ -55,8 +62,19 @@ const WhatTheySayScreen = ({ navigation }) => {
     navigation.navigate(StackNav.ReplyTo, { cap });
   };
 
-  const handleSeeWhoSaid = () => {
-    navigation.navigate(StackNav.Subscription);
+  const handleSeeWhoSaid = async () => { 
+    if(user.isSubscribed) { 
+      if(user.viewTokens > 0) { 
+        setGamerDescription(gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName); 
+
+        const updatedUser = await updateUser(user.id, { viewTokens: user.viewTokens - 1 }); 
+        setUser({ ...user, ...updatedUser }); 
+      } else {
+        showErrorToast("You have no available tokens to view the user name."); 
+      }
+    } else {
+      navigation.navigate(StackNav.Subscription);
+    }
   };
 
   const handleToggle = async () => {
@@ -83,8 +101,19 @@ const WhatTheySayScreen = ({ navigation }) => {
         ? "From a Boy"
         : gender == GENDER_TYPE.Girl
         ? "From a Girl"
-        : "From Someone";
+        : "From Someone"; 
   }
+
+  useEffect(() => { 
+    title =
+    gender == GENDER_TYPE.Boy
+      ? "From a Boy"
+      : gender == GENDER_TYPE.Girl
+      ? "From a Girl"
+      : "From Someone"; 
+
+    setGamerDescription(`${title} in the ${gamer?.grade} grade.`); 
+  }, []); 
 
   const gamerAvatar =
     gender == GENDER_TYPE.Boy
@@ -132,8 +161,8 @@ const WhatTheySayScreen = ({ navigation }) => {
             style={Dimensions.get("window").width <= 360 ? { height: 0 } : null}
           />
           <Image style={styles.avatar} source={gamerAvatar} />
-          <Text style={styles.description}>
-            {title} in the {gamer?.grade} grade.
+          <Text style={styles.description}> 
+            {gamerDescription}
           </Text>
           <TouchableOpacity
             style={styles.whoSayButton}
@@ -141,7 +170,8 @@ const WhatTheySayScreen = ({ navigation }) => {
           >
             <Image style={styles.lockAvatar} source={Images.lockerBlack} />
             <Text style={styles.btnText}>See who said this</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> 
+          {user?.isSubscribed && <Text style={styles.viewTokens}>Amount of tokens: { user.viewTokens }</Text>}
           <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
             {cap?.question?.value}
           </Text>
@@ -327,5 +357,9 @@ const styles = StyleSheet.create({
   bottomRight: {
     width: 36,
     height: 26,
-  },
+  }, 
+  viewTokens: { 
+    fontSize: 16, 
+    fontWeight: "bold", 
+  }
 });

@@ -7,16 +7,81 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Colors, Images } from "../config";
 import Carousel from "../components/Carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TopBar from "../components/TopBar";
+import TopBar from "../components/TopBar"; 
+
+import * as InAppPurchases from "expo-in-app-purchases";
+import { getAuth, updateProfile } from "firebase/auth"; 
+
+import { AuthenticatedUserContext } from "../providers"; 
+import { updateUser } from "../services/userService"; 
+import { showErrorToast, showSuccessToast } from "../utils"; 
+import { StackNav } from "../navigation/NavigationKeys";
 
 const deviceWidth = Dimensions.get("window").width;
 
-const SubscriptionScreen = () => {
+const SubscriptionScreen = ( { navigation } ) => {
   const carouselImages = [Images.subscription1, Images.subscription2];
+
+  const { user, setUser } = useContext(AuthenticatedUserContext); 
+
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const initIAP = async () => {
+      await InAppPurchases.connectAsync();
+      await fetchProducts();
+    };
+
+    initIAP();
+
+    return () => {
+      InAppPurchases.disconnectAsync();
+    };
+  }, []);
+
+  const fetchProducts = async () => {
+    const { responseCode, results } = await InAppPurchases.getProductsAsync(['subscription_id']);
+    if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+      setProducts(results);
+    }
+  };
+
+  const purchaseSubscription = async () => { 
+    try {
+      const updatedUser = await updateUser(user.id, { isSubscribed: true }); 
+      setUser({ ...user, ...updatedUser }); 
+
+      showSuccessToast("Subscribed successfully!"); 
+
+      navigation.navigate(StackNav.Profile);
+
+      console.log("Subscribed successfully: ", updatedUser); 
+    } catch(error) {
+      console.log("Err: ", error); 
+    }
+
+    // const { responseCode } = await InAppPurchases.purchaseItemAsync(productId);
+    // if (responseCode !== InAppPurchases.IAPResponseCode.OK) {
+    //   console.error('Error purchasing item:', responseCode);
+    // }
+  };
+
+  useEffect(() => {
+    const subscription = InAppPurchases.setPurchaseListener(purchase => {
+      if (purchase && purchase.responseCode === InAppPurchases.IAPResponseCode.OK && !purchase.acknowledged) {
+        console.log('Successfully purchased:', purchase);
+        InAppPurchases.finishTransactionAsync(purchase, false);
+      }
+    });
+
+    return () => {
+      subscription?.remove();
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,7 +98,12 @@ const SubscriptionScreen = () => {
         <Text style={styles.price}>$4/WK</Text>
 
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.unlockBtn}>
+          <TouchableOpacity 
+            style={styles.unlockBtn}
+            onPress={() => {
+              purchaseSubscription()
+            }}
+          >
             <Image style={styles.lockAvatar} source={Images.lockerBlack} />
             <Text style={styles.unlockBtnTxt}>UNLOCK</Text>
           </TouchableOpacity>

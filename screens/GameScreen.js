@@ -49,33 +49,38 @@ const GameScreen = ({ navigation }) => {
   }, [question, friends, selected]);
 
   // Function to save the answer and move to the next question
-  const saveAnswer_Move2Next = async () => {
+  const saveAnswer_Move2Next = async () => { 
     try {
       const question = questionRef.current;
       const friends = friendsRef.current;
-      const selected = selectedRef.current;
+      const selected = selectedRef.current; 
 
       // Get the roundId from AsyncStorage
-      const roundId = await AsyncStorage.getItem("roundId");
+      const roundId = await AsyncStorage.getItem("roundId"); 
 
       // Filter out the selected friend from the friends array
       const unselectedFriends = friends.filter(
         (_, index) => index !== selected
-      );
+      ); 
 
       // Create a cap object with the necessary data
       const cap = {
         questionId: question.id,
         gamer: user.id,
-        userInAnswer: friends[selected].email ? friends[selected].id : null,
-        nameInAnswer: friends[selected].name,
-        noanswer1: unselectedFriends[0].name,
-        noanswer2: unselectedFriends[1].name,
-        noanswer3: unselectedFriends[2].name,
+        userInAnswer: friends[selected]?.email ? friends[selected].id : null,
+        nameInAnswer: friends[selected]?.name,
+        noanswer1: unselectedFriends[0]?.name, 
+        noanswer2: unselectedFriends[1]?.name,
+        noanswer3: unselectedFriends[2]?.name, 
+        noanswer1: "na1", 
+        noanswer2: "na2", 
+        noanswer3: "na3", 
         roundId: Number(roundId),
         showToOthers: false,
         isUnlocked: false,
-      };
+      }; 
+
+      console.log("cap: ", cap); 
 
       // Save the cap using the saveCap function
       await saveCap(cap);

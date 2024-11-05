@@ -12,7 +12,8 @@ export const AuthenticatedUserProvider = ({ children }) => {
   const [grade, setGrade] = useState(0);
   const [school, setSchool] = useState("");
   const [phone, setPhone] = useState("");
-  const [friends, setFriends] = useState({});
+  const [friends, setFriends] = useState({}); 
+  const [onAudio, setOnAudio] = useState(false); 
 
   return (
     <AuthenticatedUserContext.Provider
@@ -36,7 +37,9 @@ export const AuthenticatedUserProvider = ({ children }) => {
         phone,
         setPhone,
         friends,
-        setFriends,
+        setFriends, 
+        onAudio, 
+        setOnAudio
       }}
     >
       {children}

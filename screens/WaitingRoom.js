@@ -1,7 +1,7 @@
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Colors, Images } from "../config";
-import { GENDER_TYPE, showErrorToast } from "../utils";
+import { GENDER_TYPE, showErrorToast, showSuccessToast } from "../utils";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import PlayButton from "../components/PlayButton";
 import { StackNav } from "../navigation/NavigationKeys";
@@ -12,12 +12,15 @@ import { LoadingIndicator } from "../components";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
+import { Audio } from 'expo-av'; 
+import { Icon } from "../components"; 
+
 const WaitingRoom = ({ navigation }) => {
   const [pollTime, setPollTime] = useState("59:59");
   const [playEnable, setPlayEnable] = useState(true);
   const [checking, setChecking] = useState(true);
 
-  const { user } = useContext(AuthenticatedUserContext);
+  const { user, onAudio } = useContext(AuthenticatedUserContext);
 
   const leaderList = [
     { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
@@ -35,10 +38,23 @@ const WaitingRoom = ({ navigation }) => {
     // Calculate left time to the next right hour in UTC + 0.00 timezone
     const now = new Date();
     const nextHour = new Date(now);
-    nextHour.setUTCHours(nextHour.getUTCHours() + 1);
-    nextHour.setUTCMinutes(0);
-    nextHour.setUTCSeconds(0);
-    nextHour.setUTCMilliseconds(0);
+
+    let isPaid = false;
+
+    if (user.isSubscribed && (now.getUTCMinutes() < 30 || (now.getUTCMinutes() == 30 && now.getUTCSeconds() == 0))) {
+      nextHour.setUTCHours(nextHour.getUTCHours());
+      nextHour.setUTCMinutes(30);
+      nextHour.setUTCSeconds(0);
+      nextHour.setUTCMilliseconds(0);
+      isPaid = true;
+    } else {
+      nextHour.setUTCHours(nextHour.getUTCHours() + 1);
+      nextHour.setUTCMinutes(0);
+      nextHour.setUTCSeconds(0);
+      nextHour.setUTCMilliseconds(0);
+      isPaid = false;
+    }
+
     const leftTime = nextHour.getTime() - now.getTime();
     const leftTimeInSeconds = Math.floor(leftTime / 1000);
     const leftMinutes = Math.floor(leftTimeInSeconds / 60);
@@ -50,11 +66,63 @@ const WaitingRoom = ({ navigation }) => {
     );
 
     if (leftMinutes == 0 && leftSeconds == 0) {
-      checkGame();
+      if (isPaid) {
+        checkGamePaid();
+      } else {
+        checkGame();
+      }
     }
   };
 
   const checkGame = async () => {
+    console.log("checkGame_NonPaid"); 
+
+    // showSuccessToast("Timer has run out!"); 
+
+    setChecking(true);
+    try {
+      // check the game has already completed
+      const roundId = await AsyncStorage.getItem("roundId");
+      const gameData = await fetchGameData(user.id);
+
+      // console.log("gameData: ", gameData); 
+
+      //remove me in friends list
+      gameData.friends = gameData.friends.filter((f) => f.id !== user.id);
+
+      await AsyncStorage.setItem("friends", JSON.stringify(gameData.friends));
+
+      if (roundId != gameData.roundId) {
+        setPlayEnable(true);
+      } else {
+        let questions = await AsyncStorage.getItem("questions");
+        questions = JSON.parse(questions);
+
+        // console.log("questions: ", questions); 
+
+        const unselectedQuestions = questions.filter(
+          (q) => q.selected == false
+        );
+
+        if (unselectedQuestions.length == 0) {
+          setPlayEnable(false);
+        } else {
+          setPlayEnable(true);
+        }
+      }
+    } catch (error) {
+      console.error("Error checking the game:", error);
+      showErrorToast("Failed to initialize the game. Please try again.");
+      setPlayEnable(false);
+    }
+    setChecking(false);
+  };
+
+  const checkGamePaid = async () => {
+    console.log("checkGame_Paid"); 
+
+    // showSuccessToast("Timer has run out!"); 
+
     setChecking(true);
     try {
       // check the game has already completed
@@ -113,6 +181,22 @@ const WaitingRoom = ({ navigation }) => {
 
   const handlePlay = async () => {
     try {
+      if (onAudio) { 
+        const sound = new Audio.Sound(); 
+        if (playEnable) {
+          await sound?.loadAsync(require('../assets/sounds/audio/enable.wav')); 
+        } else {
+          await sound?.loadAsync(require('../assets/sounds/audio/grey.wav'));
+        }
+        await sound.setVolumeAsync(1.0);
+        await sound?.playAsync(); 
+        sound?.setOnPlaybackStatusUpdate(status => {
+          if (status?.didJustFinish) {
+            sound?.unloadAsync(); 
+          }
+        });
+      }
+
       const gameData = await fetchGameData(user.id);
       const roundId = await AsyncStorage.getItem("roundId");
 
@@ -141,14 +225,20 @@ const WaitingRoom = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.soundIcon}>
+        <Icon
+          name={onAudio? "volume-high": "volume-off"}
+          size={32}
+          color="black"
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollViewer}>
         <Text style={styles.title}>School Leaders</Text>
         <View style={styles.leaderListContainer}>
           {leaderList.map((value, index) => (
             <View style={styles.leaderListOne} key={index}>
-              <Text style={styles.leaderListText} ellipsizeMode="tail">{`${
-                index + 1
-              }. ${value.name}`}</Text>
+              <Text style={styles.leaderListText} ellipsizeMode="tail">{`${index + 1
+                }. ${value.name}`}</Text>
               <Image
                 style={[
                   styles.leaderListImage,
@@ -157,8 +247,8 @@ const WaitingRoom = ({ navigation }) => {
                       value.gender == GENDER_TYPE.Boy
                         ? Colors.mainBlue
                         : value.gender == GENDER_TYPE.Girl
-                        ? Colors.mainPink
-                        : Colors.mainGreen,
+                          ? Colors.mainPink
+                          : Colors.mainGreen,
                   },
                 ]}
                 source={value.avatar}
@@ -307,5 +397,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-  },
+  }, 
+  soundIcon: { 
+    position: "absolute", 
+    top: 40, 
+    right: 15, 
+  }
 });
