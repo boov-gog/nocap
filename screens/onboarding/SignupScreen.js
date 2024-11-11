@@ -27,15 +27,20 @@ export const SignupScreen = ({ navigation }) => {
     setChecked((prevState) => !prevState);
   };
 
-  const { setEmail } = useContext(AuthenticatedUserContext);
+  const { setEmail, setInviter } = useContext(AuthenticatedUserContext); 
 
   const handleSignup = async (values) => {
     if (!checked) {
       showErrorToast("Please agree to our policy");
       return;
     }
-    const { email } = values;
-    setEmail(email);
+    const { email, inviter } = values; 
+
+    console.log("signupEmail: ", email); 
+    console.log("signupInviter: ", inviter); 
+
+    setEmail(email); 
+    setInviter(inviter); 
 
     navigation.navigate(StackNav.Age);
   };
@@ -54,7 +59,8 @@ export const SignupScreen = ({ navigation }) => {
       {/* Formik Wrapper */}
       <Formik
         initialValues={{
-          email: "",
+          email: "", 
+          inviter: "", 
         }}
         validationSchema={emailValidationSchema}
         onSubmit={(values) => handleSignup(values)}
@@ -63,7 +69,7 @@ export const SignupScreen = ({ navigation }) => {
           values,
           touched,
           errors,
-          handleChange,
+          handleChange, 
           handleSubmit,
           handleBlur,
         }) => (
@@ -81,6 +87,18 @@ export const SignupScreen = ({ navigation }) => {
                 value={values.email}
                 onChangeText={handleChange("email")}
                 onBlur={handleBlur("email")}
+              /> 
+              <TextInput
+                name="inviter"
+                leftIconName="inbox"
+                placeholder="Who invited you?"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoFocus={false}
+                value={values.inviter}
+                onChangeText={handleChange("inviter")}
+                onBlur={handleBlur("inviter")}
               />
               <View style={styles.checkContainer}>
                 <CheckBox

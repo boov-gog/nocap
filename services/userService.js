@@ -5,6 +5,8 @@ const SIGNUP_API_URL = ENDPOINTS.API_URL + "/users";
 const SIGNIN_API_URL = ENDPOINTS.API_URL + "/users/email";
 const DELETE_API_URL = ENDPOINTS.API_URL + "/users/delete/email";
 const FRIEND_API_URL = ENDPOINTS.API_URL + "/friends";
+const SEND_INVITE_API_URL = ENDPOINTS.API_URL + "/users/send_invite"; 
+const ADD_BONUS_API_URL = ENDPOINTS.API_URL + "/users/add_bonus"; 
 
 export const registerUser = async (user) => {
   try {
@@ -66,4 +68,25 @@ export const updateUser = async (user_id, data) => {
     console.error("Error updating user:", error);
     throw error;
   }
-};
+}; 
+
+export const sendInvite = async (data) => {
+  try {
+    const response = await axios.post(SEND_INVITE_API_URL, data); 
+    return response; 
+  } catch (error) {
+    console.error("Error sending an invite email", error);
+    throw error;
+  }
+} 
+
+export const userAddBonusRound = async (data) => {
+  try { 
+    console.log("userAddBonusRoundData: ", data); 
+    const response = await axios.post(ADD_BONUS_API_URL, data); 
+    return response; 
+  } catch (error) {
+    console.error("Error adding a bonus", error);
+    throw error;
+  }
+}

@@ -1,8 +1,8 @@
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View, Modal, Button, TouchableOpacity } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Colors, Images } from "../config";
 import { GENDER_TYPE, showErrorToast, showSuccessToast } from "../utils";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import PlayButton from "../components/PlayButton";
 import { StackNav } from "../navigation/NavigationKeys";
 import { AuthenticatedUserContext } from "../providers";
@@ -12,8 +12,10 @@ import { LoadingIndicator } from "../components";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { Audio } from 'expo-av'; 
-import { Icon } from "../components"; 
+import { Audio } from 'expo-av';
+import { Icon, TextInput } from "../components";
+import { sendInvite } from "../services/userService";
+import { SegmentedButtons } from "react-native-paper";
 
 const WaitingRoom = ({ navigation }) => {
   const [pollTime, setPollTime] = useState("59:59");
@@ -21,6 +23,10 @@ const WaitingRoom = ({ navigation }) => {
   const [checking, setChecking] = useState(true);
 
   const { user, onAudio } = useContext(AuthenticatedUserContext);
+
+  const [email, setEmail] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const leaderList = [
     { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
@@ -75,7 +81,7 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGame = async () => {
-    console.log("checkGame_NonPaid"); 
+    console.log("checkGame_NonPaid");
 
     // showSuccessToast("Timer has run out!"); 
 
@@ -119,7 +125,7 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGamePaid = async () => {
-    console.log("checkGame_Paid"); 
+    console.log("checkGame_Paid");
 
     // showSuccessToast("Timer has run out!"); 
 
@@ -181,18 +187,18 @@ const WaitingRoom = ({ navigation }) => {
 
   const handlePlay = async () => {
     try {
-      if (onAudio) { 
-        const sound = new Audio.Sound(); 
+      if (onAudio) {
+        const sound = new Audio.Sound();
         if (playEnable) {
-          await sound?.loadAsync(require('../assets/sounds/audio/enable.wav')); 
+          await sound?.loadAsync(require('../assets/sounds/audio/enable.wav'));
         } else {
           await sound?.loadAsync(require('../assets/sounds/audio/grey.wav'));
         }
         await sound.setVolumeAsync(1.0);
-        await sound?.playAsync(); 
+        await sound?.playAsync();
         sound?.setOnPlaybackStatusUpdate(status => {
           if (status?.didJustFinish) {
-            sound?.unloadAsync(); 
+            sound?.unloadAsync();
           }
         });
       }
@@ -201,6 +207,12 @@ const WaitingRoom = ({ navigation }) => {
       const roundId = await AsyncStorage.getItem("roundId");
 
       if (roundId != gameData.roundId) {
+        let roundSelectedCountId = [];
+        for (let i = 0; i < 100; i++) {
+          roundSelectedCountId.push(0);
+        }
+        await AsyncStorage.setItem("roundSelectedCountId", JSON.stringify(roundSelectedCountId));
+
         await AsyncStorage.setItem("roundId", gameData.roundId.toString());
         await AsyncStorage.setItem(
           "questions",
@@ -223,11 +235,30 @@ const WaitingRoom = ({ navigation }) => {
     navigation.navigate(StackNav.Profile);
   };
 
+  const handleInvite = async () => {
+    console.log("inviteEmail: ", email);
+    if (email == "") {
+      showErrorToast("Please input the email address.");
+    } else {
+      const res = await sendInvite({ email: email, userEmail: user.email });
+
+      console.log("sendInviteRes: ", res);
+
+      if (res.status == 200) {
+        showSuccessToast(res.data.success);
+        setModalVisible(false); 
+        setEmail("");
+      } else {
+        showErrorToast(res.data.error);
+      }
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.soundIcon}>
         <Icon
-          name={onAudio? "volume-high": "volume-off"}
+          name={onAudio ? "volume-high" : "volume-off"}
           size={32}
           color="black"
         />
@@ -262,7 +293,7 @@ const WaitingRoom = ({ navigation }) => {
           <Text style={styles.timerText}>{pollTime}</Text>
         </View>
         <Text style={styles.skipText}>Skip the wait</Text>
-        <TouchableOpacity style={styles.inviteBtn}>
+        <TouchableOpacity style={styles.inviteBtn} onPress={() => setModalVisible(true)}>
           <Image
             style={styles.inviteBtnImage}
             source={Images.inviteFrinedsBtn}
@@ -286,6 +317,31 @@ const WaitingRoom = ({ navigation }) => {
           />
         </TouchableOpacity>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Please invite a friend to play with.</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Enter the email address"
+            />
+            <TouchableOpacity style={styles.modalButton} onPress={() => handleInvite()}>
+              <Text style={styles.modalButtonText}>Invite this friend</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.modalCloseButton} onPress={() => setModalVisible(false)}>
+              <Text style={styles.modalButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -397,10 +453,55 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-  }, 
-  soundIcon: { 
-    position: "absolute", 
-    top: 40, 
-    right: 15, 
-  }
+  },
+  soundIcon: {
+    position: "absolute",
+    top: 40,
+    right: 15,
+  },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContainer: {
+    width: 360,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalInput: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    fontFamily: "Kanit-Regular",
+    fontSize: 14,
+    paddingHorizontal: 4,
+  },
+  modalButton: {
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: "#F57C00",
+    color: "white",
+  },
+  modalCloseButton: {
+    marginTop: 10,
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: "#000087",
+    color: "white",
+  },
+  modalButtonText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
 });

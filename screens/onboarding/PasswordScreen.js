@@ -32,7 +32,8 @@ import TopBar from "../../components/TopBar";
 import {
   deleteUserByEmail,
   insertFriends,
-  registerUser,
+  registerUser, 
+  userAddBonusRound
 } from "../../services/userService";
 import { StackNav } from "../../navigation/NavigationKeys";
 
@@ -60,10 +61,11 @@ export const PasswordScreen = ({ navigation }) => {
     grade,
     school,
     phone,
-    friends,
-  } = useContext(AuthenticatedUserContext);
+    friends, 
+    inviter
+  } = useContext(AuthenticatedUserContext); 
 
-  const signUp = async () => {
+  const signUp = async () => { 
     const userData = {
       email,
       age,
@@ -75,7 +77,9 @@ export const PasswordScreen = ({ navigation }) => {
       phone,
     };
 
-    try {
+    try { 
+      console.log("signupInviter: ", inviter); 
+      
       const createdUser = await registerUser(userData);
 
       setUser({ ...user, ...createdUser });
@@ -87,6 +91,11 @@ export const PasswordScreen = ({ navigation }) => {
           console.error("Error inserting friends:", error);
           showErrorToast("Error inserting friends. Please try again later.");
         }
+      } 
+
+      if(inviter != "") {
+        const res = await userAddBonusRound({email: inviter}); 
+        console.log("inviterBonusRes: ", res); 
       }
 
       showSuccessToast("You are registered successfully!");

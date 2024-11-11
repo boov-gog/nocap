@@ -1,3 +1,4 @@
+import { setIn } from "formik";
 import React, { useState, createContext } from "react";
 
 export const AuthenticatedUserContext = createContext({});
@@ -14,6 +15,8 @@ export const AuthenticatedUserProvider = ({ children }) => {
   const [phone, setPhone] = useState("");
   const [friends, setFriends] = useState({}); 
   const [onAudio, setOnAudio] = useState(false); 
+
+  const [inviter, setInviter] = useState(""); 
 
   return (
     <AuthenticatedUserContext.Provider
@@ -39,7 +42,9 @@ export const AuthenticatedUserProvider = ({ children }) => {
         friends,
         setFriends, 
         onAudio, 
-        setOnAudio
+        setOnAudio, 
+        inviter, 
+        setInviter
       }}
     >
       {children}

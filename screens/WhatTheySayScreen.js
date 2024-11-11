@@ -14,7 +14,7 @@ import { Colors, Images } from "../config";
 import AnswerButton from "../components/AnswerButton";
 import { StackNav } from "../navigation/NavigationKeys";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getRestCap, updateCapPublicity } from "../services/capService";
+import { getRestCap, updateCapPublicity, updateCapLock } from "../services/capService";
 import { GENDER_TYPE, showErrorToast } from "../utils";
 import ToggleSwitch from "toggle-switch-react-native"; 
 
@@ -32,14 +32,41 @@ const WhatTheySayScreen = ({ navigation }) => {
   const [cap, setCap] = useState(null);
   const [toggleState, setToggleState] = useState(false); 
 
+  const [gamer, setGamer] = useState(null); 
+  const [gender, setGender] = useState(null); 
   const [gamerDescription, setGamerDescription] = useState(''); 
+  const [capLock, setCapLock] = useState(false); 
 
   const init = async () => {
     setIsLoading(true);
     try {
-      const cap = await getRestCap(id);
-      setCap(cap);
-      setToggleState(cap?.showToOthers);
+      const cap1 = await getRestCap(id);
+      const gamer1 = cap1?.userGamer; 
+      const gender1 = gamer1?.gender; 
+      const lock1 = cap1?.isUnlocked; 
+      
+      setCap(cap1);
+      setToggleState(cap?.showToOthers); 
+      setGamer(gamer1); 
+      setGender(gender1); 
+      setCapLock(lock1); 
+
+      console.log("whatcap: ", cap1); 
+      console.log("whatgamer: ", gamer1); 
+      console.log("whatgender: ", gender1); 
+
+      if (cap1?.isUnlocked == false) { 
+        let title = 
+          gender1 == GENDER_TYPE.Boy
+          ? "From a Boy"
+          : gender1 == GENDER_TYPE.Girl
+          ? "From a Girl"
+          : "From Someone"; 
+
+        setGamerDescription(`${title} in the ${gamer1?.grade} grade.`);
+      } else {
+        setGamerDescription(gamer1?.firstName + (gamer1?.firstName ? " " : "") + gamer1?.lastName); 
+      }
     } catch (error) {
       console.error(`Error getting cap by id: ${id}`, error);
       showErrorToast("Error getting cap. Please try again.");
@@ -69,6 +96,9 @@ const WhatTheySayScreen = ({ navigation }) => {
 
         const updatedUser = await updateUser(user.id, { viewTokens: user.viewTokens - 1 }); 
         setUser({ ...user, ...updatedUser }); 
+
+        await updateCapLock(id, true); 
+        setCapLock(true); 
       } else {
         showErrorToast("You have no available tokens to view the user name."); 
       }
@@ -89,31 +119,7 @@ const WhatTheySayScreen = ({ navigation }) => {
     setIsToggling(false);
   };
 
-  const gamer = cap?.userGamer;
-  const gender = gamer?.gender;
-
-  let title =
-    gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName;
-
-  if (cap?.isUnlocked == false) {
-    title =
-      gender == GENDER_TYPE.Boy
-        ? "From a Boy"
-        : gender == GENDER_TYPE.Girl
-        ? "From a Girl"
-        : "From Someone"; 
-  }
-
-  useEffect(() => { 
-    title =
-    gender == GENDER_TYPE.Boy
-      ? "From a Boy"
-      : gender == GENDER_TYPE.Girl
-      ? "From a Girl"
-      : "From Someone"; 
-
-    setGamerDescription(`${title} in the ${gamer?.grade} grade.`); 
-  }, []); 
+  // console.log("whatcapbefore1: ", cap);
 
   const gamerAvatar =
     gender == GENDER_TYPE.Boy
@@ -163,14 +169,17 @@ const WhatTheySayScreen = ({ navigation }) => {
           <Image style={styles.avatar} source={gamerAvatar} />
           <Text style={styles.description}> 
             {gamerDescription}
-          </Text>
-          <TouchableOpacity
-            style={styles.whoSayButton}
-            onPress={handleSeeWhoSaid}
-          >
-            <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-            <Text style={styles.btnText}>See who said this</Text>
-          </TouchableOpacity> 
+          </Text> 
+          {
+            !capLock && 
+            <TouchableOpacity
+              style={styles.whoSayButton}
+              onPress={handleSeeWhoSaid}
+            >
+              <Image style={styles.lockAvatar} source={Images.lockerBlack} />
+              <Text style={styles.btnText}>See who said this</Text>
+            </TouchableOpacity> 
+          }
           {user?.isSubscribed && <Text style={styles.viewTokens}>Amount of tokens: { user.viewTokens }</Text>}
           <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
             {cap?.question?.value}

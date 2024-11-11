@@ -74,3 +74,16 @@ export const updateCapWithReply = async (capId, replyId) => {
     throw error;
   }
 };
+
+export const updateCapLock = async (capId, isLock) => { 
+  try {
+    const response = await axios.put(`${CAP_API_URL}/${capId}`, {
+      cap: {
+        isUnlocked: isLock,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}

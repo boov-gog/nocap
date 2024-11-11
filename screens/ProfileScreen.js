@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Text, Image, ScrollView, Alert } from "react-native";
+import { View, StyleSheet, Text, Image, ScrollView, Alert, Modal, TouchableOpacity } from "react-native";
 import { signOut } from "firebase/auth";
 
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,26 +8,28 @@ import { Images, Colors, auth } from "../config";
 import { StackNav } from "../navigation/NavigationKeys";
 import TopBar from "../components/TopBar";
 import { GENDER_TYPE } from "../utils";
-import { TouchableOpacity } from "react-native-gesture-handler";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import { getSchoolById } from "../services/schoolService";
 import ToggleSwitch from "toggle-switch-react-native";
 import { Provider } from "react-native-paper";
 import ChangeUserInfoModal from "../components/ChangeUserInfoModal";
-import { Icon } from "../components"; 
+import { Icon } from "../components";
 
-import { getAuth } from "firebase/auth"; 
-import { showErrorToast, showSuccessToast } from "../utils"; 
-import { updateUser } from "../services/userService"; 
+import { getAuth } from "firebase/auth";
+import { showErrorToast, showSuccessToast } from "../utils";
+import { updateUser } from "../services/userService";
 
 export const ProfileScreen = ({ navigation }) => {
   const { user, setUser, onAudio, setOnAudio } = useContext(AuthenticatedUserContext);
   const [schoolTitle, setSchoolTitle] = useState("");
   const [toggleState, setToggleState] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); 
+
+  const [modalDowngradeVisible, setModalDowngradeVisible] = useState(false);
 
   const handleToggle = () => {
-    setToggleState(!toggleState); 
-    setOnAudio(!onAudio); 
+    setToggleState(!toggleState);
+    setOnAudio(!onAudio);
   };
 
   const handleLogout = () => {
@@ -60,35 +62,40 @@ export const ProfileScreen = ({ navigation }) => {
 
   const onDismissModal = () => {
     setModalVisible(false);
-  }; 
+  };
 
-  const handleSubscription = () => { 
+  const handleSubscription = () => {
     if (user.isSubscribed) {
-      showErrorToast("You are already subscribed!"); 
+      showErrorToast("You are already subscribed!");
     } else {
       navigation.navigate(StackNav.Subscription);
     }
-  } 
+  }
 
-  const handleDowngrade = async () => { 
+  const handleDowngrade = async () => {
     if (!user.isSubscribed) {
-      showErrorToast("You have no subscription!"); 
+      showErrorToast("You have no subscription!");
     } else {
-      const updatedUser = await updateUser(user.id, { isSubscribed: false }); 
-      setUser({ ...user, ...updatedUser }); 
-      showSuccessToast("You downgraded subscription successfully!"); 
+      setModalDowngradeVisible(true); 
     }
+  }
+
+  const handleDowngradeAction = async () => {
+    const updatedUser = await updateUser(user.id, { isSubscribed: false });
+    setUser({ ...user, ...updatedUser });
+    showSuccessToast("You downgraded subscription successfully!"); 
+    setModalDowngradeVisible(false); 
   }
 
   const avatarImage =
     user?.gender == GENDER_TYPE.Boy
       ? Images.boy
       : user?.gender == GENDER_TYPE.Girl
-      ? Images.girl
-      : Images.nonBinary;
+        ? Images.girl
+        : Images.nonBinary;
 
-  useEffect(() => { 
-    const auth = getAuth(); 
+  useEffect(() => {
+    const auth = getAuth();
 
     const getSchool = async (schoolId) => {
       try {
@@ -111,6 +118,27 @@ export const ProfileScreen = ({ navigation }) => {
         {modalVisible && (
           <ChangeUserInfoModal onDismiss={onDismissModal} userValue={user} />
         )}
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalDowngradeVisible}
+          onRequestClose={() => {
+            setModalDowngradeVisible(!modalDowngradeVisible);
+          }}>
+          <View style={styles.modalDowngradeBackground}>
+            <View style={styles.modalDowngradeContainer}>
+              <Text style={styles.modalDowngradeTitle}>You will loose every unlocked caps. Are you sure?</Text>
+              <TouchableOpacity style={styles.modalDowngradeButton} onPress={() => handleDowngradeAction()}>
+                <Text style={styles.modalDowngradeButtonText}>Yes, sure</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalDowngradeCloseButton} onPress={() => setModalDowngradeVisible(false)}>
+                <Text style={styles.modalDowngradeButtonText}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
         <TopBar
           rightIconShow={true}
           rightIconName="account-arrow-right"
@@ -187,8 +215,8 @@ export const ProfileScreen = ({ navigation }) => {
                 onToggle={handleToggle}
               />
             </View>
-            <TouchableOpacity 
-              style={user?.isSubscribed? styles.proModeBtn: styles.settingBtn} 
+            <TouchableOpacity
+              style={user?.isSubscribed ? styles.proModeBtn : styles.settingBtn}
               onPress={handleSubscription}
             >
               <Text
@@ -199,9 +227,9 @@ export const ProfileScreen = ({ navigation }) => {
                 Pro Mode
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.settingBtn}
-              onPress={handleDowngrade}
+              onPress={() => handleDowngrade()}
             >
               <Text
                 style={styles.settingText}
@@ -323,7 +351,7 @@ const styles = StyleSheet.create({
     backgroundColor: "yellow",
     justifyContent: "center",
     alignItems: "center",
-  }, 
+  },
   proModeBtn: {
     alignItems: "center",
     borderRadius: 50,
@@ -334,5 +362,51 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 20,
+  }, 
+
+  modalDowngradeBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalDowngradeContainer: {
+    width: 360,
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+  },
+  modalDowngradeTitle: {
+    fontSize: 20, 
+    fontWeight: "bold", 
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalDowngradeInput: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    fontFamily: "Kanit-Regular",
+    fontSize: 14,
+    paddingHorizontal: 4,
+  },
+  modalDowngradeButton: {
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: "#007C00",
+    color: "white",
+  },
+  modalDowngradeCloseButton: {
+    marginTop: 10,
+    padding: 14,
+    borderRadius: 10,
+    backgroundColor: "#000087",
+    color: "white",
+  },
+  modalDowngradeButtonText: {
+    fontSize: 14,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
