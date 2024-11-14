@@ -35,8 +35,9 @@ export const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     const signOutUser = async () => {
       try {
-        await signOut(auth);
-        setUser(null);
+        await signOut(auth); 
+        await updateUser(user.id, {isOnline: false}); 
+        setUser(null); 
 
         navigation.reset({
           index: 0,
@@ -267,6 +268,20 @@ export const ProfileScreen = ({ navigation }) => {
                 ellipsizeMode="head"
               >
                 App Info
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity  
+              style={styles.settingBtn}
+              onPress={() => {
+                navigation.navigate(StackNav.Group);
+              }}
+            >
+              <Text
+                style={styles.settingText}
+                numberOfLines={1}
+                ellipsizeMode="head"
+              >
+                Your Groups
               </Text>
             </TouchableOpacity>
           </ScrollView>

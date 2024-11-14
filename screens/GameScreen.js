@@ -175,17 +175,17 @@ const GameScreen = ({ navigation }) => {
         friends.sort((a, b) => {
           if(a.isSubscribed === b.isSubscribed) {
             if(roundSelectedCountId && roundSelectedCountId[a.id] != roundSelectedCountId[b.id]) {
-              return roundSelectedCountId[a.id] - roundSelectedCountId[b.id]; 
+              return roundSelectedCountId[b.id] - roundSelectedCountId[a.id]; 
             } else {
               const randomIndex = Math.floor(
                 (Math.random() * 100) % 2
               ); 
-              if(randomIndex == 0) return 1; 
-              else return -1; 
+              if(randomIndex == 0) return -1; 
+              else return 1; 
             }
           } else {
-            if(a.isSubscribed) return 1; 
-            else return -1; 
+            if(a.isSubscribed) return -1; 
+            else return 1; 
           }
         }) 
   

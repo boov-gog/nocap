@@ -13,7 +13,7 @@ import { LoadingIndicator, Logo, TextInput } from "../../components";
 import { Colors, Images } from "../../config";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { distanceInMiles, showErrorToast } from "../../utils";
-import { fetchSchools } from "../../services/schoolService";
+import { fetchSchools, getLimitDistance } from "../../services/schoolService";
 import { debounce } from "lodash";
 import TopBar from "../../components/TopBar";
 import { useRoute } from "@react-navigation/native";
@@ -30,7 +30,9 @@ export const SchoolScreen = (props) => {
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const location = useRoute().params.location;
+  const location = useRoute().params.location; 
+
+  const [limitDistance, setLimitDistance] = useState(30); 
 
   let sortedAllSchools;
 
@@ -109,7 +111,7 @@ export const SchoolScreen = (props) => {
   };
 
   const handleNext = (school) => {
-    if (school.distance > 30) {
+    if (school.distance > limitDistance) {
       showErrorToast("You are too far away from this school.");
     } else {
       setSchool(school.id);
@@ -144,9 +146,16 @@ export const SchoolScreen = (props) => {
       }
       setLoading(false);
     }
-  };
+  }; 
 
-  useEffect(() => {
+  const getLimit = async () => {
+    const res = await getLimitDistance(); 
+    setLimitDistance(Number(res)); 
+    console.log("onBoardingLimitRes: ", Number(res)); 
+  }
+
+  useEffect(() => { 
+    getLimit();
     loadSchools();
   }, []);
 
@@ -154,7 +163,7 @@ export const SchoolScreen = (props) => {
     <TouchableOpacity style={styles.oneItem} onPress={() => handleNext(item)}>
       <Image
         style={styles.itemAvatar}
-        source={item.avatar == "" ? Images.highSchool : { uri: item.avatar }}
+        source={item.avatar == null ? Images.highSchool : { uri: item.avatar }}
         resizeMode="contain"
       />
       <Text style={styles.oneItemTitle} numberOfLines={2}>
@@ -168,7 +177,7 @@ export const SchoolScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Find Your School</Text>
+        <Text style={styles.titleStyle}>Find Your School (inside {limitDistance}miles)</Text>
 
         <View style={styles.listContainer}>
           <TextInput

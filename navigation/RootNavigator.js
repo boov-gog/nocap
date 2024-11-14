@@ -37,6 +37,8 @@ import {
   ReplyDetail,
   ChangePasswordScreen,
   ChangeSchoolScreen,
+  GroupScreen,
+  GroupQuestionsScreen
 } from "../screens";
 
 const Stack = createStackNavigator();
@@ -125,6 +127,14 @@ export const RootNavigator = () => {
         <Stack.Screen
           name={StackNav.ChangeSchool}
           component={ChangeSchoolScreen}
+        />
+        <Stack.Screen
+          name={StackNav.Group}
+          component={GroupScreen}
+        />
+        <Stack.Screen
+          name={StackNav.GroupQuestions}
+          component={GroupQuestionsScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

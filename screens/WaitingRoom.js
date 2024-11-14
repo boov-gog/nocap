@@ -16,17 +16,19 @@ import { Audio } from 'expo-av';
 import { Icon, TextInput } from "../components";
 import { sendInvite } from "../services/userService";
 import { SegmentedButtons } from "react-native-paper";
+import { FirebaseError } from "firebase/app";
+import { FriendScreen } from "./onboarding/FriendScreen";
 
 const WaitingRoom = ({ navigation }) => {
   const [pollTime, setPollTime] = useState("59:59");
   const [playEnable, setPlayEnable] = useState(true);
   const [checking, setChecking] = useState(true);
 
-  const { user, onAudio } = useContext(AuthenticatedUserContext);
+  let { user, onAudio } = useContext(AuthenticatedUserContext); 
 
   const [email, setEmail] = useState("");
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);  
 
   const leaderList = [
     { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
@@ -38,14 +40,16 @@ const WaitingRoom = ({ navigation }) => {
     },
   ];
 
-  let timer = null;
+  const [leaders, setLeaders] = useState(leaderList);  
 
-  const calculatePollTime = () => {
+  let timer = null
+
+  const calculatePollTime = () => { 
     // Calculate left time to the next right hour in UTC + 0.00 timezone
     const now = new Date();
     const nextHour = new Date(now);
 
-    let isPaid = false;
+    let isPaid = false; 
 
     if (user.isSubscribed && (now.getUTCMinutes() < 30 || (now.getUTCMinutes() == 30 && now.getUTCSeconds() == 0))) {
       nextHour.setUTCHours(nextHour.getUTCHours());
@@ -168,15 +172,57 @@ const WaitingRoom = ({ navigation }) => {
     useCallback(() => {
       checkGame();
     }, [])
-  );
+  ); 
 
-  useEffect(() => {
+  const handleSetLeaders = async () => { 
+    console.log("handleSetLeaders"); 
+    const gameData = await fetchGameData(user.id);
+
+    // console.log("gameData: ", gameData); 
+
+    let friends = gameData.friends.filter((f) => f.id !== user.id); 
+
+    let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId"); 
+    roundSelectedCountId = JSON.parse(roundSelectedCountId); 
+
+    console.log("friends: ", friends); 
+
+    if(roundSelectedCountId != null) {
+      friends.sort((a, b) => {
+        return roundSelectedCountId[a.id] - roundSelectedCountId[b.id]; 
+      }); 
+    }
+
+    let tempLeaders = []; 
+    for(let i = 0; i < 3; i ++) { 
+      console.log("i: ", i);
+      let avatar = Images.boy; 
+      if(friends[i].gender == "G") {
+        avatar = Images.girl; 
+      } else if(friends[i].gender == "N") {
+        avatar = Images.nonBinary; 
+      }
+
+      tempLeaders.push({
+        name: friends[i].firstName + " " + friends[i].lastName, 
+        avatar: avatar, 
+        gender: friends[i].gender, 
+      }); 
+    } 
+
+    console.log("tempLeaders: ", tempLeaders); 
+
+    setLeaders(tempLeaders); 
+  }
+
+  useEffect(() => { 
+    handleSetLeaders(); 
     // Countdown timer for the poll time
     if (timer) clearInterval(timer);
 
     timer = setInterval(() => {
       calculatePollTime();
-    }, 1000);
+    }, 1000); 
 
     return () => clearInterval(timer);
   }, []);
@@ -190,9 +236,9 @@ const WaitingRoom = ({ navigation }) => {
       if (onAudio) {
         const sound = new Audio.Sound();
         if (playEnable) {
-          await sound?.loadAsync(require('../assets/sounds/audio/enable.wav'));
+          await sound?.loadAsync(require('../assets/sounds/DJT/Bounces.mp3'));
         } else {
-          await sound?.loadAsync(require('../assets/sounds/audio/grey.wav'));
+          await sound?.loadAsync(require('../assets/sounds/DJT/Game_Button.mp3'));
         }
         await sound.setVolumeAsync(1.0);
         await sound?.playAsync();
@@ -221,7 +267,7 @@ const WaitingRoom = ({ navigation }) => {
           )
         );
         await AsyncStorage.setItem("shuffle", "3");
-        await AsyncStorage.setItem("skip", "3");
+        await AsyncStorage.setItem("skip", "2");
       }
 
       navigation.replace(StackNav.GamePage, {});
@@ -266,7 +312,7 @@ const WaitingRoom = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollViewer}>
         <Text style={styles.title}>School Leaders</Text>
         <View style={styles.leaderListContainer}>
-          {leaderList.map((value, index) => (
+          {leaders.map((value, index) => (
             <View style={styles.leaderListOne} key={index}>
               <Text style={styles.leaderListText} ellipsizeMode="tail">{`${index + 1
                 }. ${value.name}`}</Text>
@@ -484,7 +530,8 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
     fontSize: 14,
     paddingHorizontal: 4,
-  },
+  }, 
+
   modalButton: {
     padding: 14,
     borderRadius: 10,

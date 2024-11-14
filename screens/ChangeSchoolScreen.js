@@ -12,14 +12,14 @@ import { LoadingIndicator, TextInput } from "../components";
 import { Colors, Images } from "../config";
 import { StackNav } from "../navigation/NavigationKeys";
 import { distanceInMiles, showErrorToast, showSuccessToast } from "../utils";
-import { fetchSchools } from "../services/schoolService";
+import { fetchSchools, getLimitDistance } from "../services/schoolService";
 import { debounce } from "lodash";
 import TopBar from "../components/TopBar";
 import { AuthenticatedUserContext } from "../providers";
 import * as Location from "expo-location";
 import lunr from "lunr";
 import { updateUser } from "../services/userService";
-import { setCache, getCache } from "../utils";
+import { setCache, getCache } from "../utils"; 
 
 lunr.tokenizer.minLength = 3;
 
@@ -31,6 +31,8 @@ export const ChangeSchoolScreen = (props) => {
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
+
+  const [limitDistance, setLimitDistance] = useState(30); 
 
   let sortedAllSchools;
 
@@ -87,7 +89,7 @@ export const ChangeSchoolScreen = (props) => {
   };
 
   const handleNext = async (school) => {
-    if (school.distance > 30) {
+    if (school.distance > limitDistance) {
       showErrorToast("You are too far away from this school.");
     } else {
       try {
@@ -165,9 +167,17 @@ export const ChangeSchoolScreen = (props) => {
       props.navigation.goBack();
     }
     setLoading(false);
-  };
+  }; 
 
-  useEffect(() => {
+  const getLimit = async () => {
+    const res = await getLimitDistance(); 
+    setLimitDistance(Number(res)); 
+    console.log("limitRes: ", Number(res)); 
+  }
+
+  useEffect(() => { 
+    console.log("ChangeSchoolScreen");
+    getLimit(); 
     loadSchools();
   }, []);
 
@@ -175,7 +185,7 @@ export const ChangeSchoolScreen = (props) => {
     <TouchableOpacity style={styles.oneItem} onPress={() => handleNext(item)}>
       <Image
         style={styles.itemAvatar}
-        source={item.avatar == "" ? Images.highSchool : { uri: item.avatar }}
+        source={item.avatar == null ? Images.highSchool : { uri: item.avatar }}
         resizeMode="contain"
       />
       <Text style={styles.oneItemTitle} numberOfLines={2}>
@@ -189,7 +199,7 @@ export const ChangeSchoolScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Find Your School</Text>
+        <Text style={styles.titleStyle}>Find Your School (inside {limitDistance}miles)</Text>
 
         <View style={styles.listContainer}>
           <TextInput

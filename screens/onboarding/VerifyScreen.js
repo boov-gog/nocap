@@ -9,7 +9,8 @@ import NocapButton from "../../components/NocapButton";
 import { AuthenticatedUserContext } from "../../providers";
 import { showErrorToast, showSuccessToast } from "../../utils";
 import { StackNav } from "../../navigation/NavigationKeys";
-import { signinUser } from "../../services/userService";
+import { signinUser, updateUser } from "../../services/userService";
+import { isObject } from "formik";
 
 export const VerifyScreen = ({ navigation }) => {
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -70,8 +71,9 @@ export const VerifyScreen = ({ navigation }) => {
 
   const handleSignOut = async () => {
     try {
-      await signOut(auth);
-      setUser(null);
+      await signOut(auth); 
+      await updateUser(user.id, {isOnline: false}); 
+      setUser(null); 
     } catch (error) {
       console.error("Error signing out:", error);
     }

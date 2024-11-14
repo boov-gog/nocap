@@ -26,7 +26,10 @@ import CapOfFriend from "./CapOfFriend";
 import FriendCapDetail from "./FriendCapDetail";
 import ReplyDetail from "./ReplyDetail";
 import ChangePasswordScreen from "./Profile/ChangePasswordScreen";
-import { ChangeSchoolScreen } from "./ChangeSchoolScreen";
+import { ChangeSchoolScreen } from "./ChangeSchoolScreen"; 
+
+import GroupScreen from './GroupScreen'; 
+import GroupQuestionsScreen from "./GroupQuestionScreen";
 
 export {
   LoginScreen,
@@ -57,5 +60,7 @@ export {
   FriendCapDetail,
   ReplyDetail,
   ChangePasswordScreen,
-  ChangeSchoolScreen,
+  ChangeSchoolScreen, 
+  GroupScreen, 
+  GroupQuestionsScreen
 };
