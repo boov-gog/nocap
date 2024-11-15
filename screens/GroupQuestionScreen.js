@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View, Button, TouchableOpacity, TextInput as RNTextInput, ScrollView } from "react-native";
+import { Alert, StyleSheet, Text, View, Button, TouchableOpacity, TextInput as RNTextInput, ScrollView, Modal } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "../components/TopBar";
@@ -15,9 +15,9 @@ import {
 import { showErrorToast, showSuccessToast } from "../utils";
 
 import { Icon } from "../components/Icon";
-import { getSchoolById, addGroup, updateGroup } from "../services/schoolService";
+import { getSchoolById, addGroup, updateGroup, updateQuestion, delQuestion } from "../services/schoolService";
 
-import { useRoute } from "@react-navigation/native"; 
+import { useRoute } from "@react-navigation/native";
 
 import { AuthenticatedUserContext } from "../providers";
 
@@ -29,7 +29,15 @@ const GroupQuestionsScreen = () => {
   const [groupCode, setGroupCode] = useState("");
   const [groupQuestions, setGroupQuestions] = useState([]);
   const [newQuestions, setNewQuestions] = useState([]);
-  const [insertQuestion, setInsertQuestion] = useState("");
+  const [insertEngQuestion, setInsertEngQuestion] = useState("");
+  const [insertEspQuestion, setInsertEspQuestion] = useState("");
+
+  const [editEngQuestion, setEditEngQuestion] = useState("");
+  const [editEspQuestion, setEditEspQuestion] = useState("");
+  const [editType, setEditType] = useState("origin");
+  const [editId, setEditId] = useState(-1);
+
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   const groupId = useRoute().params.groupId;
 
@@ -48,37 +56,162 @@ const GroupQuestionsScreen = () => {
   }, [])
 
   const handleAddQuestion = () => {
-    if (insertQuestion == "") {
+    if (insertEngQuestion == "" || insertEspQuestion == "") {
       showErrorToast("Please input the question content!");
     } else {
-      console.log("insertQuestion: ", insertQuestion);
+      const timeId = Date.now();
       let tempNewQuestions = newQuestions;
-      tempNewQuestions.push({ value: insertQuestion, enabled: true });
+      tempNewQuestions.push({ tempId: timeId, value: insertEngQuestion, value_esp: insertEspQuestion, enabled: true });
       setNewQuestions(tempNewQuestions);
-      setInsertQuestion("");
+      setInsertEngQuestion("");
+      setInsertEspQuestion("");
     }
   }
 
   const handleDone = async () => {
+    console.log("handleDone: ", groupName);
+
     if (groupName == "") {
       showErrorToast("Group name should not be empty.");
     } else {
-      const data = { groupName, groupCode, newQuestions, groupId, ownerId: user.id }; 
-      if(groupId == -1) {
-        const res = await addGroup(data); 
-        setNewQuestions([]); 
-        showSuccessToast("New group is added successfully."); 
-      } else {
-        const res = await updateGroup(data); 
-        init(); 
-        setNewQuestions([]); 
-        showSuccessToast("Group data is updated successfully."); 
+      console.log("tempNewQuestions: ", newQuestions); 
+
+      if(groupQuestions.length + newQuestions.length < 10) {
+        showErrorToast("A group should have at least 10 questions."); 
+        return; 
       }
+
+      let tempNewQuestions = [];
+      newQuestions.map(item => {
+        tempNewQuestions.push({ value: item.value, value_esp: item.value_esp, enabled: item.enabled });
+      })
+
+      const data = { groupName, groupCode, newQuestions: tempNewQuestions, groupId, ownerId: user.id };
+
+      console.log("groupData: ", data); 
+
+      if (groupId == -1) {
+        const res = await addGroup(data); 
+
+        console.log("addGroupRes: ", res); 
+        if(res.status == 204) {
+          showErrorToast("This group code already exists."); 
+        } else { 
+          setGroupName("");
+          setGroupCode("");
+          setNewQuestions([]);
+          showSuccessToast("New group is added successfully.");
+        }
+      } else {
+        const res = await updateGroup(data);
+        init();
+        setNewQuestions([]);
+        showSuccessToast("Group data is updated successfully.");
+      }
+    }
+  }
+
+  const handleEdit = (type, id, engStr, espStr) => {
+    console.log("timeId: ", id);
+    console.log("engStr: ", engStr);
+    console.log("espStr: ", espStr);
+
+    setEditEngQuestion(engStr);
+    setEditEspQuestion(espStr);
+    setEditType(type);
+    setEditId(id);
+    setEditModalVisible(true);
+  }
+
+  const handleEditAction = async () => {
+    if (editType == "origin") {
+      const index = groupQuestions.findIndex(item => item.id == editId);
+
+      console.log("originIndex: ", index);
+
+      if (index != -1) {
+        let tmp = groupQuestions;
+        tmp[index].value = editEngQuestion;
+        tmp[index].value_esp = editEspQuestion;
+        setGroupQuestions(tmp);
+      } 
+
+      const res = updateQuestion(editId, {value: editEngQuestion, value_esp: editEspQuestion});
+      console.log("updateRes: ", res);
+    } else {
+      const index = newQuestions.findIndex(item => item.tempId == editId);
+
+      console.log("newIndex: ", index);
+
+      if (index != -1) {
+        let tmp = newQuestions;
+        tmp[index].value = editEngQuestion;
+        tmp[index].value_esp = editEspQuestion;
+        setNewQuestions(tmp);
+      }
+    }
+
+    setEditModalVisible(false);
+  }
+
+  const handleDelAction = (type, id) => {
+    if (type == "origin") {
+      try {
+        const res = delQuestion(id);
+        console.log("delRes: ", res);
+        const tmp = groupQuestions.filter(item => item.id != id);
+        setGroupQuestions(tmp);
+        showSuccessToast("Deleted a question successfully.");
+      } catch (error) {
+        console.log("delError: ", error);
+        showErrorToast("Error to delete a question.");
+      }
+    } else {
+      const tmp = newQuestions.filter(item => item.tempId != id);
+      setNewQuestions(tmp);
     }
   }
 
   return (
     <SafeAreaView style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => {
+          setEditModalVisible(!editModalVisible);
+        }}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <View style={styles.questionContainer}>
+              <View style={styles.questionBox}>
+                <TextInput
+                  style={styles.newInput}
+                  value={editEngQuestion}
+                  onChangeText={setEditEngQuestion}
+                  placeholder="Insert in English..."
+                />
+              </View>
+              <View style={styles.questionBox}>
+                <TextInput
+                  style={styles.newInput}
+                  value={editEspQuestion}
+                  onChangeText={setEditEspQuestion}
+                  placeholder="Insert in Spanish..."
+                />
+              </View>
+            </View>
+            <View style={styles.modalBtnContainer}>
+              <TouchableOpacity style={styles.modalCloseButton} onPress={() => setEditModalVisible(false)}>
+                <Text style={styles.modalButtonText}>Back</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalOkButton} onPress={() => handleEditAction()}>
+                <Text style={styles.modalButtonText}>Edit</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <TopBar />
       <View style={styles.mainContainer}>
         <View style={styles.inputContainer}>
@@ -104,22 +237,34 @@ const GroupQuestionsScreen = () => {
           </View>
         </View>
 
-        <View style={styles.topContainer}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.search}
-              value={insertQuestion}
-              onChangeText={setInsertQuestion}
-              placeholder="Insert questions..."
-            />
+        <View style={styles.questionContainer}>
+          <View style={styles.questionBox}>
+            <View style={styles.newInputContainer}>
+              <TextInput
+                style={styles.newInput}
+                value={insertEngQuestion}
+                onChangeText={setInsertEngQuestion}
+                placeholder="Insert in English..."
+              />
+            </View>
           </View>
-          <View style={styles.topEmptySpace}></View>
-          <View style={styles.newBtnContainer}>
-            <TouchableOpacity style={styles.newBtn} onPress={() => {
-              handleAddQuestion();
-            }}>
-              <Text style={styles.newBtnText}>Add</Text>
-            </TouchableOpacity>
+          <View style={styles.questionBox}>
+            <View style={styles.newInputContainer}>
+              <TextInput
+                style={styles.newInput}
+                value={insertEspQuestion}
+                onChangeText={setInsertEspQuestion}
+                placeholder="Insert in Spanish..."
+              />
+            </View>
+            <View style={styles.topEmptySpace}></View>
+            <View style={styles.newBtnContainer}>
+              <TouchableOpacity style={styles.newBtn} onPress={() => {
+                handleAddQuestion();
+              }}>
+                <Text style={styles.newBtnText}>Add</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -127,16 +272,20 @@ const GroupQuestionsScreen = () => {
           {groupQuestions.map(item => (
             <View style={styles.groupContainer}>
               <Text style={styles.groupText}>
-                { item.value }
+                {item.value}
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                handleEdit("origin", item.id, item.value, item.value_esp);
+              }}>
                 <Icon
                   name="pencil-outline"
                   size={32}
                   color="#1D1B20"
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                handleDelAction("origin", item.id, item.value, item.value_esp);
+              }}>
                 <Icon
                   name="delete-outline"
                   size={32}
@@ -150,14 +299,18 @@ const GroupQuestionsScreen = () => {
               <Text style={styles.groupText}>
                 {item.value}
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                handleEdit("new", item.tempId, item.value, item.value_esp);
+              }}>
                 <Icon
                   name="pencil-outline"
                   size={32}
                   color="#1D1B20"
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                handleDelAction("new", item.tempId);
+              }}>
                 <Icon
                   name="delete-outline"
                   size={32}
@@ -171,7 +324,7 @@ const GroupQuestionsScreen = () => {
           <TouchableOpacity style={styles.doneBtn} onPress={() => {
             handleDone();
           }}>
-            <Text style={styles.doneBtnText}>{groupId == -1? "Create": "Update"}</Text>
+            <Text style={styles.doneBtnText}>{groupId == -1 ? "Create" : "Update"}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -214,15 +367,18 @@ const styles = StyleSheet.create({
     color: Colors.white,
   },
 
-  topContainer: {
+  questionContainer: {
+    width: "100%"
+  },
+  questionBox: {
     // marginTop: 30,
     width: "100%",
     flexDirection: "row",
   },
-  searchContainer: {
+  newInputContainer: {
     width: "75%",
   },
-  search: {
+  newInput: {
     backgroundColor: "white",
     borderRadius: 10,
     fontFamily: "Kanit-Regular",
@@ -300,5 +456,66 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontFamily: "Kanit-Bold",
     color: "white",
+  },
+
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContainer: {
+    width: 360,
+    padding: 30,
+    backgroundColor: 'white',
+    borderRadius: 25,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontFamily: "Kanit",
+    fontWeight: "bold",
+    fontSize: 26,
+    lineHeight: 39,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalInput: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    fontFamily: "Kanit-Regular",
+    fontSize: 14,
+    paddingHorizontal: 4,
+  },
+
+  modalBtnContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "center",
+    gap: 24
+  },
+  modalCloseButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: "#000000",
+    color: "white",
+    width: "40%",
+  },
+  modalOkButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: "#0066FF",
+    color: "white",
+    width: "40%"
+  },
+  modalButtonText: {
+    fontFamily: "Rounded Mplus 1c Bold",
+    fontSize: 24,
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

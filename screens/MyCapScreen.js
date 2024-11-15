@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Icon, LoadingIndicator } from "../components";
 import { Colors, Images } from "../config";
@@ -19,6 +19,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 const MyCapScreen = ({ navigation }) => {
   const [followers, setFollowers] = useState(0);
@@ -42,15 +43,15 @@ const MyCapScreen = ({ navigation }) => {
         gender == GENDER_TYPE.Boy
           ? "From a Boy"
           : gender == GENDER_TYPE.Girl
-          ? "From a Girl"
-          : "From Someone";
+            ? "From a Girl"
+            : "From Someone";
     }
     let myImage =
       gender == GENDER_TYPE.Boy
         ? Images.blueCapList
         : gender == GENDER_TYPE.Girl
-        ? Images.pinkCap
-        : Images.greenCap;
+          ? Images.pinkCap
+          : Images.greenCap;
 
     if (item.gamer == user.id) {
       title =
@@ -64,8 +65,8 @@ const MyCapScreen = ({ navigation }) => {
         gender == GENDER_TYPE.Boy
           ? Images.blueBack
           : gender == GENDER_TYPE.Girl
-          ? Images.pinkBack
-          : Images.greenBack;
+            ? Images.pinkBack
+            : Images.greenBack;
     }
 
     return (
@@ -116,15 +117,16 @@ const MyCapScreen = ({ navigation }) => {
     user?.gender == GENDER_TYPE.Boy
       ? Images.boy
       : user?.gender == GENDER_TYPE.Girl
-      ? Images.girl
-      : Images.nonBinary;
+        ? Images.girl
+        : Images.nonBinary;
 
   const getCaps = async () => {
+    console.log("getCaps is called");
+
     try {
       const caps = await getRestCaps(user.id);
       // console.log("caps: ", caps);
       setCaps(caps);
-
       //only count that userInAnswer is mine
       const myCaps = caps.filter((cap) => cap.userInAnswer == user.id);
       setFollowers(myCaps.length);
@@ -145,16 +147,29 @@ const MyCapScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const initialLoading = async () => {
-      setIsLoading(true);
-      await getCaps();
-      setIsLoading(false);
+  useFocusEffect(
+    useCallback(() => {
+      const initialLoading = async () => {
+        setIsLoading(true);
+        await getCaps();
+        setIsLoading(false);
 
-      getFollowings();
-    };
-    initialLoading();
-  }, []);
+        getFollowings();
+      };
+      initialLoading();
+    }, [])
+  )
+
+  // useEffect(() => {
+  //   const initialLoading = async () => {
+  //     setIsLoading(true);
+  //     await getCaps();
+  //     setIsLoading(false);
+
+  //     getFollowings();
+  //   };
+  //   initialLoading();
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>

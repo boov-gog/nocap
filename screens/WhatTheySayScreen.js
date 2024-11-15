@@ -51,9 +51,9 @@ const WhatTheySayScreen = ({ navigation }) => {
       setGender(gender1); 
       setCapLock(lock1); 
 
-      console.log("whatcap: ", cap1); 
-      console.log("whatgamer: ", gamer1); 
-      console.log("whatgender: ", gender1); 
+      // console.log("whatcap: ", cap1); 
+      // console.log("whatgamer: ", gamer1); 
+      // console.log("whatgender: ", gender1); 
 
       if (cap1?.isUnlocked == false) { 
         let title = 
