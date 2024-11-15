@@ -6,23 +6,20 @@ import { LoadingIndicator, TextInput } from "../components";
 import { Colors } from "../config";
 import NocapButton from "../components/NocapButton";
 
-import { auth } from "../config";
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
-} from "firebase/auth";
 import { showErrorToast, showSuccessToast } from "../utils";
 
 import { Icon } from "../components/Icon";
 import { getSchoolById, addGroup, updateGroup, updateQuestion, delQuestion } from "../services/schoolService";
-
 import { useRoute } from "@react-navigation/native";
-
 import { AuthenticatedUserContext } from "../providers";
+import { StackNav } from "../navigation/NavigationKeys";
 
-const GroupQuestionsScreen = () => {
-  const { user } = useContext(AuthenticatedUserContext);
+const GroupQuestionsScreen = ({ navigation }) => { 
+  const authContext = useContext(AuthenticatedUserContext); 
+  const { user, setSchool } = useContext(AuthenticatedUserContext); 
+  const setGroupNameContext = authContext.setGroupName; 
+  const setGroupCodeContext = authContext.setGroupCode; 
+  const setGroupQuestionsContext = authContext.setGroupQuestions; 
 
   const [group, setGroup] = useState({});
   const [groupName, setGroupName] = useState("");
@@ -76,31 +73,47 @@ const GroupQuestionsScreen = () => {
     } else {
       console.log("tempNewQuestions: ", newQuestions); 
 
-      if(groupQuestions.length + newQuestions.length < 10) {
-        showErrorToast("A group should have at least 10 questions."); 
-        return; 
-      }
+      // if(groupQuestions.length + newQuestions.length < 10) {
+      //   showErrorToast("A group should have at least 10 questions."); 
+      //   return; 
+      // }
 
       let tempNewQuestions = [];
       newQuestions.map(item => {
         tempNewQuestions.push({ value: item.value, value_esp: item.value_esp, enabled: item.enabled });
-      })
+      }) 
 
-      const data = { groupName, groupCode, newQuestions: tempNewQuestions, groupId, ownerId: user.id };
+      console.log("middle");
+
+      const data = { groupName, groupCode, newQuestions: tempNewQuestions, groupId, ownerId: user?.id };
 
       console.log("groupData: ", data); 
 
-      if (groupId == -1) {
-        const res = await addGroup(data); 
+      if (groupId == -1) { 
+        if (!user) { 
+          console.log("here signup");
+          setSchool(-1); 
+          console.log("hereGroupName: ", groupName); 
+          console.log("hereGroupCode: ", groupCode); 
+          console.log("hereGroupQuestions: ", tempNewQuestions); 
+          setGroupNameContext(groupName); 
+          setGroupCodeContext(groupCode); 
+          setGroupQuestionsContext(tempNewQuestions); 
+          navigation.navigate(StackNav.Phone); 
+          console.log("navigate"); 
+          return; 
+        } else {
+          const res = await addGroup(data); 
 
-        console.log("addGroupRes: ", res); 
-        if(res.status == 204) {
-          showErrorToast("This group code already exists."); 
-        } else { 
-          setGroupName("");
-          setGroupCode("");
-          setNewQuestions([]);
-          showSuccessToast("New group is added successfully.");
+          console.log("addGroupRes: ", res); 
+          if(res.status == 204) {
+            showErrorToast("This group code already exists."); 
+          } else { 
+            setGroupName("");
+            setGroupCode("");
+            setNewQuestions([]);
+            showSuccessToast("New group is added successfully."); 
+          }
         }
       } else {
         const res = await updateGroup(data);

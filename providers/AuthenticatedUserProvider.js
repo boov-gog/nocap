@@ -17,6 +17,10 @@ export const AuthenticatedUserProvider = ({ children }) => {
   const [onAudio, setOnAudio] = useState(false); 
 
   const [inviter, setInviter] = useState(""); 
+  
+  const [groupName, setGroupName] = useState(""); 
+  const [groupCode, setGroupCode] = useState(""); 
+  const [groupQuestions, setGroupQuestions] = useState([]); 
 
   return (
     <AuthenticatedUserContext.Provider
@@ -44,7 +48,13 @@ export const AuthenticatedUserProvider = ({ children }) => {
         onAudio, 
         setOnAudio, 
         inviter, 
-        setInviter
+        setInviter, 
+        groupName, 
+        setGroupName, 
+        groupCode, 
+        setGroupCode, 
+        groupQuestions, 
+        setGroupQuestions, 
       }}
     >
       {children}

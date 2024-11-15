@@ -233,21 +233,21 @@ const WaitingRoom = ({ navigation }) => {
 
   const handlePlay = async () => {
     try {
-      if (onAudio) {
-        const sound = new Audio.Sound();
-        if (playEnable) {
-          await sound?.loadAsync(require('../assets/sounds/DJT/Bounces.mp3'));
-        } else {
-          await sound?.loadAsync(require('../assets/sounds/DJT/Game_Button.mp3'));
-        }
-        await sound.setVolumeAsync(1.0);
-        await sound?.playAsync();
-        sound?.setOnPlaybackStatusUpdate(status => {
-          if (status?.didJustFinish) {
-            sound?.unloadAsync();
-          }
-        });
-      }
+      // if (onAudio) {
+      //   const sound = new Audio.Sound();
+      //   if (playEnable) {
+      //     await sound?.loadAsync(require('../assets/sounds/DJT/Bounces.mp3'));
+      //   } else {
+      //     await sound?.loadAsync(require('../assets/sounds/DJT/Game_Button.mp3'));
+      //   }
+      //   await sound.setVolumeAsync(1.0);
+      //   await sound?.playAsync();
+      //   sound?.setOnPlaybackStatusUpdate(status => {
+      //     if (status?.didJustFinish) {
+      //       sound?.unloadAsync();
+      //     }
+      //   });
+      // }
 
       const gameData = await fetchGameData(user.id);
       const roundId = await AsyncStorage.getItem("roundId");

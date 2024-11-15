@@ -29,5 +29,6 @@ export const StackNav = {
   ChangePassword: "ChangePassword",
   ChangeSchool: "ChangeSchool", 
   Group: "Group", 
-  GroupQuestions: "GroupQuestions"
+  GroupQuestions: "GroupQuestions", 
+  GroupJoin: "GroupJoin"
 };

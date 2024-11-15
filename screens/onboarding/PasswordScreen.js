@@ -62,10 +62,17 @@ export const PasswordScreen = ({ navigation }) => {
     school,
     phone,
     friends, 
-    inviter
+    inviter, 
+    groupName, 
+    groupCode,
+    groupQuestions, 
   } = useContext(AuthenticatedUserContext); 
 
   const signUp = async () => { 
+    console.log("signupGroupName1", groupName); 
+    console.log("signupGroupCode1", groupCode); 
+    console.log("signupGroupQuestions1", groupQuestions); 
+
     const userData = {
       email,
       age,
@@ -74,13 +81,30 @@ export const PasswordScreen = ({ navigation }) => {
       gender,
       grade,
       school,
-      phone,
-    };
+      phone, 
+      groupName, 
+      groupCode, 
+      groupQuestions, 
+    }; 
+
+    console.log("signupUserData", userData); 
 
     try { 
       console.log("signupInviter: ", inviter); 
+
+      console.log("signupGroupName", groupName); 
+      console.log("signupGroupCode", groupCode); 
+      console.log("signupGroupQuestions", groupQuestions); 
+
+      const res = await registerUser(userData); 
       
-      const createdUser = await registerUser(userData);
+      if(res.status == 204) {
+        showErrorToast("The group code already exists."); 
+        return; 
+      } 
+      
+      const createdUser = res.data; 
+      console.log("createdUser: ", res); 
 
       setUser({ ...user, ...createdUser });
 
@@ -106,7 +130,7 @@ export const PasswordScreen = ({ navigation }) => {
       });
     } catch (error) {
       console.error("Error signing up user:", error);
-      showErrorToast(error);
+      showErrorToast("Error signing up user:" + error);
 
       deleteUser(auth.currentUser).catch((error) => {
         console.error("Error deleting firebase user:", error);

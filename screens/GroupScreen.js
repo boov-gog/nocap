@@ -11,19 +11,19 @@ import { useRoute } from "@react-navigation/native";
 
 import { Icon } from "../components/Icon";
 import { StackNav } from "../navigation/NavigationKeys";
-import { fetchSchools, deleteSchoolById } from "../services/schoolService"; 
-import { AuthenticatedUserContext } from "../providers"; 
+import { fetchSchools, deleteSchoolById } from "../services/schoolService";
+import { AuthenticatedUserContext } from "../providers";
 import { updateUser } from "../services/userService";
 
-const GroupScreen = ({ navigation }) => { 
-  const { user, setUser } = useContext(AuthenticatedUserContext);
+const GroupScreen = ({ navigation }) => {
+  const { user, setUser, setSchool } = useContext(AuthenticatedUserContext);
 
   const [searchText, setSearchText] = useState("");
   const [groups, setGroups] = useState([]);
   const [delId, setDelId] = useState(-1);
 
-  const [modalVisible, setModalVisible] = useState(false); 
-  const [limitModalVisible, setLimitModalVisible] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [limitModalVisible, setLimitModalVisible] = useState(false);
 
   const init = async () => {
     const schoolList = await fetchSchools();
@@ -49,27 +49,34 @@ const GroupScreen = ({ navigation }) => {
     setModalVisible(false);
     showSuccessToast("Group is deleted successfully.");
     setDelId(-1);
-  } 
+  }
 
-  const handleNew = () => { 
-    const currentAmount = groups.filter(item => item.owner === user.id).length; 
+  const handleNew = () => {
+    const currentAmount = groups.filter(item => item.owner === user.id).length;
 
-    if(currentAmount < 10) {
-      setLimitModalVisible(false); 
+    if (currentAmount < 10) {
+      setLimitModalVisible(false);
       navigation.navigate(StackNav.GroupQuestions, { groupId: -1 });
-    } else { 
-      showErrorToast("You already created 10 groups."); 
-      setLimitModalVisible(false); 
+    } else {
+      showErrorToast("You already created 10 groups.");
+      setLimitModalVisible(false);
     }
-  } 
+  }
 
   const handleJoin = async (id) => {
-    try {
-      const updatedUser = await updateUser(user.id, { school_id: id });
-      setUser({ ...user, ...updatedUser });
+    console.log("joinUser: ", user);
 
-      console.log("Joined user group: ", updatedUser);
-      showSuccessToast("Joined the group successfully.");
+    try {
+      if (!user) {
+        setSchool(id);
+        navigation.navigate(StackNav.Phone);
+      } else {
+        const updatedUser = await updateUser(user.id, { school_id: id });
+        setUser({ ...user, ...updatedUser });
+
+        console.log("Joined user group: ", updatedUser);
+        showSuccessToast("Joined the group successfully.");
+      }
     } catch (error) {
       console.error("Error joing the group: ", error);
       showErrorToast("Error joining the group: " + error.message);
@@ -111,8 +118,8 @@ const GroupScreen = ({ navigation }) => {
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>You can only make up to 10 groups.</Text>
             <View style={styles.modalBtnContainer}>
-              <TouchableOpacity style={styles.modalCloseButton} onPress={() => { 
-                handleNew(); 
+              <TouchableOpacity style={styles.modalCloseButton} onPress={() => {
+                handleNew();
               }}>
                 <Text style={styles.modalButtonText}>Ok</Text>
               </TouchableOpacity>
@@ -135,7 +142,7 @@ const GroupScreen = ({ navigation }) => {
           <View style={styles.topEmptySpace}></View>
           <View style={styles.newBtnContainer}>
             <TouchableOpacity style={styles.newBtn} onPress={() => {
-              setLimitModalVisible(true); 
+              setLimitModalVisible(true);
             }}>
               <Text style={styles.newBtnText}>New</Text>
             </TouchableOpacity>
@@ -149,26 +156,30 @@ const GroupScreen = ({ navigation }) => {
                 {item.title}
               </Text>
               <TouchableOpacity style={styles.groupJoinBtn} onPress={() => {
-                handleJoin(item.id); 
+                handleJoin(item.id);
               }}>
                 <Text style={styles.groupJoinBtnText}>Join</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate(StackNav.GroupQuestions, { groupId: item.id });
-              }}>
-                <Icon
-                  name="pencil-outline"
-                  size={32}
-                  color="#1D1B20"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDel(item.id)}>
-                <Icon
-                  name="delete-outline"
-                  size={32}
-                  color="#1D1B20"
-                />
-              </TouchableOpacity>
+              {user && (
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate(StackNav.GroupQuestions, { groupId: item.id });
+                }}>
+                  <Icon
+                    name="pencil-outline"
+                    size={32}
+                    color="#1D1B20"
+                  />
+                </TouchableOpacity>
+              )}
+              {user && (
+                <TouchableOpacity onPress={() => handleDel(item.id)}>
+                  <Icon
+                    name="delete-outline"
+                    size={32}
+                    color="#1D1B20"
+                  />
+                </TouchableOpacity>
+              )}
             </View>
           ))}
         </ScrollView>

@@ -23,7 +23,12 @@ export const GradeScreen = (props) => {
 
   const arr = [Grades._9, Grades._10, Grades._11, Grades._12];
 
-  const handleNext = (value) => {
+  const handleNext = (value) => { 
+    if (value == "notHighSchool") {
+      props.navigation.navigate(StackNav.GroupJoin);
+      return; 
+    }
+
     if (value == "") {
       showErrorToast("Select your grade.");
       return;
@@ -37,33 +42,33 @@ export const GradeScreen = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      {/* <KeyboardAwareScrollView> */}
       <Logo uri={Images.logo} />
-      <View style={styles.mainContainer}>
+      {/* <View style={styles.mainContainer}> */}
         <Text style={styles.titleStyle}>Choose Your Grade</Text>
-        {arr.map((value) => (
-          <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
-            <NocapButton
-              key={value}
-              title={value}
-              onPress={() => {
-                handleNext(value);
-              }}
-            />
-          </View>
-        ))}
+        <KeyboardAwareScrollView>
+          {arr.map((value) => (
+            <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
+              <NocapButton
+                key={value}
+                title={value}
+                onPress={() => {
+                  handleNext(value);
+                }}
+              />
+            </View>
+          ))}
 
-        <View style={{ height: 20 }} />
-        <NocapButton
-          title={Grades._Not}
-          onPress={() =>
-            // handleNext(Grades._Not)
-            showErrorToast("This feature is not available yet.")
-          }
-          titleStyle={{ fontSize: 24 }}
-        />
-      </View>
-      {/* </KeyboardAwareScrollView> */}
+          <View style={{ height: 20 }} />
+          <NocapButton
+            title={Grades._Not}
+            onPress={() =>
+              handleNext("notHighSchool")
+              // showErrorToast("This feature is not available yet.")
+            }
+            titleStyle={{ fontSize: 24 }}
+          />
+        </KeyboardAwareScrollView>
+      {/* </View> */}
     </SafeAreaView>
   );
 };

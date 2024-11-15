@@ -11,7 +11,7 @@ const ADD_BONUS_API_URL = ENDPOINTS.API_URL + "/users/add_bonus";
 export const registerUser = async (user) => {
   try {
     const response = await axios.post(SIGNUP_API_URL, user);
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error signing up user:", error);
     throw error;

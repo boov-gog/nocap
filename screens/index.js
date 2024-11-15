@@ -30,6 +30,7 @@ import { ChangeSchoolScreen } from "./ChangeSchoolScreen";
 
 import GroupScreen from './GroupScreen'; 
 import GroupQuestionsScreen from "./GroupQuestionScreen";
+import { GroupJoinScreen } from "./onboarding/GroupJoinScreen"; 
 
 export {
   LoginScreen,
@@ -62,5 +63,6 @@ export {
   ChangePasswordScreen,
   ChangeSchoolScreen, 
   GroupScreen, 
-  GroupQuestionsScreen
+  GroupQuestionsScreen,
+  GroupJoinScreen
 };
