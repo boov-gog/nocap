@@ -49,19 +49,19 @@ const GameScreen = ({ navigation }) => {
   }, [question, friends, selected]);
 
   // Function to save the answer and move to the next question
-  const saveAnswer_Move2Next = async () => { 
+  const saveAnswer_Move2Next = async () => {
     try {
       const question = questionRef.current;
       const friends = friendsRef.current;
-      const selected = selectedRef.current; 
+      const selected = selectedRef.current;
 
       // Get the roundId from AsyncStorage
-      const roundId = await AsyncStorage.getItem("roundId"); 
+      const roundId = await AsyncStorage.getItem("roundId");
 
       // Filter out the selected friend from the friends array
       const unselectedFriends = friends.filter(
         (_, index) => index !== selected
-      ); 
+      );
 
       // Create a cap object with the necessary data
       const cap = {
@@ -69,31 +69,36 @@ const GameScreen = ({ navigation }) => {
         gamer: user.id,
         userInAnswer: friends[selected]?.email ? friends[selected].id : null,
         nameInAnswer: friends[selected]?.name,
-        noanswer1: unselectedFriends[0]?.name, 
+        noanswer1: unselectedFriends[0]?.name,
         noanswer2: unselectedFriends[1]?.name,
-        noanswer3: unselectedFriends[2]?.name, 
+        noanswer3: unselectedFriends[2]?.name,
         roundId: Number(roundId),
         showToOthers: false,
         isUnlocked: false,
-      }; 
+      };
 
-      console.log("gameCap: ", cap); 
+      console.log("gameCap: ", cap);
 
-      let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId"); 
-      roundSelectedCountId = JSON.parse(roundSelectedCountId); 
+      let roundSelectedCountId = await AsyncStorage.getItem(
+        "rountSelectedCountId"
+      );
+      roundSelectedCountId = JSON.parse(roundSelectedCountId);
 
-      if(roundSelectedCountId == null) {
-        roundSelectedCountId = []; 
-        for(let i = 0; i < 100; i ++) {
-          roundSelectedCountId.push(0); 
+      if (roundSelectedCountId == null) {
+        roundSelectedCountId = [];
+        for (let i = 0; i < 100; i++) {
+          roundSelectedCountId.push(0);
         }
       }
 
-      roundSelectedCountId[cap.userInAnswer] ++; 
+      roundSelectedCountId[cap.userInAnswer]++;
 
-      await AsyncStorage.setItem("rountSelectedCountId", JSON.stringify(roundSelectedCountId)); 
+      await AsyncStorage.setItem(
+        "rountSelectedCountId",
+        JSON.stringify(roundSelectedCountId)
+      );
 
-      console.log("roundSelectedCountId: ", roundSelectedCountId); 
+      console.log("roundSelectedCountId: ", roundSelectedCountId);
 
       // Save the cap using the saveCap function
       await saveCap(cap);
@@ -112,6 +117,10 @@ const GameScreen = ({ navigation }) => {
 
       // Save the updated questions back to AsyncStorage
       await AsyncStorage.setItem("questions", JSON.stringify(updatedQuestions));
+
+      // Recharge "shuffle" and "skip" trying numbers
+      await AsyncStorage.setItem("shuffle", "3");
+      await AsyncStorage.setItem("skip", "2");
 
       // Replace the current screen with the GamePage screen
       navigation.replace(StackNav.GamePage, {});
@@ -163,37 +172,38 @@ const GameScreen = ({ navigation }) => {
         });
       }
 
-      console.log("gameFriends: ", friends); 
+      console.log("gameFriends: ", friends);
 
-      // Select 4 friends randomly 
-      if (friends.length >= 4) { 
-        console.log("selectFriendsPriotize"); 
+      // Select 4 friends randomly
+      if (friends.length >= 4) {
+        const selectedFriends = [];
 
-        const selectedFriends = []; 
+        let roundSelectedCountId = await AsyncStorage.getItem(
+          "rountSelectedCountId"
+        );
+        roundSelectedCountId = JSON.parse(roundSelectedCountId);
 
-        let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId"); 
-        roundSelectedCountId = JSON.parse(roundSelectedCountId); 
-  
         friends.sort((a, b) => {
-          if(a.isSubscribed === b.isSubscribed) {
-            if(roundSelectedCountId && roundSelectedCountId[a.id] != roundSelectedCountId[b.id]) {
-              return roundSelectedCountId[b.id] - roundSelectedCountId[a.id]; 
+          if (a.isSubscribed === b.isSubscribed) {
+            if (
+              roundSelectedCountId &&
+              roundSelectedCountId[a.id] != roundSelectedCountId[b.id]
+            ) {
+              return roundSelectedCountId[b.id] - roundSelectedCountId[a.id];
             } else {
-              const randomIndex = Math.floor(
-                (Math.random() * 100) % 2
-              ); 
-              if(randomIndex == 0) return -1; 
-              else return 1; 
+              const randomIndex = Math.floor((Math.random() * 100) % 2);
+              if (randomIndex == 0) return -1;
+              else return 1;
             }
           } else {
-            if(a.isSubscribed) return -1; 
-            else return 1; 
+            if (a.isSubscribed) return -1;
+            else return 1;
           }
-        }) 
-  
-        console.log("gameSortFriends: ", friends); 
-  
-        for(let i = 0; i < 4; i ++) selectedFriends.push(friends[i]);
+        });
+
+        console.log("gameSortFriends: ", friends);
+
+        for (let i = 0; i < 4; i++) selectedFriends.push(friends[i]);
 
         // for (let i = 0; i < 4; i++) {
         //   const randomIndex = Math.floor(
