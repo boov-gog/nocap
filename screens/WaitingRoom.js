@@ -24,32 +24,25 @@ const WaitingRoom = ({ navigation }) => {
   const [playEnable, setPlayEnable] = useState(true);
   const [checking, setChecking] = useState(true);
 
-  let { user, onAudio } = useContext(AuthenticatedUserContext); 
+  let { user, onAudio } = useContext(AuthenticatedUserContext);
 
   const [email, setEmail] = useState("");
 
-  const [modalVisible, setModalVisible] = useState(false);  
+  const [modalVisible, setModalVisible] = useState(false);
 
-  const leaderList = [
-    { name: "Xavier Tarkiniene", avatar: Images.boy, gender: GENDER_TYPE.Boy },
-    { name: "Sarah Shneider", avatar: Images.girl, gender: GENDER_TYPE.Girl },
-    {
-      name: "Alabaster Greensmile",
-      avatar: Images.nonBinary,
-      gender: GENDER_TYPE.NonBinary,
-    },
-  ];
+  const [isLeaderLoading, setIsLeaderLoading] = useState(true);
+  const [isLeader, setIsLeader] = useState(false);
 
-  const [leaders, setLeaders] = useState(leaderList);  
+  const [leaders, setLeaders] = useState([]);
 
   let timer = null
 
-  const calculatePollTime = () => { 
+  const calculatePollTime = () => {
     // Calculate left time to the next right hour in UTC + 0.00 timezone
     const now = new Date();
     const nextHour = new Date(now);
 
-    let isPaid = false; 
+    let isPaid = false;
 
     if (user.isSubscribed && (now.getUTCMinutes() < 30 || (now.getUTCMinutes() == 30 && now.getUTCSeconds() == 0))) {
       nextHour.setUTCHours(nextHour.getUTCHours());
@@ -172,60 +165,86 @@ const WaitingRoom = ({ navigation }) => {
     useCallback(() => {
       checkGame();
     }, [])
-  ); 
+  );
 
-  const handleSetLeaders = async () => { 
-    console.log("handleSetLeaders"); 
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const handleSetLeaders = async () => {
+    setIsLeaderLoading(true);
+
+    console.log("handleSetLeaders");
     const gameData = await fetchGameData(user.id);
 
     // console.log("gameData: ", gameData); 
+    // await delay(2000);
 
-    let friends = gameData.friends.filter((f) => f.id !== user.id); 
+    let friends = gameData.friends.filter((f) => f.id !== user.id);
 
-    let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId"); 
-    roundSelectedCountId = JSON.parse(roundSelectedCountId); 
+    if (friends.length >= 4) {
 
-    console.log("friends: ", friends); 
+      let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId");
+      roundSelectedCountId = JSON.parse(roundSelectedCountId);
 
-    if(roundSelectedCountId != null) {
-      friends.sort((a, b) => {
-        return roundSelectedCountId[a.id] - roundSelectedCountId[b.id]; 
-      }); 
-    }
+      console.log("friends: ", friends);
 
-    let tempLeaders = []; 
-    for(let i = 0; i < 3; i ++) { 
-      console.log("i: ", i);
-      let avatar = Images.boy; 
-      if(friends[i].gender == "G") {
-        avatar = Images.girl; 
-      } else if(friends[i].gender == "N") {
-        avatar = Images.nonBinary; 
+      if (roundSelectedCountId != null) {
+        friends.sort((a, b) => {
+          return roundSelectedCountId[a.id] - roundSelectedCountId[b.id];
+        });
       }
 
-      tempLeaders.push({
-        name: friends[i].firstName + " " + friends[i].lastName, 
-        avatar: avatar, 
-        gender: friends[i].gender, 
-      }); 
-    } 
+      let tempLeaders = [];
+      for (let i = 0; i < 3; i++) {
+        console.log("i: ", i);
+        let avatar = Images.boy;
+        if (friends[i].gender == "G") {
+          avatar = Images.girl;
+        } else if (friends[i].gender == "N") {
+          avatar = Images.nonBinary;
+        }
 
-    console.log("tempLeaders: ", tempLeaders); 
+        tempLeaders.push({
+          name: friends[i].firstName + " " + friends[i].lastName,
+          avatar: avatar,
+          gender: friends[i].gender,
+        });
+      }
 
-    setLeaders(tempLeaders); 
+      console.log("tempLeaders: ", tempLeaders);
+
+      setLeaders(tempLeaders);
+      setIsLeader(true);
+    } else {
+      setIsLeader(false);
+    }
+
+    setIsLeaderLoading(false);
   }
 
-  useEffect(() => { 
-    handleSetLeaders(); 
-    // Countdown timer for the poll time
-    if (timer) clearInterval(timer);
+  useFocusEffect(
+    useCallback(() => {
+      handleSetLeaders();
+      // Countdown timer for the poll time
+      if (timer) clearInterval(timer);
 
-    timer = setInterval(() => {
-      calculatePollTime();
-    }, 1000); 
+      timer = setInterval(() => {
+        calculatePollTime();
+      }, 1000);
 
-    return () => clearInterval(timer);
-  }, []);
+      return () => clearInterval(timer);
+    }, [])
+  );
+
+  // useEffect(() => {
+  //   handleSetLeaders();
+  //   if (timer) clearInterval(timer);
+
+  //   timer = setInterval(() => {
+  //     calculatePollTime();
+  //   }, 1000);
+
+  //   return () => clearInterval(timer);
+  // }, []);
 
   const handleBlueCapClick = () => {
     navigation.navigate(StackNav.MyCaps);
@@ -233,22 +252,6 @@ const WaitingRoom = ({ navigation }) => {
 
   const handlePlay = async () => {
     try {
-      // if (onAudio) {
-      //   const sound = new Audio.Sound();
-      //   if (playEnable) {
-      //     await sound?.loadAsync(require('../assets/sounds/DJT/Bounces.mp3'));
-      //   } else {
-      //     await sound?.loadAsync(require('../assets/sounds/DJT/Game_Button.mp3'));
-      //   }
-      //   await sound.setVolumeAsync(1.0);
-      //   await sound?.playAsync();
-      //   sound?.setOnPlaybackStatusUpdate(status => {
-      //     if (status?.didJustFinish) {
-      //       sound?.unloadAsync();
-      //     }
-      //   });
-      // }
-
       const gameData = await fetchGameData(user.id);
       const roundId = await AsyncStorage.getItem("roundId");
 
@@ -292,7 +295,7 @@ const WaitingRoom = ({ navigation }) => {
 
       if (res.status == 200) {
         showSuccessToast(res.data.success);
-        setModalVisible(false); 
+        setModalVisible(false);
         setEmail("");
       } else {
         showErrorToast(res.data.error);
@@ -312,10 +315,13 @@ const WaitingRoom = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.scrollViewer}>
         <Text style={styles.title}>School Leaders</Text>
         <View style={styles.leaderListContainer}>
-          {leaders.map((value, index) => (
+          {isLeaderLoading ? (
+            <LoadingIndicator />
+          ) : isLeader ? (leaders.map((value, index) => (
             <View style={styles.leaderListOne} key={index}>
-              <Text style={styles.leaderListText} ellipsizeMode="tail">{`${index + 1
-                }. ${value.name}`}</Text>
+              <Text style={styles.leaderListText} ellipsizeMode="tail">
+                {`${index + 1}. ${value.name}`}
+              </Text>
               <Image
                 style={[
                   styles.leaderListImage,
@@ -331,7 +337,13 @@ const WaitingRoom = ({ navigation }) => {
                 source={value.avatar}
               ></Image>
             </View>
-          ))}
+          ))) : (
+            <View style={styles.noListTextContainer}>
+              <Text style={styles.noListText} ellipsizeMode="tail">There are no leading friends.</Text>
+            </View>
+          )
+          }
+
         </View>
         <View style={styles.timerContainer}>
           <Image style={styles.lockImage} source={Images.locker} />
@@ -410,10 +422,21 @@ const styles = StyleSheet.create({
   },
   leaderListContainer: {
     width: "100%",
+    height: 145,
     borderRadius: 5,
     backgroundColor: Colors.leaderListBack,
     padding: 6,
     gap: 6,
+  },
+  noListTextContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noListText: {
+    color: "white",
+    fontSize: 26,
+    fontFamily: "Kanit-Bold",
   },
   leaderListOne: {
     borderRadius: 10,
@@ -530,7 +553,7 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
     fontSize: 14,
     paddingHorizontal: 4,
-  }, 
+  },
 
   modalButton: {
     padding: 14,

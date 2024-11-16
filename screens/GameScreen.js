@@ -167,6 +167,8 @@ const GameScreen = ({ navigation }) => {
 
       // Select 4 friends randomly 
       if (friends.length >= 4) { 
+        console.log("selectFriendsPriotize"); 
+
         const selectedFriends = []; 
 
         let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId"); 
