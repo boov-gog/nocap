@@ -73,10 +73,10 @@ const GroupQuestionsScreen = ({ navigation }) => {
     } else {
       console.log("tempNewQuestions: ", newQuestions); 
 
-      // if(groupQuestions.length + newQuestions.length < 10) {
-      //   showErrorToast("A group should have at least 10 questions."); 
-      //   return; 
-      // }
+      if(groupQuestions.length + newQuestions.length < 10) {
+        showErrorToast("A group should have at least 10 questions."); 
+        return; 
+      }
 
       let tempNewQuestions = [];
       newQuestions.map(item => {

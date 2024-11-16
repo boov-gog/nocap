@@ -189,15 +189,15 @@ const GameScreen = ({ navigation }) => {
               roundSelectedCountId &&
               roundSelectedCountId[a.id] != roundSelectedCountId[b.id]
             ) {
-              return roundSelectedCountId[b.id] - roundSelectedCountId[a.id];
+              return roundSelectedCountId[a.id] - roundSelectedCountId[b.id];
             } else {
               const randomIndex = Math.floor((Math.random() * 100) % 2);
-              if (randomIndex == 0) return -1;
-              else return 1;
+              if (randomIndex == 0) return 1;
+              else return -1;
             }
           } else {
-            if (a.isSubscribed) return -1;
-            else return 1;
+            if (a.isSubscribed) return 1;
+            else return -1;
           }
         });
 
