@@ -314,7 +314,7 @@ const WaitingRoom = ({ navigation }) => {
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewer}>
         <Text style={styles.title}>School Leaders</Text>
-        <View style={styles.leaderListContainer}>
+        <View style={[styles.leaderListContainer, isLeaderLoading && { backgroundColor : "#FFFFFF" }]}>
           {isLeaderLoading ? (
             <LoadingIndicator />
           ) : isLeader ? (leaders.map((value, index) => (
