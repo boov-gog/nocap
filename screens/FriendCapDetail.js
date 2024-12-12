@@ -81,6 +81,7 @@ const FriendCapDetail = ({ navigation }) => {
         <LoadingIndicator />
       ) : (
         <ScrollView
+          showsVerticalScrollIndicator={false} 
           style={styles.scrollViewer}
           contentContainerStyle={styles.scrollViewContainer}
         >

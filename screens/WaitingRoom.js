@@ -19,7 +19,11 @@ import { SegmentedButtons } from "react-native-paper";
 import { FirebaseError } from "firebase/app";
 import { FriendScreen } from "./onboarding/FriendScreen";
 
+import { useTranslation } from "react-i18next";
+
 const WaitingRoom = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const [pollTime, setPollTime] = useState("59:59");
   const [playEnable, setPlayEnable] = useState(true);
   const [checking, setChecking] = useState(true);
@@ -312,8 +316,8 @@ const WaitingRoom = ({ navigation }) => {
           color="black"
         />
       </View>
-      <ScrollView contentContainerStyle={styles.scrollViewer}>
-        <Text style={styles.title}>School Leaders</Text>
+      <ScrollView contentContainerStyle={styles.scrollViewer} showsVerticalScrollIndicator={false} >
+        <Text style={styles.title}>{t("schoolLeaders")}</Text>
         <View style={[styles.leaderListContainer, isLeaderLoading && { backgroundColor : "#FFFFFF" }]}>
           {isLeaderLoading ? (
             <LoadingIndicator />
@@ -347,7 +351,7 @@ const WaitingRoom = ({ navigation }) => {
         </View>
         <View style={styles.timerContainer}>
           <Image style={styles.lockImage} source={Images.locker} />
-          <Text style={styles.timerBefore}>New polls in </Text>
+          <Text style={styles.timerBefore}>{t("newPollsIn")} </Text>
           <Text style={styles.timerText}>{pollTime}</Text>
         </View>
         <Text style={styles.skipText}>Skip the wait</Text>
@@ -356,7 +360,7 @@ const WaitingRoom = ({ navigation }) => {
             style={styles.inviteBtnImage}
             source={Images.inviteFrinedsBtn}
           />
-          <Text style={styles.inviteBtnText}>Invite a friend</Text>
+          <Text style={styles.inviteBtnText}>{t("inviteAFriend")}</Text>
         </TouchableOpacity>
         {checking ? (
           <LoadingIndicator />
@@ -416,13 +420,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    marginTop: 50,
+    marginTop: 20, // 50
     fontFamily: "Kanit-Bold",
     fontSize: 32,
   },
   leaderListContainer: {
     width: "100%",
-    height: 145,
+    // height: 145,
     borderRadius: 5,
     backgroundColor: Colors.leaderListBack,
     padding: 6,
@@ -456,7 +460,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   timerContainer: {
-    marginTop: 22,
+    marginTop: 0, // 22
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
@@ -476,14 +480,14 @@ const styles = StyleSheet.create({
     color: "red",
   },
   skipText: {
-    marginTop: 27,
+    marginTop: 0, // 27
     fontFamily: "MPR-Bold",
     fontSize: 32,
     color: "#D3D3D3",
   },
   inviteBtn: {
-    marginTop: 17,
-    marginBottom: 39,
+    marginTop: 6, // 17
+    marginBottom: 12, // 17
     paddingHorizontal: 60,
     paddingVertical: 14,
     flexDirection: "row",

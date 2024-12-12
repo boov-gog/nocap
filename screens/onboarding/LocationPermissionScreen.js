@@ -10,7 +10,11 @@ import { showErrorToast, showSuccessToast } from "../../utils";
 import * as Location from "expo-location";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const LocationPermissionScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [isGettingPermission, setIsGettingPermission] = useState(false);
 
   const getCurrentLocationWithTimeout = async () => {
@@ -59,13 +63,13 @@ export const LocationPermissionScreen = (props) => {
       <TopBar />
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>To find your school</Text>
+        <Text style={styles.titleStyle}>{t("toFindYourSchool")}</Text>
 
         {isGettingPermission ? (
           <LoadingIndicator />
         ) : (
           <NocapButton
-            title="Allow Access to Location"
+            title={t("allowAccessToLocation")}
             onPress={handleNext}
             titleStyle={{ fontSize: 22 }}
           />

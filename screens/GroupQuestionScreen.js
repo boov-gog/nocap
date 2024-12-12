@@ -14,12 +14,16 @@ import { useRoute } from "@react-navigation/native";
 import { AuthenticatedUserContext } from "../providers";
 import { StackNav } from "../navigation/NavigationKeys";
 
-const GroupQuestionsScreen = ({ navigation }) => { 
-  const authContext = useContext(AuthenticatedUserContext); 
-  const { user, setSchool } = useContext(AuthenticatedUserContext); 
-  const setGroupNameContext = authContext.setGroupName; 
-  const setGroupCodeContext = authContext.setGroupCode; 
-  const setGroupQuestionsContext = authContext.setGroupQuestions; 
+import { useTranslation } from "react-i18next";
+
+const GroupQuestionsScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
+  const authContext = useContext(AuthenticatedUserContext);
+  const { user, setSchool } = useContext(AuthenticatedUserContext);
+  const setGroupNameContext = authContext.setGroupName;
+  const setGroupCodeContext = authContext.setGroupCode;
+  const setGroupQuestionsContext = authContext.setGroupQuestions;
 
   const [group, setGroup] = useState({});
   const [groupName, setGroupName] = useState("");
@@ -27,7 +31,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
   const [groupQuestions, setGroupQuestions] = useState([]);
   const [newQuestions, setNewQuestions] = useState([]);
   const [insertEngQuestion, setInsertEngQuestion] = useState("");
-  const [insertEspQuestion, setInsertEspQuestion] = useState("");
+  const [insertEspQuestion, setInsertEspQuestion] = useState("Question in Spanish");
 
   const [editEngQuestion, setEditEngQuestion] = useState("");
   const [editEspQuestion, setEditEspQuestion] = useState("");
@@ -71,48 +75,48 @@ const GroupQuestionsScreen = ({ navigation }) => {
     if (groupName == "") {
       showErrorToast("Group name should not be empty.");
     } else {
-      console.log("tempNewQuestions: ", newQuestions); 
+      console.log("tempNewQuestions: ", newQuestions);
 
-      if(groupQuestions.length + newQuestions.length < 10) {
-        showErrorToast("A group should have at least 10 questions."); 
-        return; 
+      if (groupQuestions.length + newQuestions.length < 10) {
+        showErrorToast("A group should have at least 10 questions.");
+        return;
       }
 
       let tempNewQuestions = [];
       newQuestions.map(item => {
         tempNewQuestions.push({ value: item.value, value_esp: item.value_esp, enabled: item.enabled });
-      }) 
+      })
 
       console.log("middle");
 
       const data = { groupName, groupCode, newQuestions: tempNewQuestions, groupId, ownerId: user?.id };
 
-      console.log("groupData: ", data); 
+      console.log("groupData: ", data);
 
-      if (groupId == -1) { 
-        if (!user) { 
+      if (groupId == -1) {
+        if (!user) {
           console.log("here signup");
-          setSchool(-1); 
-          console.log("hereGroupName: ", groupName); 
-          console.log("hereGroupCode: ", groupCode); 
-          console.log("hereGroupQuestions: ", tempNewQuestions); 
-          setGroupNameContext(groupName); 
-          setGroupCodeContext(groupCode); 
-          setGroupQuestionsContext(tempNewQuestions); 
-          navigation.navigate(StackNav.Phone); 
-          console.log("navigate"); 
-          return; 
+          setSchool(-1);
+          console.log("hereGroupName: ", groupName);
+          console.log("hereGroupCode: ", groupCode);
+          console.log("hereGroupQuestions: ", tempNewQuestions);
+          setGroupNameContext(groupName);
+          setGroupCodeContext(groupCode);
+          setGroupQuestionsContext(tempNewQuestions);
+          navigation.navigate(StackNav.Phone);
+          console.log("navigate");
+          return;
         } else {
-          const res = await addGroup(data); 
+          const res = await addGroup(data);
 
-          console.log("addGroupRes: ", res); 
-          if(res.status == 204) {
-            showErrorToast("This group code already exists."); 
-          } else { 
+          console.log("addGroupRes: ", res);
+          if (res.status == 204) {
+            showErrorToast("This group code already exists.");
+          } else {
             setGroupName("");
             setGroupCode("");
             setNewQuestions([]);
-            showSuccessToast("New group is added successfully."); 
+            showSuccessToast("New group is added successfully.");
           }
         }
       } else {
@@ -147,9 +151,9 @@ const GroupQuestionsScreen = ({ navigation }) => {
         tmp[index].value = editEngQuestion;
         tmp[index].value_esp = editEspQuestion;
         setGroupQuestions(tmp);
-      } 
+      }
 
-      const res = updateQuestion(editId, {value: editEngQuestion, value_esp: editEspQuestion});
+      const res = updateQuestion(editId, { value: editEngQuestion, value_esp: editEspQuestion });
       console.log("updateRes: ", res);
     } else {
       const index = newQuestions.findIndex(item => item.tempId == editId);
@@ -205,18 +209,18 @@ const GroupQuestionsScreen = ({ navigation }) => {
                   placeholder="Insert in English..."
                 />
               </View>
-              <View style={styles.questionBox}>
+              {/* <View style={styles.questionBox}>
                 <TextInput
                   style={styles.newInput}
                   value={editEspQuestion}
                   onChangeText={setEditEspQuestion}
                   placeholder="Insert in Spanish..."
                 />
-              </View>
+              </View> */}
             </View>
             <View style={styles.modalBtnContainer}>
               <TouchableOpacity style={styles.modalCloseButton} onPress={() => setEditModalVisible(false)}>
-                <Text style={styles.modalButtonText}>Back</Text>
+                <Text style={styles.modalButtonText}>{t("back")}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalOkButton} onPress={() => handleEditAction()}>
                 <Text style={styles.modalButtonText}>Edit</Text>
@@ -257,11 +261,19 @@ const GroupQuestionsScreen = ({ navigation }) => {
                 style={styles.newInput}
                 value={insertEngQuestion}
                 onChangeText={setInsertEngQuestion}
-                placeholder="Insert in English..."
+                placeholder="Insert a question..."
               />
             </View>
+            <View style={styles.topEmptySpace}></View>
+            <View style={styles.newBtnContainer}>
+              <TouchableOpacity style={styles.newBtn} onPress={() => {
+                handleAddQuestion();
+              }}>
+                <Text style={styles.newBtnText}>Add</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-          <View style={styles.questionBox}>
+          {/* <View style={styles.questionBox}>
             <View style={styles.newInputContainer}>
               <TextInput
                 style={styles.newInput}
@@ -278,10 +290,10 @@ const GroupQuestionsScreen = ({ navigation }) => {
                 <Text style={styles.newBtnText}>Add</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </View>
 
-        <ScrollView style={styles.groupScroll}>
+        <ScrollView style={styles.groupScroll} showsVerticalScrollIndicator={false} >
           {groupQuestions.map(item => (
             <View style={styles.groupContainer}>
               <Text style={styles.groupText}>

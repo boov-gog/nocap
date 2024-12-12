@@ -171,7 +171,8 @@ const CapOfFriend = ({ navigation }) => {
           {caps.length == 0 ? (
             <Text style={styles.title}>No Public Caps Yet</Text>
           ) : (
-            <FlatList
+            <FlatList 
+              showsVerticalScrollIndicator={false}
               data={caps}
               renderItem={capListItem}
               keyExtractor={(item) => item.id}

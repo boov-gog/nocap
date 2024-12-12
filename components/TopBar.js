@@ -4,6 +4,8 @@ import { Colors, Images } from "../config";
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "./Icon";
 
+import { useTranslation } from "react-i18next";
+
 const TopBar = ({
   style,
   textStyle,
@@ -12,6 +14,8 @@ const TopBar = ({
   handlePressBack,
   handlePressRight,
 }) => {
+  const { t } = useTranslation(); 
+
   const navigation = useNavigation();
 
   return (
@@ -23,7 +27,7 @@ const TopBar = ({
         style={{ flexDirection: "row", alignItems: "center", left: 30 }}
       >
         {/* <Image style={{ width: 36, height: 36 }} source={Images.backIcon} /> */}
-        <Text style={[styles.text, textStyle]}>Back</Text>
+        <Text style={[styles.text, textStyle]}>{t("back")}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handlePressRight}>

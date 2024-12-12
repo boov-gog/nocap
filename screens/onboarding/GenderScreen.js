@@ -19,7 +19,11 @@ import GenderButton from "../../components/GenderButton";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const GenderScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const { setGender } = useContext(AuthenticatedUserContext);
 
   const handleNext = (id) => {
@@ -37,9 +41,9 @@ export const GenderScreen = (props) => {
       {/* <KeyboardAwareScrollView> */}
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Choose Your Gender</Text>
+        <Text style={styles.titleStyle}>{t("chooseYourGender")}</Text>
 
-        <View style={{ flexDirection: "row", gap: 32, marginTop: 64 }}>
+        <View style={{ flexDirection: "row", gap: 32, marginTop: 48 }}>
           <View style={{ alignItems: "center" }}>
             <GenderButton
               uri={Images.boy}
@@ -92,7 +96,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontFamily: "Kanit-Bold",
-    fontSize: 36,
+    fontSize: 32,
     color: Colors.white,
   },
   inputStyle: {
@@ -104,7 +108,7 @@ const styles = StyleSheet.create({
   },
   genderLabel: {
     fontFamily: "Kanit-Bold",
-    fontSize: 36,
+    fontSize: 32,
     color: "white",
   },
 });

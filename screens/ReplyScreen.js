@@ -14,12 +14,16 @@ import { debounce } from "lodash";
 import lunr from "lunr";
 import { updateCapWithReply } from "../services/capService";
 
+import { useTranslation } from "react-i18next";
+
 lunr.tokenizer.minLength = 2;
 
 let lunrIdx = null;
 let replies = [];
 
 const ReplyScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const { cap } = useRoute().params;
   const [filteredReplies, setFilteredReplies] = useState([]);
   const [select, setSelect] = useState(-1);
@@ -194,6 +198,7 @@ const ReplyScreen = ({ navigation }) => {
             <LoadingIndicator />
           ) : (
             <FlatList
+              showsVerticalScrollIndicator={false}
               numColumns={2}
               data={filteredReplies}
               renderItem={oneReplyItem}
@@ -231,7 +236,7 @@ const ReplyScreen = ({ navigation }) => {
               { bottom: 60 + bottomInset },
             ]}
           >
-            <Text style={styles.sendBtnTxt}>SEND</Text>
+            <Text style={styles.sendBtnTxt}>{t("send")}</Text>
           </TouchableOpacity>
         )}
       </SafeAreaView>

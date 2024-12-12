@@ -3,6 +3,8 @@ import Toast from "react-native-toast-message";
 import BadWords from "badwords-list";
 import Constants from "expo-constants";
 
+import { useTranslation } from "react-i18next";
+
 const cache = {};
 
 export const setCache = (key, value) => {

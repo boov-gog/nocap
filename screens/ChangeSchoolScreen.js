@@ -21,12 +21,16 @@ import lunr from "lunr";
 import { updateUser } from "../services/userService";
 import { setCache, getCache } from "../utils"; 
 
+import { useTranslation } from "react-i18next";
+
 lunr.tokenizer.minLength = 3;
 
 let lunrIdx = null;
 let schoolsMap = null;
 
 export const ChangeSchoolScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const { user, setUser } = useContext(AuthenticatedUserContext);
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -199,12 +203,12 @@ export const ChangeSchoolScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Find Your School (inside {limitDistance}miles)</Text>
+        <Text style={styles.titleStyle}>{t("findYourSchool")} (inside {limitDistance}miles)</Text>
 
         <View style={styles.listContainer}>
           <TextInput
             leftIconName={"magnify"}
-            placeholder="Search..."
+            placeholder={`${t("search")}...`}
             borderLess={true}
             onChangeText={handleQueryChange}
             value={query}
@@ -215,6 +219,7 @@ export const ChangeSchoolScreen = (props) => {
             <LoadingIndicator />
           ) : (
             <FlatList
+              showsVerticalScrollIndicator={false}
               data={sortedSchools}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}

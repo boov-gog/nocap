@@ -26,12 +26,12 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
   }
 
   const paddingBtnHorz = (11 / 100) * containerWidth;
-  const paddingBtnVert = (7 / 100) * containerWidth;
+  const paddingBtnVert = (6 / 100) * containerWidth;
 
   const styles = StyleSheet.create({
     container: {
       width: "100%",
-      aspectRatio: 3.359,
+      aspectRatio: 3.75, // 3.359
       paddingHorizontal: paddingBtnHorz,
       paddingVertical: paddingBtnVert,
     },
@@ -56,12 +56,12 @@ const NocapButton = ({ onPress, title, titleStyle, containerWidth }) => {
     },
     title: {
       fontFamily: "Kanit-Bold",
-      fontSize: 32,
+      fontSize: 28, // 32
       // fontWeight: "700",
     },
     pressedTitle: {
       fontFamily: "Kanit-Bold",
-      fontSize: 32,
+      fontSize: 28, //32
       // fontWeight: "700",
       color: "white",
     },

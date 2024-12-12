@@ -14,7 +14,11 @@ import {
 } from "firebase/auth";
 import { showErrorToast, showSuccessToast } from "../../utils";
 
+import { useTranslation } from "react-i18next";
+
 const ChangePasswordScreen = () => {
+  const { t } = useTranslation(); 
+
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -67,34 +71,34 @@ const ChangePasswordScreen = () => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Change Password</Text>
+        <Text style={styles.titleStyle}>{t("changePassword")}</Text>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder="Current Password..."
+            placeholder={`${t(currentPassword)}...`}
             secureTextEntry={true}
           />
           <TextInput
             style={styles.input}
             value={newPassword}
             onChangeText={setNewPassword}
-            placeholder="New Password..."
+            placeholder={`${t("newPassword")}...`}
             secureTextEntry={true}
           />
           <TextInput
             style={styles.input}
             value={confirmPassword}
             onChangeText={setConfirmPassword}
-            placeholder="Confirm New Password..."
+            placeholder={`${t("confirmNewPassword")}...`}
             secureTextEntry={true}
           />
         </View>
         {updating ? (
           <LoadingIndicator />
         ) : (
-          <NocapButton title="Save" onPress={handleSave} />
+          <NocapButton title={t("save")} onPress={handleSave} />
         )}
       </View>
     </SafeAreaView>

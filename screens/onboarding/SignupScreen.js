@@ -19,7 +19,11 @@ import { CheckBox } from "react-native-elements";
 import { AuthenticatedUserContext } from "../../providers";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const SignupScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const [errorState, setErrorState] = useState("");
   const [checked, setChecked] = useState(false);
 
@@ -79,7 +83,7 @@ export const SignupScreen = ({ navigation }) => {
               <TextInput
                 name="email"
                 leftIconName="email"
-                placeholder="Enter email"
+                placeholder={t("enterEmail")}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"
@@ -107,7 +111,7 @@ export const SignupScreen = ({ navigation }) => {
                   style={styles.checkBox}
                 />
                 <Text style={styles.checkText}>
-                  You agree to our privacy policy
+                  {t("youAgreeToOurPrivacyPolicy")}
                 </Text>
               </View>
               <FormErrorMessage error={errors.email} visible={touched.email} />
@@ -118,7 +122,7 @@ export const SignupScreen = ({ navigation }) => {
             </View>
 
             {/* Signup button */}
-            <NocapButton title={"Create Account"} onPress={handleSubmit} />
+            <NocapButton title={t("createAccount")} onPress={handleSubmit} />
           </View>
         )}
       </Formik>
@@ -126,7 +130,7 @@ export const SignupScreen = ({ navigation }) => {
       <View style={{ alignItems: "center" }}>
         <View style={{ width: 220 }}>
           <NocapButton
-            title={"Log In"}
+            title={t("login")}
             titleStyle={{ fontSize: 16 }}
             onPress={() => navigation.navigate(StackNav.Login)}
             containerWidth={220}

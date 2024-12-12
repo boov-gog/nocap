@@ -10,7 +10,11 @@ import { showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const AgeScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [age, setLocalAge] = useState("");
 
   const handleAgeChange = (value) => {
@@ -41,17 +45,17 @@ export const AgeScreen = (props) => {
       > */}
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Enter Your Age</Text>
+        <Text style={styles.titleStyle}>{t("enterYourAge")}</Text>
         <TextInput
           style={styles.inputStyle}
-          placeholder="Age..."
+          placeholder={`${t("Age")}...`}
           placeholderTextColor={Colors.gray}
           keyboardType="decimal-pad"
           value={age}
           onChangeText={handleAgeChange}
           maxLength={3}
         />
-        <NocapButton title="Next" onPress={handleNext} />
+        <NocapButton title={t("Next")} onPress={handleNext} />
       </View>
       {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>

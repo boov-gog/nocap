@@ -23,9 +23,13 @@ import { updateUser } from "../services/userService";
 import { saveCap } from "../services/capService";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useTranslation } from "react-i18next";
+
 let timer = null;
 
 const GameScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const { user } = useContext(AuthenticatedUserContext);
 
   const [selected, setSelected] = useState(-1);
@@ -628,14 +632,14 @@ const GameScreen = ({ navigation }) => {
                   onPress={handleShuffle}
                   style={styles.shuffleBtn}
                 >
-                  <Text style={styles.shuffleText}>Shuffle</Text>
+                  <Text style={styles.shuffleText}>{t("shuffle")}</Text>
                 </TouchableOpacity>
               ) : (
                 <View style={{ height: 60 }} />
               )}
               {skipEnable ? (
                 <TouchableOpacity onPress={handleSkip} style={styles.skipBtn}>
-                  <Text style={styles.skipText}>Skip</Text>
+                  <Text style={styles.skipText}>{t("skip")}</Text>
                 </TouchableOpacity>
               ) : (
                 <View style={{ height: 60 }} />

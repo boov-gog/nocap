@@ -15,7 +15,11 @@ import { fetchSchools, deleteSchoolById } from "../services/schoolService";
 import { AuthenticatedUserContext } from "../providers";
 import { updateUser } from "../services/userService";
 
+import { useTranslation } from "react-i18next";
+
 const GroupScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const { user, setUser, setSchool } = useContext(AuthenticatedUserContext);
 
   const [searchText, setSearchText] = useState("");
@@ -24,6 +28,9 @@ const GroupScreen = ({ navigation }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [limitModalVisible, setLimitModalVisible] = useState(false);
+  const [joinModalVisible, setJoinModalVisible] = useState(false); 
+
+  const [joinId, setJoinId] = useState(-1); 
 
   const init = async () => {
     const schoolList = await fetchSchools();
@@ -51,16 +58,41 @@ const GroupScreen = ({ navigation }) => {
     setDelId(-1);
   }
 
+  const handleModalOk = () => {
+    setLimitModalVisible(false); 
+
+    // const currentAmount = groups.filter(item => item.owner === user.id).length;
+
+    // if (currentAmount < 10) {
+    //   setLimitModalVisible(false);
+    //   navigation.navigate(StackNav.GroupQuestions, { groupId: -1 });
+    // } else {
+    //   showErrorToast("You already created 10 groups.");
+    //   setLimitModalVisible(false);
+    // }
+  }
+
   const handleNew = () => {
     const currentAmount = groups.filter(item => item.owner === user.id).length;
 
     if (currentAmount < 10) {
-      setLimitModalVisible(false);
+      // setLimitModalVisible(false);
       navigation.navigate(StackNav.GroupQuestions, { groupId: -1 });
     } else {
-      showErrorToast("You already created 10 groups.");
-      setLimitModalVisible(false);
+      setLimitModalVisible(true); 
+      // showErrorToast("You already created 10 groups.");
+      // setLimitModalVisible(false);
     }
+  }
+
+  const handleJoinGroup = (id) => {
+    setJoinModalVisible(true); 
+    setJoinId(id); 
+  }
+
+  const handleJoinModalOk = () => {
+    setJoinModalVisible(false); 
+    handleJoin(joinId); 
   }
 
   const handleJoin = async (id) => {
@@ -98,7 +130,7 @@ const GroupScreen = ({ navigation }) => {
             <Text style={styles.modalTitle}>Are you sure you want to delete this group?</Text>
             <View style={styles.modalBtnContainer}>
               <TouchableOpacity style={styles.modalCloseButton} onPress={() => setModalVisible(false)}>
-                <Text style={styles.modalButtonText}>Back</Text>
+                <Text style={styles.modalButtonText}>{t("back")}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalDelButton} onPress={() => handleDelACtion()}>
                 <Text style={styles.modalButtonText}>Delete</Text>
@@ -119,9 +151,32 @@ const GroupScreen = ({ navigation }) => {
             <Text style={styles.modalTitle}>You can only make up to 10 groups.</Text>
             <View style={styles.modalBtnContainer}>
               <TouchableOpacity style={styles.modalCloseButton} onPress={() => {
-                handleNew();
+                handleModalOk();
               }}>
                 <Text style={styles.modalButtonText}>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={joinModalVisible}
+        onRequestClose={() => {
+          setLimitModalVisible(!joinModalVisible);
+        }}>
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>
+              Warning: questions in a group are written by other players. 
+              They are not reviewed, and may be inappropriate for users under 18 years of age. 
+            </Text>
+            <View style={styles.modalBtnContainer}>
+              <TouchableOpacity style={styles.joinModalButton} onPress={() => {
+                handleJoinModalOk();
+              }}>
+                <Text style={styles.modalButtonText}>I Consent</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -142,21 +197,22 @@ const GroupScreen = ({ navigation }) => {
           <View style={styles.topEmptySpace}></View>
           <View style={styles.newBtnContainer}>
             <TouchableOpacity style={styles.newBtn} onPress={() => {
-              setLimitModalVisible(true);
+              // setLimitModalVisible(true);
+              handleNew(); 
             }}>
               <Text style={styles.newBtnText}>New</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        <ScrollView style={styles.groupScroll}>
+        <ScrollView style={styles.groupScroll} showsVerticalScrollIndicator={false} >
           {groups.map(item => (
             <View style={styles.groupContainer}>
               <Text style={styles.groupText}>
                 {item.title}
               </Text>
               <TouchableOpacity style={styles.groupJoinBtn} onPress={() => {
-                handleJoin(item.id);
+                handleJoinGroup(item.id);
               }}>
                 <Text style={styles.groupJoinBtnText}>Join</Text>
               </TouchableOpacity>
@@ -346,5 +402,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  joinModalButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 20,
+    backgroundColor: "red",
+    color: "white",
+    width: "80%",
   },
 });

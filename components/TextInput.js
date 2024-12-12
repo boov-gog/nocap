@@ -11,7 +11,7 @@ export const TextInput = ({
   leftIconName,
   rightIcon,
   borderLess = false,
-  handlePasswordVisibility,
+  handlePasswordVisibility, 
   ...otherProps
 }) => {
   return (
@@ -45,6 +45,7 @@ export const TextInput = ({
         }}
         placeholderTextColor={Colors.mediumGray}
         {...otherProps}
+        maxLength={50}
       />
       {rightIcon ? (
         <Button onPress={handlePasswordVisibility}>

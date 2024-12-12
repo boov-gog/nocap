@@ -16,56 +16,60 @@ import { StackNav } from "../navigation/NavigationKeys";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getRestCap, updateCapPublicity, updateCapLock } from "../services/capService";
 import { GENDER_TYPE, showErrorToast } from "../utils";
-import ToggleSwitch from "toggle-switch-react-native"; 
+import ToggleSwitch from "toggle-switch-react-native";
 
-import { AuthenticatedUserContext } from "../providers"; 
-import { updateUser } from "../services/userService"; 
+import { AuthenticatedUserContext } from "../providers";
+import { updateUser } from "../services/userService";
 
 const { width: deviceWidth } = Dimensions.get("window");
 
+import { useTranslation } from "react-i18next";
+
 const WhatTheySayScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const { user, setUser } = useContext(AuthenticatedUserContext);
 
   const { id } = useRoute().params;
   const [isLoading, setIsLoading] = useState(false);
   const [isToggling, setIsToggling] = useState(false);
   const [cap, setCap] = useState(null);
-  const [toggleState, setToggleState] = useState(false); 
+  const [toggleState, setToggleState] = useState(false);
 
-  const [gamer, setGamer] = useState(null); 
-  const [gender, setGender] = useState(null); 
-  const [gamerDescription, setGamerDescription] = useState(''); 
-  const [capLock, setCapLock] = useState(false); 
+  const [gamer, setGamer] = useState(null);
+  const [gender, setGender] = useState(null);
+  const [gamerDescription, setGamerDescription] = useState('');
+  const [capLock, setCapLock] = useState(false);
 
   const init = async () => {
     setIsLoading(true);
     try {
       const cap1 = await getRestCap(id);
-      const gamer1 = cap1?.userGamer; 
-      const gender1 = gamer1?.gender; 
-      const lock1 = cap1?.isUnlocked; 
-      
+      const gamer1 = cap1?.userGamer;
+      const gender1 = gamer1?.gender;
+      const lock1 = cap1?.isUnlocked;
+
       setCap(cap1);
-      setToggleState(cap?.showToOthers); 
-      setGamer(gamer1); 
-      setGender(gender1); 
-      setCapLock(lock1); 
+      setToggleState(cap?.showToOthers);
+      setGamer(gamer1);
+      setGender(gender1);
+      setCapLock(lock1);
 
       // console.log("whatcap: ", cap1); 
       // console.log("whatgamer: ", gamer1); 
       // console.log("whatgender: ", gender1); 
 
-      if (cap1?.isUnlocked == false) { 
-        let title = 
+      if (cap1?.isUnlocked == false) {
+        let title =
           gender1 == GENDER_TYPE.Boy
-          ? "From a Boy"
-          : gender1 == GENDER_TYPE.Girl
-          ? "From a Girl"
-          : "From Someone"; 
+            ? "From a Boy"
+            : gender1 == GENDER_TYPE.Girl
+              ? "From a Girl"
+              : "From Someone";
 
         setGamerDescription(`${title} in the ${gamer1?.grade} grade.`);
       } else {
-        setGamerDescription(gamer1?.firstName + (gamer1?.firstName ? " " : "") + gamer1?.lastName); 
+        setGamerDescription(gamer1?.firstName + (gamer1?.firstName ? " " : "") + gamer1?.lastName);
       }
     } catch (error) {
       console.error(`Error getting cap by id: ${id}`, error);
@@ -77,7 +81,7 @@ const WhatTheySayScreen = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      init(); 
+      init();
     }, [])
   );
 
@@ -89,18 +93,18 @@ const WhatTheySayScreen = ({ navigation }) => {
     navigation.navigate(StackNav.ReplyTo, { cap });
   };
 
-  const handleSeeWhoSaid = async () => { 
-    if(user.isSubscribed) { 
-      if(user.viewTokens > 0) { 
-        setGamerDescription(gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName); 
+  const handleSeeWhoSaid = async () => {
+    if (user.isSubscribed) {
+      if (user.viewTokens > 0) {
+        setCapLock(true);
+        setGamerDescription(gamer?.firstName + (gamer?.firstName ? " " : "") + gamer?.lastName);
 
-        const updatedUser = await updateUser(user.id, { viewTokens: user.viewTokens - 1 }); 
-        setUser({ ...user, ...updatedUser }); 
+        const updatedUser = await updateUser(user.id, { viewTokens: user.viewTokens - 1 });
+        setUser({ ...user, ...updatedUser });
 
-        await updateCapLock(id, true); 
-        setCapLock(true); 
+        await updateCapLock(id, true);
       } else {
-        showErrorToast("You have no available tokens to view the user name."); 
+        showErrorToast("You have no available tokens to view the user name.");
       }
     } else {
       navigation.navigate(StackNav.Subscription);
@@ -125,17 +129,17 @@ const WhatTheySayScreen = ({ navigation }) => {
     gender == GENDER_TYPE.Boy
       ? Images.boy
       : gender == GENDER_TYPE.Girl
-      ? Images.girl
-      : Images.nonBinary;
+        ? Images.girl
+        : Images.nonBinary;
 
   const mainBackColor =
     gender == GENDER_TYPE.Boy
       ? Colors.mainBlue
       : gender == GENDER_TYPE.Girl
-      ? Colors.mainPink
-      : gender == GENDER_TYPE.NonBinary
-      ? Colors.mainGreen
-      : Colors.blackBlue;
+        ? Colors.mainPink
+        : gender == GENDER_TYPE.NonBinary
+          ? Colors.mainGreen
+          : Colors.blackBlue;
 
   return (
     <SafeAreaView
@@ -147,6 +151,7 @@ const WhatTheySayScreen = ({ navigation }) => {
         <ScrollView
           style={styles.scrollViewer}
           contentContainerStyle={styles.scrollViewContainer}
+          showsVerticalScrollIndicator={false}
         >
           <View style={styles.showToOthers}>
             {isToggling ? (
@@ -167,20 +172,33 @@ const WhatTheySayScreen = ({ navigation }) => {
             style={Dimensions.get("window").width <= 360 ? { height: 0 } : null}
           />
           <Image style={styles.avatar} source={gamerAvatar} />
-          <Text style={styles.description}> 
+          <Text style={styles.description}>
             {gamerDescription}
-          </Text> 
+          </Text>
           {
-            !capLock && 
-            <TouchableOpacity
-              style={styles.whoSayButton}
-              onPress={handleSeeWhoSaid}
-            >
-              <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-              <Text style={styles.btnText}>See who said this</Text>
-            </TouchableOpacity> 
+            !capLock ? user?.isSubscribed == true ? (
+              <TouchableOpacity
+                style={styles.whoSayButton}
+                onPress={handleSeeWhoSaid}
+              >
+                <Text style={styles.countTokens}>
+                  {user.viewTokens}
+                </Text>
+                <Text style={styles.btnText}>{t("seeWhoSaidThis")}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.whoSayButton}
+                onPress={handleSeeWhoSaid}
+              >
+                <Image style={styles.lockAvatar} source={Images.lockerBlack} />
+                <Text style={styles.btnText}>{t("seeWhoSaidThis")}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity />
+            )
           }
-          {user?.isSubscribed && <Text style={styles.viewTokens}>Amount of tokens: { user.viewTokens }</Text>}
+          {/* {user?.isSubscribed && <Text style={styles.viewTokens}>Amount of tokens: {user.viewTokens}</Text>} */}
           <Text style={styles.question} numberOfLines={3} ellipsizeMode="tail">
             {cap?.question?.value}
           </Text>
@@ -210,20 +228,20 @@ const WhatTheySayScreen = ({ navigation }) => {
           {cap?.reply == null ? (
             <TouchableOpacity style={styles.replyBtn} onPress={handleReply}>
               <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-              <Text style={styles.replyBtnText}>Reply</Text>
+              <Text style={styles.replyBtnText}>{t("reply")}</Text>
             </TouchableOpacity>
           ) : (
             <Text
               style={styles.replyText}
-              numberOfLines={1}
-              ellipsizeMode="tail"
+            // numberOfLines={1}
+            // ellipsizeMode="tail"
             >
-              {"You replied : " + cap?.replySentence?.content}
+              {"You replied: " + cap?.replySentence?.content}
             </Text>
           )}
 
           <TouchableOpacity style={styles.shareBtn}>
-            <Text style={styles.shareBtnTxt}>Share</Text>
+            <Text style={styles.shareBtnTxt}>{t("share")}</Text>
             <Image style={styles.shareBtnImage} source={Images.instagram} />
             <Image style={styles.shareBtnImage} source={Images.facebook} />
             <Image style={styles.shareBtnImage} source={Images.snapchat} />
@@ -268,8 +286,8 @@ const styles = StyleSheet.create({
     height: deviceWidth * 0.24,
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: 75, // 100
+    height: 75, // 100
   },
   description: {
     fontWeight: "700",
@@ -287,20 +305,21 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   lockAvatar: {
-    width: 22,
-    height: 30,
+    width: 18, // 22
+    height: 24, // 30
   },
   btnText: {
     fontFamily: "MPR-Bold",
-    fontSize: 20,
+    fontSize: 16,
   },
   question: {
     width: "90%",
-    height: 90,
+    height: 40, // 90
     fontWeight: "700",
-    marginVertical: 14,
+    // marginVertical: 14,
+    marginBottom: 8,
     textAlign: "center",
-    fontSize: 24,
+    fontSize: 18,
   },
   answersContainer: {
     width: "100%",
@@ -366,9 +385,21 @@ const styles = StyleSheet.create({
   bottomRight: {
     width: 36,
     height: 26,
+  },
+  viewTokens: {
+    fontSize: 16,
+    fontWeight: "bold",
   }, 
-  viewTokens: { 
-    fontSize: 16, 
+  countTokens: {
+    fontSize: 14, 
     fontWeight: "bold", 
+    width: 24, 
+    height: 24, 
+    textAlign: "center", 
+    textAlignVertical: "center", 
+    borderRadius: 15, 
+    borderWidth: 2, 
+    borderColor: "black", 
+    backgroundColor: "yellow"
   }
 });

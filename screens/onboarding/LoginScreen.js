@@ -21,7 +21,11 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import TopBar from "../../components/TopBar";
 import { AuthenticatedUserContext } from "../../providers";
 
+import { useTranslation } from "react-i18next";
+
 export const LoginScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const [isSigning, setIsSigning] = useState(false);
   const [errorState, setErrorState] = useState("");
   const { passwordVisibility, handlePasswordVisibility, rightIcon } =
@@ -83,7 +87,7 @@ export const LoginScreen = ({ navigation }) => {
                   <TextInput
                     name="email"
                     leftIconName="email"
-                    placeholder="Enter email"
+                    placeholder={t("enterEmail")}
                     autoCapitalize="none"
                     keyboardType="email-address"
                     textContentType="emailAddress"
@@ -99,7 +103,7 @@ export const LoginScreen = ({ navigation }) => {
                   <TextInput
                     name="password"
                     leftIconName="key-variant"
-                    placeholder="Enter password"
+                    placeholder={t("enterPassword")} 
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
@@ -122,7 +126,7 @@ export const LoginScreen = ({ navigation }) => {
 
                 {/* Login button */}
                 <View style={{ paddingTop: 20 }} />
-                <NocapButton title="Log In" onPress={handleSubmit} />
+                <NocapButton title={t("login")} onPress={handleSubmit} />
               </View>
             )}
           </Formik>
@@ -130,7 +134,7 @@ export const LoginScreen = ({ navigation }) => {
           <View style={{ flex: 1, alignItems: "center" }}>
             <View style={{ width: 220 }}>
               <NocapButton
-                title={"Create Account"}
+                title={t("createAccount")}
                 onPress={() => navigation.navigate(StackNav.Signup)}
                 titleStyle={{ fontSize: 16 }}
                 containerWidth={220}

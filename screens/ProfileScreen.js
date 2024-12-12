@@ -19,7 +19,11 @@ import { getAuth } from "firebase/auth";
 import { showErrorToast, showSuccessToast } from "../utils";
 import { updateUser } from "../services/userService";
 
+import { useTranslation } from "react-i18next";
+
 export const ProfileScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const { user, setUser, onAudio, setOnAudio } = useContext(AuthenticatedUserContext);
   const [schoolTitle, setSchoolTitle] = useState("");
   const [toggleState, setToggleState] = useState(true);
@@ -134,7 +138,7 @@ export const ProfileScreen = ({ navigation }) => {
                 <Text style={styles.modalDowngradeButtonText}>Yes, sure</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalDowngradeCloseButton} onPress={() => setModalDowngradeVisible(false)}>
-                <Text style={styles.modalDowngradeButtonText}>Cancel</Text>
+                <Text style={styles.modalDowngradeButtonText}>{t("cancel")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -172,7 +176,7 @@ export const ProfileScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.mainContainer}>
-          <ScrollView contentContainerStyle={styles.scrollContentStyle}>
+          <ScrollView contentContainerStyle={styles.scrollContentStyle} showsVerticalScrollIndicator={false}>
             <TouchableOpacity
               style={styles.settingBtn}
               onPress={() => {
@@ -184,7 +188,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Change Password
+                {t("changePassword")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -198,7 +202,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Change School
+                {t("changeSchool")}
               </Text>
             </TouchableOpacity>
             <View style={styles.settingBtn}>
@@ -207,7 +211,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Sounds
+                {t("sounds")}
               </Text>
               <ToggleSwitch
                 isOn={onAudio}
@@ -237,7 +241,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="middle"
               >
-                Downgrade Subscription
+                {t("downgradeSubscription")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.settingBtn}>
@@ -246,7 +250,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Purchase Name Reveals
+                {t("purchaseNameReveals")}
               </Text>
               <View style={styles.nameReveals}>
                 <Text style={styles.settingText}>3</Text>
@@ -258,7 +262,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Privacy Policy
+                {t("privacyPolicy")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.settingBtn}>
@@ -267,7 +271,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                App Info
+                {t("appInfo")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity  
@@ -281,7 +285,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Your Groups
+                {t("yourGroups")}
               </Text>
             </TouchableOpacity>
           </ScrollView>

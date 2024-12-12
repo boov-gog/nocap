@@ -16,9 +16,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import NocapButton from "../../components/NocapButton";
 import { StackNav } from "../../navigation/NavigationKeys";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import TopBar from "../../components/TopBar";
+import TopBar from "../../components/TopBar"; 
+
+import { useTranslation } from "react-i18next";
 
 export const ForgotPasswordScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const [errorState, setErrorState] = useState("");
 
   const handleSendPasswordResetEmail = (values) => {
@@ -62,7 +66,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
               <TextInput
                 name="email"
                 leftIconName="email"
-                placeholder="Enter email"
+                placeholder={t("enterEmail")}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"
@@ -95,7 +99,7 @@ export const ForgotPasswordScreen = ({ navigation }) => {
       <View style={{ alignItems: "center" }}>
         <View style={{ width: 220 }}>
           <NocapButton
-            title={"Log In"}
+            title={t("login")}
             onPress={() => navigation.navigate(StackNav.Login)}
             titleStyle={{ fontSize: 16 }}
             containerWidth={220}

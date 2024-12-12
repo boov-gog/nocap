@@ -10,7 +10,11 @@ import { showErrorToast } from "../../utils";
 import * as Contacts from "expo-contacts";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const ContactsPermissionScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [isGettingPermission, setIsGettingPermission] = useState(false);
 
   const handleNext = async () => {
@@ -32,14 +36,14 @@ export const ContactsPermissionScreen = (props) => {
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
         <Text style={styles.titleStyle}>
-          To find your friends to play with!
+          {t("toFindYourFriends")}
         </Text>
 
         {isGettingPermission ? (
           <LoadingIndicator />
         ) : (
           <NocapButton
-            title="Allow Access to Contacts"
+            title={t("allowAccessToContacts")}
             onPress={handleNext}
             titleStyle={{ fontSize: 26 }}
           />

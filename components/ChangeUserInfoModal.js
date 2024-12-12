@@ -13,7 +13,11 @@ import { LoadingIndicator } from "./LoadingIndicator";
 import { updateUser } from "../services/userService";
 import { AuthenticatedUserContext } from "../providers";
 
+import { useTranslation } from "react-i18next";
+
 const ChangeUserInfoModal = ({ onDismiss, userValue }) => {
+  const { t } = useTranslation(); 
+
   const [localAge, setLocalAge] = useState(userValue.age.toString());
   const [localFName, setLocalFName] = useState(userValue.firstName);
   const [localLName, setLocalLName] = useState(userValue.lastName);
@@ -152,10 +156,10 @@ const ChangeUserInfoModal = ({ onDismiss, userValue }) => {
                   }
                   style={styles.picker}
                 >
-                  <Picker.Item label="Boy" value={GENDER_TYPE.Boy} />
-                  <Picker.Item label="Girl" value={GENDER_TYPE.Girl} />
+                  <Picker.Item label={t("boy")} value={GENDER_TYPE.Boy} />
+                  <Picker.Item label={t("girl")} value={GENDER_TYPE.Girl} />
                   <Picker.Item
-                    label="Non-binary"
+                    label={t("nonBinary")}
                     value={GENDER_TYPE.NonBinary}
                   />
                 </Picker>
@@ -178,8 +182,8 @@ const ChangeUserInfoModal = ({ onDismiss, userValue }) => {
           )}
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={handleSave}>Save</Button>
-          <Button onPress={hideDialog}>Cancel</Button>
+          <Button onPress={handleSave}>{t("save")}</Button>
+          <Button onPress={hideDialog}>{t("cancel")}</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

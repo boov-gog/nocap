@@ -10,7 +10,11 @@ import { showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const PhoneScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isValid, setIsValid] = useState(true);
 
@@ -76,7 +80,7 @@ export const PhoneScreen = (props) => {
             Please enter a valid phone number
           </Text>
         )}
-        <NocapButton title="Next" onPress={handleNext} />
+        <NocapButton title={t("Next")} onPress={handleNext} />
       </View>
       {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>

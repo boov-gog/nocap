@@ -30,9 +30,9 @@ export const SchoolScreen = (props) => {
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState("");
-  const location = useRoute().params.location; 
+  const location = useRoute().params.location;
 
-  const [limitDistance, setLimitDistance] = useState(30); 
+  const [limitDistance, setLimitDistance] = useState(30);
 
   let sortedAllSchools;
 
@@ -146,15 +146,15 @@ export const SchoolScreen = (props) => {
       }
       setLoading(false);
     }
-  }; 
+  };
 
   const getLimit = async () => {
-    const res = await getLimitDistance(); 
-    setLimitDistance(Number(res)); 
-    console.log("onBoardingLimitRes: ", Number(res)); 
+    const res = await getLimitDistance();
+    setLimitDistance(Number(res));
+    console.log("onBoardingLimitRes: ", Number(res));
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     getLimit();
     loadSchools();
   }, []);
@@ -192,6 +192,7 @@ export const SchoolScreen = (props) => {
             <LoadingIndicator />
           ) : (
             <FlatList
+              showsVerticalScrollIndicator={false}
               data={sortedSchools}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}

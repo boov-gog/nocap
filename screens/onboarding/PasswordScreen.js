@@ -37,7 +37,11 @@ import {
 } from "../../services/userService";
 import { StackNav } from "../../navigation/NavigationKeys";
 
-export const PasswordScreen = ({ navigation }) => {
+import { useTranslation } from "react-i18next";
+
+export const PasswordScreen = ({ navigation }) => { 
+  const { t } = useTranslation(); 
+
   const [errorState, setErrorState] = useState("");
   const [processing, setProcessing] = useState(false);
 
@@ -197,7 +201,7 @@ export const PasswordScreen = ({ navigation }) => {
               {/* <TextInput
                   name="email"
                   leftIconName="email"
-                  placeholder="Enter email"
+                  placeholder={t("enterEmail")}
                   autoCapitalize="none"
                   keyboardType="email-address"
                   textContentType="emailAddress"
@@ -213,7 +217,7 @@ export const PasswordScreen = ({ navigation }) => {
               <TextInput
                 name="password"
                 leftIconName="key-variant"
-                placeholder="Enter password"
+                placeholder={t("enterPassword")}
                 autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={passwordVisibility}
@@ -231,7 +235,7 @@ export const PasswordScreen = ({ navigation }) => {
               <TextInput
                 name="confirmPassword"
                 leftIconName="key-variant"
-                placeholder="Confirm password"
+                placeholder={t("confirmPassword")}
                 autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={confirmPasswordVisibility}

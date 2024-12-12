@@ -18,7 +18,11 @@ import { Grades, showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const GradeScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const { setGrade } = useContext(AuthenticatedUserContext);
 
   const arr = [Grades._9, Grades._10, Grades._11, Grades._12];
@@ -44,8 +48,8 @@ export const GradeScreen = (props) => {
       <TopBar />
       <Logo uri={Images.logo} />
       {/* <View style={styles.mainContainer}> */}
-        <Text style={styles.titleStyle}>Choose Your Grade</Text>
-        <KeyboardAwareScrollView>
+        <Text style={styles.titleStyle}>{t("chooseYourGrade")}</Text>
+        <KeyboardAwareScrollView showsVerticalScrollIndicator={false} >
           {arr.map((value) => (
             <View style={{ marginBottom: -0.09 * windowWidth }} key={value}>
               <NocapButton
@@ -58,9 +62,10 @@ export const GradeScreen = (props) => {
             </View>
           ))}
 
-          <View style={{ height: 20 }} />
+          <View style={{ height: 16 }} />
           <NocapButton
-            title={Grades._Not}
+            // title={Grades._Not}
+            title={t("notInHighSchool")}
             onPress={() =>
               handleNext("notHighSchool")
               // showErrorToast("This feature is not available yet.")
@@ -87,7 +92,7 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     fontFamily: "Kanit-Bold",
-    fontSize: 36,
+    fontSize: 32,
     color: Colors.white,
   },
   inputStyle: {

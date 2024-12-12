@@ -17,9 +17,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { getRestCap } from "../services/capService";
 import { GENDER_TYPE, showErrorToast } from "../utils";
 
+import { useTranslation } from "react-i18next";
+
 const { width: deviceWidth } = Dimensions.get("window");
 
 const ReplyDetail = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const { id } = useRoute().params;
   const [isLoading, setIsLoading] = useState(false);
   const [cap, setCap] = useState(null);
@@ -88,6 +92,7 @@ const ReplyDetail = ({ navigation }) => {
         <ScrollView
           style={styles.scrollViewer}
           contentContainerStyle={styles.scrollViewContainer}
+          showsVerticalScrollIndicator={false} 
         >
           <Logo
             uri={Images.logoNoback}
@@ -133,7 +138,7 @@ const ReplyDetail = ({ navigation }) => {
           </View>
 
           <TouchableOpacity style={styles.shareBtn}>
-            <Text style={styles.shareBtnTxt}>Share</Text>
+            <Text style={styles.shareBtnTxt}>{t("share")}</Text>
             <Image style={styles.shareBtnImage} source={Images.instagram} />
             <Image style={styles.shareBtnImage} source={Images.facebook} />
             <Image style={styles.shareBtnImage} source={Images.snapchat} />
@@ -178,8 +183,8 @@ const styles = StyleSheet.create({
     height: deviceWidth * 0.24,
   },
   avatar: {
-    width: 100,
-    height: 100,
+    width: 75, // 100
+    height: 75, // 100
   },
   description: {
     fontWeight: "700",
@@ -206,7 +211,7 @@ const styles = StyleSheet.create({
   },
   question: {
     width: "90%",
-    height: 90,
+    height: 60, // 90
     fontWeight: "700",
     marginVertical: 14,
     textAlign: "center",

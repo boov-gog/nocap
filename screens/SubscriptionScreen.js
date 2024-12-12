@@ -23,7 +23,11 @@ import { StackNav } from "../navigation/NavigationKeys";
 
 const deviceWidth = Dimensions.get("window").width;
 
+import { useTranslation } from "react-i18next";
+
 const SubscriptionScreen = ( { navigation } ) => {
+  const { t } = useTranslation(); 
+
   const carouselImages = [Images.subscription1, Images.subscription2];
 
   const { user, setUser } = useContext(AuthenticatedUserContext); 
@@ -89,6 +93,7 @@ const SubscriptionScreen = ( { navigation } ) => {
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false} 
       >
         <Image style={styles.starLogo} source={Images.star2} />
         <Image style={styles.proLetter} source={Images.proLetter} />
@@ -105,7 +110,7 @@ const SubscriptionScreen = ( { navigation } ) => {
             }}
           >
             <Image style={styles.lockAvatar} source={Images.lockerBlack} />
-            <Text style={styles.unlockBtnTxt}>UNLOCK</Text>
+            <Text style={styles.unlockBtnTxt}>{t("unlock")}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -130,16 +135,16 @@ const styles = StyleSheet.create({
   },
   starLogo: {
     position: "absolute",
-    top: 130,
-    width: 152,
-    height: 112,
+    top: 80,// 150
+    width: 150, //152
+    height: 100, //112
   },
   proLetter: {
     position: "absolute",
-    top: 160,
+    top: 105,
   },
   logo: {
-    marginTop: 80,
+    marginTop: 30, // 80
     width: deviceWidth * 0.7,
     height: deviceWidth * 0.7 * 0.3,
   },
@@ -150,9 +155,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "relative",
-    marginTop: 60,
-    width: 350,
-    height: 175,
+    marginTop: 0, // 60
+    width: 300, // 300
+    height: 150, //175
     justifyContent: "center",
     alignItems: "center",
   },

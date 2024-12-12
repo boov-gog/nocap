@@ -47,7 +47,7 @@ const Carousel = ({ images }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 100,
+    marginTop: 80, // 100
   },
   image: {
     width: deviceWidth * 0.9,

@@ -10,7 +10,11 @@ import { checkBadName, showErrorToast } from "../../utils";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const LastNameScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [lName, setLName] = useState("");
 
   const { setLastName } = useContext(AuthenticatedUserContext);
@@ -36,15 +40,15 @@ export const LastNameScreen = (props) => {
       > */}
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Enter Your Last Name</Text>
+        <Text style={styles.titleStyle}>{t("enterYourLastName")}</Text>
         <TextInput
           style={styles.inputStyle}
-          placeholder="Last Name..."
+          placeholder={`${t("lastName")}...`}
           placeholderTextColor={Colors.gray}
           value={lName}
           onChangeText={setLName}
         />
-        <NocapButton title="Next" onPress={handleNext} />
+        <NocapButton title={t("Next")} onPress={handleNext} />
       </View>
       {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>

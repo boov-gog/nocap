@@ -19,7 +19,11 @@ import { CheckBox } from "react-native-elements";
 import * as Contacts from "expo-contacts";
 import TopBar from "../../components/TopBar";
 
+import { useTranslation } from "react-i18next";
+
 export const FriendScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const [contacts, setContacts] = useState([]);
   const [selectedContacts, setSelectedContacts] = useState([]);
 
@@ -27,7 +31,7 @@ export const FriendScreen = (props) => {
 
   const handleNext = () => {
     if (selectedContacts.length === 0) {
-      showSuccessToast("We'll use your full contacts as a friend list");
+      // showSuccessToast("We'll use your full contacts as a friend list");
 
       const contactIds = contacts.map((value) => value.id);
 
@@ -119,7 +123,7 @@ export const FriendScreen = (props) => {
         >
           <TouchableOpacity onPress={handleSkip}>
             <View style={styles.skipBtnBack}>
-              <Text style={styles.skipBtnTxt}>Skip</Text>
+              <Text style={styles.skipBtnTxt}>{t("skip")}</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
@@ -136,6 +140,7 @@ export const FriendScreen = (props) => {
           />
 
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={contacts}
             renderItem={renderItem}
             keyExtractor={(item) => item.id}

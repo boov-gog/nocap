@@ -21,7 +21,11 @@ import {
 } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
+import { useTranslation } from "react-i18next";
+
 const MyCapScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const [followers, setFollowers] = useState(0);
   const [followings, setFollowings] = useState(0);
   const [caps, setCaps] = useState([]);
@@ -199,6 +203,7 @@ const MyCapScreen = ({ navigation }) => {
         ) : (
           <>
             <FlatList
+              showsVerticalScrollIndicator={false}
               data={caps}
               renderItem={capListItem}
               keyExtractor={(item) => item.id}
@@ -225,7 +230,7 @@ const MyCapScreen = ({ navigation }) => {
             >
               <TouchableOpacity style={styles.whoButton}>
                 <Image style={styles.lockImage} source={Images.lockerWhite} />
-                <Text style={styles.whoBtnText}>See who said this</Text>
+                <Text style={styles.whoBtnText}>{t("seeWhoSaidThis")}</Text>
               </TouchableOpacity>
             </View>
           </>

@@ -135,8 +135,8 @@ export const SearchFriendScreen = (props) => {
           item.gender == GENDER_TYPE.Boy
             ? Images.boy
             : item.gender == GENDER_TYPE.Girl
-            ? Images.girl
-            : Images.nonBinary
+              ? Images.girl
+              : Images.nonBinary
         }
         resizeMode="contain"
       />
@@ -167,6 +167,7 @@ export const SearchFriendScreen = (props) => {
             </Text>
           ) : (
             <FlatList
+              showsVerticalScrollIndicator={false}
               data={friends}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
