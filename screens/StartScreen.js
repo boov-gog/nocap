@@ -8,13 +8,43 @@ import { StackNav } from "../navigation/NavigationKeys";
 import { onAuthStateChanged } from "firebase/auth";
 import { AuthenticatedUserContext } from "../providers";
 
-import { TouchableOpacity } from "react-native-gesture-handler"; 
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { useTranslation } from 'react-i18next';
 
-import i18n from '../i18n'; 
+import i18n from '../i18n';
 
-export const StartScreen = (props) => { 
-  const { t } = useTranslation(); 
+import usePushNotification from "../hooks/usePushNotification";
+
+export const StartScreen = (props) => {
+  const {
+    requestUserPermission,
+    getFCMToken,
+    listenToBackgroundNotifications,
+    listenToForegroundNotifications,
+    onNotificationOpenedAppFromBackground,
+    onNotificationOpenedAppFromQuit,
+  } = usePushNotification();
+
+  useEffect(() => {
+    const listenToNotifications = () => {
+      try {
+        getFCMToken();
+        requestUserPermission();
+        onNotificationOpenedAppFromQuit();
+        listenToBackgroundNotifications();
+        listenToForegroundNotifications();
+        onNotificationOpenedAppFromBackground();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    listenToNotifications();
+  }, []);
+
+
+
+  const { t } = useTranslation();
 
   const [isLoading, setIsLoadig] = useState(true);
   const { setUser } = useContext(AuthenticatedUserContext);
@@ -25,7 +55,7 @@ export const StartScreen = (props) => {
       index: 0,
       routes: [{ name: StackNav.Login }],
     });
-  }; 
+  };
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -53,7 +83,7 @@ export const StartScreen = (props) => {
         routes: [{ name: StackNav.Verify }],
       });
     }
-  }, [firebaseUser]); 
+  }, [firebaseUser]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -128,15 +158,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   lngBtnWrapper: {
-    marginHorizontal: '2.5%', 
-    alignItems: 'center',  
+    marginHorizontal: '2.5%',
+    alignItems: 'center',
   },
   lngBtn: {
     alignItems: "center",
     borderRadius: 50,
     backgroundColor: "white",
-    gap: 8, 
-    width: '100%', 
+    gap: 8,
+    width: '100%',
     height: 45,
     justifyContent: "center",
     paddingHorizontal: 40,
@@ -144,10 +174,10 @@ const styles = StyleSheet.create({
   lngText: {
     fontFamily: "Kanit-Bold",
     fontSize: 24,
-  }, 
+  },
   lngImage: {
-    width: 50, 
-    height: 50, 
-    marginTop: 5, 
+    width: 50,
+    height: 50,
+    marginTop: 5,
   },
 });
