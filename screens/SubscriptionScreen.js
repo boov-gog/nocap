@@ -63,9 +63,9 @@ const SubscriptionScreen = ( { navigation } ) => {
 
       navigation.navigate(StackNav.Profile);
 
-      console.log("Subscribed successfully: ", updatedUser); 
+      // console.log("Subscribed successfully: ", updatedUser); 
     } catch(error) {
-      console.log("Err: ", error); 
+      // console.log("Err: ", error); 
     }
 
     // const { responseCode } = await InAppPurchases.purchaseItemAsync(productId);
@@ -77,7 +77,7 @@ const SubscriptionScreen = ( { navigation } ) => {
   useEffect(() => {
     const subscription = InAppPurchases.setPurchaseListener(purchase => {
       if (purchase && purchase.responseCode === InAppPurchases.IAPResponseCode.OK && !purchase.acknowledged) {
-        console.log('Successfully purchased:', purchase);
+        // console.log('Successfully purchased:', purchase);
         InAppPurchases.finishTransactionAsync(purchase, false);
       }
     });

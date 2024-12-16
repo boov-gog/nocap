@@ -38,7 +38,7 @@ const GroupScreen = ({ navigation }) => {
       return item.isCustom == true;
     });
     setGroups(groupList);
-    console.log("groupList: ", groupList);
+    // console.log("groupList: ", groupList);
   }
 
   useEffect(() => {
@@ -96,7 +96,7 @@ const GroupScreen = ({ navigation }) => {
   }
 
   const handleJoin = async (id) => {
-    console.log("joinUser: ", user);
+    // console.log("joinUser: ", user);
 
     try {
       if (!user) {
@@ -106,7 +106,7 @@ const GroupScreen = ({ navigation }) => {
         const updatedUser = await updateUser(user.id, { school_id: id });
         setUser({ ...user, ...updatedUser });
 
-        console.log("Joined user group: ", updatedUser);
+        // console.log("Joined user group: ", updatedUser);
         showSuccessToast("Joined the group successfully.");
       }
     } catch (error) {

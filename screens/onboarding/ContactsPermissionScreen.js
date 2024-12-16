@@ -21,7 +21,7 @@ export const ContactsPermissionScreen = (props) => {
     setIsGettingPermission(true);
 
     const { status } = await Contacts.requestPermissionsAsync();
-    console.log(status);
+    // console.log(status);
     if (status !== "granted") {
       showErrorToast("Permission to access contacts was denied");
     } else {

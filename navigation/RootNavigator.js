@@ -56,7 +56,7 @@ export const RootNavigator = () => {
         "MPR-Bold": require("../assets/font/MPLUSRounded1c-Bold.ttf"),
         // Add other Kanit styles as needed
       });
-      console.log("font is loaded.");
+      // console.log("font is loaded.");
       setFontsLoaded(true);
     }
     loadFonts();

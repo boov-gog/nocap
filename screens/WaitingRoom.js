@@ -14,14 +14,18 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import { Audio } from 'expo-av';
 import { Icon, TextInput } from "../components";
-import { sendInvite } from "../services/userService";
+import { sendInvite, userSendNotification } from "../services/userService";
 import { SegmentedButtons } from "react-native-paper";
 import { FirebaseError } from "firebase/app";
 import { FriendScreen } from "./onboarding/FriendScreen";
 
 import { useTranslation } from "react-i18next";
 
-const WaitingRoom = ({ navigation }) => {
+import usePushNotification from "../hooks/usePushNotification";
+
+const WaitingRoom = ({ navigation }) => { 
+  const { getFCMToken } = usePushNotification(); 
+
   const { t } = useTranslation(); 
 
   const [pollTime, setPollTime] = useState("59:59");
@@ -82,7 +86,7 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGame = async () => {
-    console.log("checkGame_NonPaid");
+    // console.log("checkGame_NonPaid");
 
     // showSuccessToast("Timer has run out!"); 
 
@@ -126,7 +130,7 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGamePaid = async () => {
-    console.log("checkGame_Paid");
+    // console.log("checkGame_Paid");
 
     // showSuccessToast("Timer has run out!"); 
 
@@ -176,7 +180,7 @@ const WaitingRoom = ({ navigation }) => {
   const handleSetLeaders = async () => {
     setIsLeaderLoading(true);
 
-    console.log("handleSetLeaders");
+    // console.log("handleSetLeaders");
     const gameData = await fetchGameData(user.id);
 
     // console.log("gameData: ", gameData); 
@@ -189,7 +193,7 @@ const WaitingRoom = ({ navigation }) => {
       let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId");
       roundSelectedCountId = JSON.parse(roundSelectedCountId);
 
-      console.log("friends: ", friends);
+      // console.log("friends: ", friends);
 
       if (roundSelectedCountId != null) {
         friends.sort((a, b) => {
@@ -199,7 +203,7 @@ const WaitingRoom = ({ navigation }) => {
 
       let tempLeaders = [];
       for (let i = 0; i < 3; i++) {
-        console.log("i: ", i);
+        // console.log("i: ", i);
         let avatar = Images.boy;
         if (friends[i].gender == "G") {
           avatar = Images.girl;
@@ -214,7 +218,7 @@ const WaitingRoom = ({ navigation }) => {
         });
       }
 
-      console.log("tempLeaders: ", tempLeaders);
+      // console.log("tempLeaders: ", tempLeaders);
 
       setLeaders(tempLeaders);
       setIsLeader(true);
@@ -254,7 +258,13 @@ const WaitingRoom = ({ navigation }) => {
     navigation.navigate(StackNav.MyCaps);
   };
 
-  const handlePlay = async () => {
+  const handlePlay = async () => { 
+    const fcmToken = await getFCMToken(); 
+
+    // console.log("Gamer fcmToken: ", fcmToken); 
+
+    await userSendNotification({token: fcmToken, title: "Hello", body: "Nice to meet you."}); 
+
     try {
       const gameData = await fetchGameData(user.id);
       const roundId = await AsyncStorage.getItem("roundId");
@@ -289,13 +299,13 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const handleInvite = async () => {
-    console.log("inviteEmail: ", email);
+    // console.log("inviteEmail: ", email);
     if (email == "") {
       showErrorToast("Please input the email address.");
     } else {
       const res = await sendInvite({ email: email, userEmail: user.email });
 
-      console.log("sendInviteRes: ", res);
+      // console.log("sendInviteRes: ", res);
 
       if (res.status == 200) {
         showSuccessToast(res.data.success);

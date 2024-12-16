@@ -48,7 +48,7 @@ export const ProfileScreen = ({ navigation }) => {
           routes: [{ name: StackNav.Start }],
         });
       } catch (error) {
-        console.log("Error logging out: ", error);
+        // console.log("Error logging out: ", error);
       }
     };
 
@@ -107,7 +107,7 @@ export const ProfileScreen = ({ navigation }) => {
         const school = await getSchoolById(schoolId);
         setSchoolTitle(school.title);
       } catch (error) {
-        console.log("Error getting school: ", error);
+        // console.log("Error getting school: ", error);
       }
     };
     if (user?.school_id) {

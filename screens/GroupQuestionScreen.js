@@ -70,12 +70,12 @@ const GroupQuestionsScreen = ({ navigation }) => {
   }
 
   const handleDone = async () => {
-    console.log("handleDone: ", groupName);
+    // console.log("handleDone: ", groupName);
 
     if (groupName == "") {
       showErrorToast("Group name should not be empty.");
     } else {
-      console.log("tempNewQuestions: ", newQuestions);
+      // console.log("tempNewQuestions: ", newQuestions);
 
       if (groupQuestions.length + newQuestions.length < 10) {
         showErrorToast("A group should have at least 10 questions.");
@@ -87,29 +87,29 @@ const GroupQuestionsScreen = ({ navigation }) => {
         tempNewQuestions.push({ value: item.value, value_esp: item.value_esp, enabled: item.enabled });
       })
 
-      console.log("middle");
+      // console.log("middle");
 
       const data = { groupName, groupCode, newQuestions: tempNewQuestions, groupId, ownerId: user?.id };
 
-      console.log("groupData: ", data);
+      // console.log("groupData: ", data);
 
       if (groupId == -1) {
         if (!user) {
-          console.log("here signup");
+          // console.log("here signup");
           setSchool(-1);
-          console.log("hereGroupName: ", groupName);
-          console.log("hereGroupCode: ", groupCode);
-          console.log("hereGroupQuestions: ", tempNewQuestions);
+          // console.log("hereGroupName: ", groupName);
+          // console.log("hereGroupCode: ", groupCode);
+          // console.log("hereGroupQuestions: ", tempNewQuestions);
           setGroupNameContext(groupName);
           setGroupCodeContext(groupCode);
           setGroupQuestionsContext(tempNewQuestions);
           navigation.navigate(StackNav.Phone);
-          console.log("navigate");
+          // console.log("navigate");
           return;
         } else {
           const res = await addGroup(data);
 
-          console.log("addGroupRes: ", res);
+          // console.log("addGroupRes: ", res);
           if (res.status == 204) {
             showErrorToast("This group code already exists.");
           } else {
@@ -129,9 +129,9 @@ const GroupQuestionsScreen = ({ navigation }) => {
   }
 
   const handleEdit = (type, id, engStr, espStr) => {
-    console.log("timeId: ", id);
-    console.log("engStr: ", engStr);
-    console.log("espStr: ", espStr);
+    // console.log("timeId: ", id);
+    // console.log("engStr: ", engStr);
+    // console.log("espStr: ", espStr);
 
     setEditEngQuestion(engStr);
     setEditEspQuestion(espStr);
@@ -144,7 +144,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
     if (editType == "origin") {
       const index = groupQuestions.findIndex(item => item.id == editId);
 
-      console.log("originIndex: ", index);
+      // console.log("originIndex: ", index);
 
       if (index != -1) {
         let tmp = groupQuestions;
@@ -154,11 +154,11 @@ const GroupQuestionsScreen = ({ navigation }) => {
       }
 
       const res = updateQuestion(editId, { value: editEngQuestion, value_esp: editEspQuestion });
-      console.log("updateRes: ", res);
+      // console.log("updateRes: ", res);
     } else {
       const index = newQuestions.findIndex(item => item.tempId == editId);
 
-      console.log("newIndex: ", index);
+      // console.log("newIndex: ", index);
 
       if (index != -1) {
         let tmp = newQuestions;
@@ -175,12 +175,12 @@ const GroupQuestionsScreen = ({ navigation }) => {
     if (type == "origin") {
       try {
         const res = delQuestion(id);
-        console.log("delRes: ", res);
+        // console.log("delRes: ", res);
         const tmp = groupQuestions.filter(item => item.id != id);
         setGroupQuestions(tmp);
         showSuccessToast("Deleted a question successfully.");
       } catch (error) {
-        console.log("delError: ", error);
+        // console.log("delError: ", error);
         showErrorToast("Error to delete a question.");
       }
     } else {

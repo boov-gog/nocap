@@ -12,7 +12,7 @@ const PlayButton = ({ onPress, playEnabled }) => {
   let { onAudio } = useContext(AuthenticatedUserContext);
 
   const handlePress = async () => {
-    console.log("handlePress: ", onAudio);
+    // console.log("handlePress: ", onAudio);
     
     if (onAudio) {
       const sound = new Audio.Sound();

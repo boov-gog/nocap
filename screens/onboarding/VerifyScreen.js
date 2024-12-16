@@ -20,7 +20,7 @@ export const VerifyScreen = ({ navigation }) => {
   const { user, setUser } = useContext(AuthenticatedUserContext);
 
   const checkUser = async () => {
-    console.log("VerifyScreen User:", user);
+    // console.log("VerifyScreen User:", user);
 
     if (user) {
       setIsEmailVerified(user.emailVerified);

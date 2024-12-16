@@ -125,7 +125,7 @@ const MyCapScreen = ({ navigation }) => {
         : Images.nonBinary;
 
   const getCaps = async () => {
-    console.log("getCaps is called");
+    // console.log("getCaps is called");
 
     try {
       const caps = await getRestCaps(user.id);
@@ -135,7 +135,7 @@ const MyCapScreen = ({ navigation }) => {
       const myCaps = caps.filter((cap) => cap.userInAnswer == user.id);
       setFollowers(myCaps.length);
     } catch (error) {
-      console.log("Error getting followers: ", error);
+      // console.log("Error getting followers: ", error);
       showErrorToast("Error getting followers");
     }
   };
@@ -143,10 +143,10 @@ const MyCapScreen = ({ navigation }) => {
   const getFollowings = async () => {
     try {
       const followings = await getRestFollowings(user.id);
-      console.log("followings: ", followings);
+      // console.log("followings: ", followings);
       setFollowings(followings);
     } catch (error) {
-      console.log("Error getting followings: ", error);
+      // console.log("Error getting followings: ", error);
       showErrorToast("Error getting followings");
     }
   };

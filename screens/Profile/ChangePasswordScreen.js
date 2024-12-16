@@ -58,7 +58,7 @@ const ChangePasswordScreen = () => {
         Alert.alert("Error", error.message);
       }
     } catch (error) {
-      console.log("Error re-authenticating user: ", error);
+      // console.log("Error re-authenticating user: ", error);
       Alert.alert(
         "Error",
         "The current password is incorrect. Please try again."

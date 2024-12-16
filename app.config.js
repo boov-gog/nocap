@@ -2,7 +2,7 @@ import "dotenv/config";
 
 export default {
   expo: {
-    name: "Expo Firebase Starter",
+    name: "Nocap", // Expo Firebase Starter
     slug: "expo-firebase",
     privacy: "public",
     platforms: ["ios", "android"],

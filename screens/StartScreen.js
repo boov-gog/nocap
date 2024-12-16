@@ -13,37 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 import i18n from '../i18n';
 
-import usePushNotification from "../hooks/usePushNotification";
-
 export const StartScreen = (props) => {
-  const {
-    requestUserPermission,
-    getFCMToken,
-    listenToBackgroundNotifications,
-    listenToForegroundNotifications,
-    onNotificationOpenedAppFromBackground,
-    onNotificationOpenedAppFromQuit,
-  } = usePushNotification();
-
-  useEffect(() => {
-    const listenToNotifications = () => {
-      try {
-        getFCMToken();
-        requestUserPermission();
-        onNotificationOpenedAppFromQuit();
-        listenToBackgroundNotifications();
-        listenToForegroundNotifications();
-        onNotificationOpenedAppFromBackground();
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    listenToNotifications();
-  }, []);
-
-
-
   const { t } = useTranslation();
 
   const [isLoading, setIsLoadig] = useState(true);
@@ -76,7 +46,7 @@ export const StartScreen = (props) => {
 
   useEffect(() => {
     if (firebaseUser) {
-      console.log("Firebase User:", firebaseUser);
+      // console.log("Firebase User:", firebaseUser);
 
       props.navigation.reset({
         index: 0,

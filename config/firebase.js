@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -13,12 +13,24 @@ const firebaseConfig = {
   appId: Constants.expoConfig?.extra?.appId,
 };
 
-// initialize firebase
-const app = initializeApp(firebaseConfig);
+// console.log("Constants: ", Constants);
 
-// initialize auth; only for native platforms (Android and iOS)
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage),
-});
+let auth;
+
+if (!getApps().length) {
+  const app = initializeApp(firebaseConfig); // Initialize the app
+
+  // Initialize auth with persistence if the app was just created
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+
+  console.log("Firebase initialized: ", auth);
+} else {
+  console.log("Firebase already initialized.");
+  auth = initializeAuth(getApps()[0], {
+    persistence: getReactNativePersistence(AsyncStorage), // Ensure persistence for existing app
+  }); // Use the existing app to initialize auth
+}
 
 export { auth };

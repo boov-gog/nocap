@@ -40,8 +40,8 @@ export const SignupScreen = ({ navigation }) => {
     }
     const { email, inviter } = values; 
 
-    console.log("signupEmail: ", email); 
-    console.log("signupInviter: ", inviter); 
+    // console.log("signupEmail: ", email); 
+    // console.log("signupInviter: ", inviter); 
 
     setEmail(email); 
     setInviter(inviter); 

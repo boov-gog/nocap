@@ -1,22 +1,53 @@
 import 'intl-pluralrules';
-import React from "react"; 
+import React, { useEffect } from "react";
 import { LogBox } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { RootNavigator } from "./navigation/RootNavigator";
 import { AuthenticatedUserProvider } from "./providers";
-import Toast from "react-native-toast-message"; 
+import Toast from "react-native-toast-message";
 
 import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n'; // Adjust the path as necessary
+import i18n from './i18n'; // Adjust the path as necessary 
+
+import usePushNotification from './hooks/usePushNotification';
 
 LogBox.ignoreLogs([
   "Warning: ...",
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
 ]);
-LogBox.ignoreAllLogs(true); 
+LogBox.ignoreAllLogs(true);
 
 const App = () => {
+  const {
+    requestUserPermission,
+    getFCMToken,
+    listenToBackgroundNotifications,
+    listenToForegroundNotifications,
+    onNotificationOpenedAppFromBackground,
+    onNotificationOpenedAppFromQuit,
+  } = usePushNotification();
+
+  useEffect(() => {
+    const listenToNotifications = async () => {
+      try {
+        const fcm = await getFCMToken();
+        console.log("fcm token: ", fcm); 
+        requestUserPermission();
+        onNotificationOpenedAppFromQuit();
+        listenToBackgroundNotifications();
+        listenToForegroundNotifications();
+        onNotificationOpenedAppFromBackground();
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    listenToNotifications();
+  }, []);
+
+  console.log("app.js"); 
+
   return (
     <I18nextProvider i18n={i18n}>
       <AuthenticatedUserProvider>

@@ -65,11 +65,11 @@ export const ChangeSchoolScreen = (props) => {
       });
     });
 
-    console.log("Lunr index initialized");
+    // console.log("Lunr index initialized");
   };
 
   const handleSearch = async (query) => {
-    console.log("Searching for: ", query);
+    // console.log("Searching for: ", query);
     //Implement search logic here
     if (query == "") {
       setSortedSchools(sortedAllSchools);
@@ -100,7 +100,7 @@ export const ChangeSchoolScreen = (props) => {
         const updatedUser = await updateUser(user.id, { school_id: school.id });
         setUser({ ...user, ...updatedUser });
 
-        console.log("Updated user school: ", updatedUser);
+        // console.log("Updated user school: ", updatedUser);
         showSuccessToast("School updated successfully.");
 
         props.navigation.goBack();
@@ -139,14 +139,14 @@ export const ChangeSchoolScreen = (props) => {
         props.navigation.goBack();
       } else {
         let location = (await getCurrentLocationWithTimeout()).coords;
-        console.log("Location: ", location);
+        // console.log("Location: ", location);
 
         let schoolList = getCache("schools");
         if (!schoolList) {
           schoolList = await fetchSchools();
           setCache("schools", schoolList);
         } else {
-          console.log("Schools loaded from cache");
+          // console.log("Schools loaded from cache");
         }
 
         const schoolsWithDistance = schoolList.map((school) => ({
@@ -176,11 +176,11 @@ export const ChangeSchoolScreen = (props) => {
   const getLimit = async () => {
     const res = await getLimitDistance(); 
     setLimitDistance(Number(res)); 
-    console.log("limitRes: ", Number(res)); 
+    // console.log("limitRes: ", Number(res)); 
   }
 
   useEffect(() => { 
-    console.log("ChangeSchoolScreen");
+    // console.log("ChangeSchoolScreen");
     getLimit(); 
     loadSchools();
   }, []);

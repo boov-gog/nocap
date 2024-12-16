@@ -95,12 +95,12 @@ const ChangeUserInfoModal = ({ onDismiss, userValue }) => {
       });
       setUser({ ...user, ...updatedUser });
 
-      console.log("Updated user info: ", updatedUser);
+      // console.log("Updated user info: ", updatedUser);
       showSuccessToast("User info updated successfully.");
 
       hideDialog();
     } catch (error) {
-      console.log("Error updating user info: ", error);
+      // console.log("Error updating user info: ", error);
       showErrorToast("Error updating user info. Try again later.");
     }
     setUpdating(false);

@@ -32,7 +32,7 @@ const ReplyDetail = ({ navigation }) => {
     setIsLoading(true);
     try {
       const cap = await getRestCap(id);
-      console.log("ReplyDetail cap", cap);
+      // console.log("ReplyDetail cap", cap);
       setCap(cap);
     } catch (error) {
       console.error(`Error getting cap by id: ${id}`, error);

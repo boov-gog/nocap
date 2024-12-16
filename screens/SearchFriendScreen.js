@@ -33,7 +33,7 @@ export const SearchFriendScreen = (props) => {
   const bottomInset = useSafeAreaInsets().bottom;
 
   const handleSearch = async (query) => {
-    console.log("Searching friends for: ", query);
+    // console.log("Searching friends for: ", query);
     const searchQuery = `*${query.toLowerCase()}*`;
 
     const searchResults = lunrIdx.search(searchQuery).slice(0, 1000);
@@ -105,7 +105,7 @@ export const SearchFriendScreen = (props) => {
       });
     });
 
-    console.log("Lunr index initialized");
+    // console.log("Lunr index initialized");
   };
 
   useFocusEffect(

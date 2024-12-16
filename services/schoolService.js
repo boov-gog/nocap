@@ -43,7 +43,7 @@ export const deleteSchoolById = async (schoolId) => {
 export const addGroup = async (data) => {
   try {
     const response = await axios.post(`${ADD_GROUP_URL}`, data); 
-    console.log("addRes: ", response); 
+    // console.log("addRes: ", response); 
     return response; 
   } catch (error) {
     console.error(`Error adding a group: `, error);

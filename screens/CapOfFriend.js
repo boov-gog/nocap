@@ -96,7 +96,7 @@ const CapOfFriend = ({ navigation }) => {
       setUser(user);
       return user;
     } catch (error) {
-      console.log("Error getting user: ", error);
+      // console.log("Error getting user: ", error);
       showErrorToast("Error getting friend");
     }
   };
@@ -108,7 +108,7 @@ const CapOfFriend = ({ navigation }) => {
       setCaps(caps);
       setFollowers(caps.length);
     } catch (error) {
-      console.log("Error getting followers: ", error);
+      // console.log("Error getting followers: ", error);
       showErrorToast("Error getting followers");
     }
   };
@@ -119,7 +119,7 @@ const CapOfFriend = ({ navigation }) => {
 
       setFollowings(followings);
     } catch (error) {
-      console.log("Error getting followings: ", error);
+      // console.log("Error getting followings: ", error);
       showErrorToast("Error getting followings");
     }
   };

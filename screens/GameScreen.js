@@ -81,7 +81,7 @@ const GameScreen = ({ navigation }) => {
         isUnlocked: false,
       };
 
-      console.log("gameCap: ", cap);
+      // console.log("gameCap: ", cap);
 
       let roundSelectedCountId = await AsyncStorage.getItem(
         "rountSelectedCountId"
@@ -102,7 +102,7 @@ const GameScreen = ({ navigation }) => {
         JSON.stringify(roundSelectedCountId)
       );
 
-      console.log("roundSelectedCountId: ", roundSelectedCountId);
+      // console.log("roundSelectedCountId: ", roundSelectedCountId);
 
       // Save the cap using the saveCap function
       await saveCap(cap);
@@ -176,7 +176,7 @@ const GameScreen = ({ navigation }) => {
         });
       }
 
-      console.log("gameFriends: ", friends);
+      // console.log("gameFriends: ", friends);
 
       // Select 4 friends randomly
       if (friends.length >= 4) {
@@ -205,7 +205,7 @@ const GameScreen = ({ navigation }) => {
           }
         });
 
-        console.log("gameSortFriends: ", friends);
+        // console.log("gameSortFriends: ", friends);
 
         for (let i = 0; i < 4; i++) selectedFriends.push(friends[i]);
 
@@ -245,7 +245,7 @@ const GameScreen = ({ navigation }) => {
         candidateIds
       );
 
-      console.log("Answered numbers:", answeredNumbers);
+      // console.log("Answered numbers:", answeredNumbers);
 
       // Update the percentage state with the answered numbers
       let updatedAnswerNums = friends.map((friend) => {
@@ -261,7 +261,7 @@ const GameScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log("Percentage:", percentage);
+    // console.log("Percentage:", percentage);
   }, [percentage]);
 
   useEffect(() => {

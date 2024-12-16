@@ -98,13 +98,13 @@ const ReplyScreen = ({ navigation }) => {
       const replyId = reply?.id;
 
       const response = await updateCapWithReply(cap.id, replyId);
-      console.log("send Reply response", response);
+      // console.log("send Reply response", response);
       navigation.goBack();
     } catch (error) {
       if (error.response.status == 409) {
         showErrorToast("You have already replied to this CAP");
       } else {
-        console.log("send Reply error", error);
+        // console.log("send Reply error", error);
         showErrorToast("Failed to send reply");
       }
     }
@@ -127,11 +127,11 @@ const ReplyScreen = ({ navigation }) => {
       });
     });
 
-    console.log("Lunr index initialized");
+    // console.log("Lunr index initialized");
   };
 
   const handleSearch = async (query) => {
-    console.log("Searching reply sentences for: ", query);
+    // console.log("Searching reply sentences for: ", query);
     if (query == "") {
       setFilteredReplies(replies);
       return;
@@ -165,7 +165,7 @@ const ReplyScreen = ({ navigation }) => {
         initLunrIndex(replies);
         setFilteredReplies(replies);
       } catch (error) {
-        console.log("getReplies error", error);
+        // console.log("getReplies error", error);
       }
       setLoading(false);
     };

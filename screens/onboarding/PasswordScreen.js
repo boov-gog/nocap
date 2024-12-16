@@ -73,9 +73,9 @@ export const PasswordScreen = ({ navigation }) => {
   } = useContext(AuthenticatedUserContext); 
 
   const signUp = async () => { 
-    console.log("signupGroupName1", groupName); 
-    console.log("signupGroupCode1", groupCode); 
-    console.log("signupGroupQuestions1", groupQuestions); 
+    // console.log("signupGroupName1", groupName); 
+    // console.log("signupGroupCode1", groupCode); 
+    // console.log("signupGroupQuestions1", groupQuestions); 
 
     const userData = {
       email,
@@ -91,14 +91,14 @@ export const PasswordScreen = ({ navigation }) => {
       groupQuestions, 
     }; 
 
-    console.log("signupUserData", userData); 
+    // console.log("signupUserData", userData); 
 
     try { 
-      console.log("signupInviter: ", inviter); 
+      // console.log("signupInviter: ", inviter); 
 
-      console.log("signupGroupName", groupName); 
-      console.log("signupGroupCode", groupCode); 
-      console.log("signupGroupQuestions", groupQuestions); 
+      // console.log("signupGroupName", groupName); 
+      // console.log("signupGroupCode", groupCode); 
+      // console.log("signupGroupQuestions", groupQuestions); 
 
       const res = await registerUser(userData); 
       
@@ -108,7 +108,7 @@ export const PasswordScreen = ({ navigation }) => {
       } 
       
       const createdUser = res.data; 
-      console.log("createdUser: ", res); 
+      // console.log("createdUser: ", res); 
 
       setUser({ ...user, ...createdUser });
 
@@ -123,7 +123,7 @@ export const PasswordScreen = ({ navigation }) => {
 
       if(inviter != "") {
         const res = await userAddBonusRound({email: inviter}); 
-        console.log("inviterBonusRes: ", res); 
+        // console.log("inviterBonusRes: ", res); 
       }
 
       showSuccessToast("You are registered successfully!");
@@ -141,9 +141,9 @@ export const PasswordScreen = ({ navigation }) => {
       });
 
       try {
-        console.log("Deleting backend user:", email);
+        // console.log("Deleting backend user:", email);
         const res = await deleteUserByEmail(email);
-        console.log("Delete user response:", res);
+        // console.log("Delete user response:", res);
       } catch (error) {
         console.error("Error deleting backend user:", error);
       }
@@ -152,7 +152,7 @@ export const PasswordScreen = ({ navigation }) => {
 
   const handleSignup = async (values) => {
     const { password } = values;
-    console.log("Email", email, "Password", password);
+    // console.log("Email", email, "Password", password);
 
     try {
       setProcessing(true);

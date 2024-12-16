@@ -61,11 +61,11 @@ export const SchoolScreen = (props) => {
       });
     });
 
-    console.log("Lunr index initialized");
+    // console.log("Lunr index initialized");
   };
 
   const handleSearch = async (query) => {
-    console.log("Searching for: ", query);
+    // console.log("Searching for: ", query);
     //Implement search logic here
     if (query == "") {
       setSortedSchools(sortedAllSchools);
@@ -151,7 +151,7 @@ export const SchoolScreen = (props) => {
   const getLimit = async () => {
     const res = await getLimitDistance();
     setLimitDistance(Number(res));
-    console.log("onBoardingLimitRes: ", Number(res));
+    // console.log("onBoardingLimitRes: ", Number(res));
   }
 
   useEffect(() => {

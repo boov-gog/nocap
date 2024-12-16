@@ -52,7 +52,7 @@ export const LocationPermissionScreen = (props) => {
         });
       }
     } catch (error) {
-      console.log(error.message);
+      // console.log(error.message);
       showErrorToast("Unable to fetch location: " + error.message);
     }
     setIsGettingPermission(false);
