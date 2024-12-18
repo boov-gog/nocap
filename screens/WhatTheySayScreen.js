@@ -179,9 +179,12 @@ const WhatTheySayScreen = ({ navigation }) => {
                 style={styles.whoSayButton}
                 onPress={handleSeeWhoSaid}
               >
-                <Text style={styles.countTokens}>
-                  {user.viewTokens}
-                </Text>
+                <View style={styles.countTokens}>
+                  <Text style={styles.countTokensText}>
+                    {user.viewTokens}
+                  </Text>
+                </View>
+
                 <Text style={styles.btnText}>{t("seeWhoSaidThis")}</Text>
               </TouchableOpacity>
             ) : (
@@ -392,15 +395,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   }, 
   countTokens: {
-    fontSize: 14, 
-    fontWeight: "bold", 
     width: 24, 
     height: 24, 
-    textAlign: "center", 
-    textAlignVertical: "center", 
-    borderRadius: 15, 
+    borderRadius: 12, 
     borderWidth: 2, 
     borderColor: "black", 
-    backgroundColor: "yellow"
+    backgroundColor: "yellow", 
+    overflow: "hidden",
+    display: "flex", 
+    justifyContent: "center", 
+    alignItems: "center"
+  }, 
+  countTokensText: {
+    fontSize: 12, 
+    fontWeight: "bold", 
   }
 });
