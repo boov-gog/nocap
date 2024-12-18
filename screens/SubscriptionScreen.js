@@ -90,10 +90,8 @@ const SubscriptionScreen = ( { navigation } ) => {
   return (
     <SafeAreaView style={styles.container}>
       <TopBar />
-      <ScrollView
+      <View
         style={styles.scrollView}
-        contentContainerStyle={styles.scrollContentContainer}
-        showsVerticalScrollIndicator={false} 
       >
         <Image style={styles.starLogo} source={Images.star2} />
         <Image style={styles.proLetter} source={Images.proLetter} />
@@ -113,7 +111,7 @@ const SubscriptionScreen = ( { navigation } ) => {
             <Text style={styles.unlockBtnTxt}>{t("unlock")}</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -129,10 +127,11 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     width: "100%",
-  },
-  scrollContentContainer: {
     alignItems: "center",
   },
+  // scrollContentContainer: {
+  //   alignItems: "center",
+  // },
   starLogo: {
     position: "absolute",
     top: 80,// 150
@@ -155,9 +154,9 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     position: "relative",
-    marginTop: 0, // 60
+    marginTop: 12, // 60
     width: 300, // 300
-    height: 150, //175
+    // height: 150, //175
     justifyContent: "center",
     alignItems: "center",
   },

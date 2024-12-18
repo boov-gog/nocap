@@ -148,21 +148,19 @@ const WhatTheySayScreen = ({ navigation }) => {
       {isLoading ? (
         <LoadingIndicator />
       ) : (
-        <ScrollView
+        <View
           style={styles.scrollViewer}
-          contentContainerStyle={styles.scrollViewContainer}
-          showsVerticalScrollIndicator={false}
         >
           <View style={styles.showToOthers}>
             {isToggling ? (
-              <LoadingIndicator indicatorSize={40} />
+              <LoadingIndicator indicatorSize={20} />
             ) : (
               <ToggleSwitch
                 isOn={toggleState}
                 onColor="green"
                 label="Show to others"
-                labelStyle={{ fontFamily: "MPR-Bold", fontSize: 20 }}
-                size="large"
+                labelStyle={{ fontFamily: "MPR-Bold", fontSize: 16 }}
+                size="medium"
                 onToggle={handleToggle}
               />
             )}
@@ -246,7 +244,7 @@ const WhatTheySayScreen = ({ navigation }) => {
             <Image style={styles.shareBtnImage} source={Images.facebook} />
             <Image style={styles.shareBtnImage} source={Images.snapchat} />
           </TouchableOpacity>
-        </ScrollView>
+        </View>
       )}
       <View style={styles.bottomBar}>
         <TouchableOpacity onPress={handleBack}>
@@ -270,11 +268,13 @@ const styles = StyleSheet.create({
   scrollViewer: {
     flex: 1,
     width: "100%",
-  },
-  scrollViewContainer: {
     alignItems: "center",
-    paddingBottom: 20,
+    // paddingBottom: 20, 
   },
+  // scrollViewContainer: {
+  //   alignItems: "center",
+  //   paddingBottom: 20,
+  // },
   showToOthers: {
     width: "100%",
     alignItems: "flex-end",
@@ -288,10 +288,11 @@ const styles = StyleSheet.create({
   avatar: {
     width: 75, // 100
     height: 75, // 100
+    marginTop: -15, 
   },
   description: {
     fontWeight: "700",
-    fontSize: 20,
+    fontSize: 16,
     padding: 10,
   },
   whoSayButton: {
@@ -302,15 +303,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18.5,
     flexDirection: "row",
     alignItems: "center",
-    gap: 8,
+    gap: 4,
   },
   lockAvatar: {
     width: 18, // 22
-    height: 24, // 30
+    height: 20, // 30
   },
   btnText: {
     fontFamily: "MPR-Bold",
-    fontSize: 16,
+    fontSize: 14,
   },
   question: {
     width: "90%",
@@ -335,8 +336,8 @@ const styles = StyleSheet.create({
     marginTop: 9,
     borderRadius: 50,
     borderWidth: 1,
-    paddingVertical: 7,
-    paddingHorizontal: 22,
+    paddingVertical: 4.5,
+    paddingHorizontal: 20,
     gap: 12.5,
     backgroundColor: "white",
   },
@@ -358,17 +359,17 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     paddingVertical: 4.5,
-    paddingHorizontal: 34,
+    paddingHorizontal: 20, //34
     gap: 8,
     backgroundColor: "white",
   },
   shareBtnTxt: {
     fontWeight: "600",
-    fontSize: 24,
+    fontSize: 20,
   },
   shareBtnImage: {
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
   },
   bottomBar: {
     width: "100%",

@@ -356,9 +356,8 @@ const WaitingRoom = ({ navigation }) => {
           color="black"
         />
       </View>
-      <ScrollView
-        contentContainerStyle={styles.scrollViewer}
-        showsVerticalScrollIndicator={false}
+      <View
+        style={styles.scrollViewer}
       >
         <Text style={styles.title}>{t("schoolLeaders")}</Text>
         <View
@@ -420,7 +419,7 @@ const WaitingRoom = ({ navigation }) => {
         ) : (
           <PlayButton onPress={handlePlay} playEnabled={playEnable} />
         )}
-      </ScrollView>
+      </View>
       <View style={styles.bottomContainer}>
         <TouchableOpacity onPress={handleBlueCapClick}>
           <Image style={{ width: 50, height: 35 }} source={Images.blueCap} />
@@ -484,7 +483,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 20, // 50
     fontFamily: "Kanit-Bold",
-    fontSize: 32,
+    fontSize: 28, // 32
   },
   leaderListContainer: {
     width: "100%",
@@ -501,7 +500,7 @@ const styles = StyleSheet.create({
   },
   noListText: {
     color: "white",
-    fontSize: 26,
+    fontSize: 22, // 26
     fontFamily: "Kanit-Bold",
   },
   leaderListOne: {
@@ -522,36 +521,36 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   timerContainer: {
-    marginTop: 0, // 22
+    marginTop: 4, // 22
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
   },
   lockImage: {
-    width: 44,
-    height: 65,
+    width: 32, // 44
+    height: 48, // 65
   },
   timerBefore: {
     paddingLeft: 13,
     fontFamily: "MPR-Bold",
-    fontSize: 32,
+    fontSize: 28, // 32
   },
   timerText: {
     fontFamily: "MPR-Bold",
-    fontSize: 32,
+    fontSize: 28, // 32
     color: "red",
   },
   skipText: {
     marginTop: 0, // 27
     fontFamily: "MPR-Bold",
-    fontSize: 32,
+    fontSize: 28, // 32
     color: "#D3D3D3",
   },
   inviteBtn: {
     marginTop: 6, // 17
-    marginBottom: 12, // 17
+    marginBottom: 6, // 17
     paddingHorizontal: 60,
-    paddingVertical: 14,
+    paddingVertical: 0, // 14
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

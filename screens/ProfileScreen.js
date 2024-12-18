@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
   },
   settingText: {
     fontFamily: "Kanit-Bold",
-    fontSize: 26,
+    fontSize: 24,
   },
   nameReveals: {
     width: 40,

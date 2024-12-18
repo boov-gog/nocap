@@ -12,9 +12,9 @@ export const Logo = ({ uri, style }) => {
 
 const styles = StyleSheet.create({
   image: {
-    marginVertical: windowHeight * 0.025, // 0.05
+    marginVertical: windowHeight * 0.010, // 0.05
     marginHorizontal: windowWidth * 0.05,
-    width: "80%", // 90%
-    height: windowWidth * 0.6 * 0.30, // 0.9 * 0.31
+    width: "90%", // 90%
+    height: windowWidth * 0.7 * 0.30, // 0.9 * 0.31
   },
 });

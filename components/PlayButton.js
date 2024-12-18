@@ -49,8 +49,8 @@ const PlayButton = ({ onPress, playEnabled }) => {
 
   const styles = StyleSheet.create({
     image: {
-      width: 300,
-      height: 300,
+      width: 250, // 300 
+      height: 250, // 300
     },
   });
 
