@@ -35,7 +35,7 @@ const ReplyDetail = ({ navigation }) => {
       // console.log("ReplyDetail cap", cap);
       setCap(cap);
     } catch (error) {
-      console.error(`Error getting cap by id: ${id}`, error);
+      // console.log(`Error getting cap by id: ${id}`, error);
       showErrorToast("Error getting cap. Please try again.");
       navigation.goBack();
     }

@@ -10,7 +10,7 @@ export const fetchGameData = async (user_id) => {
     const response = await axios.get(`${GAME_API_URL}/${user_id}`);
     return response.data;
   } catch (error) {
-    console.error("Error fetching game data:", error);
+    // console.log("Error fetching game data:", error);
     throw error;
   }
 };

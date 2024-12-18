@@ -19,7 +19,7 @@ const languageDetector = {
       const { languageTag } = RNLocalize.findBestLanguageTag(['en', 'es']) || { languageTag: 'en' }; 
       callback(languageTag);
     } catch (error) {
-      console.error("Error detecting language:", error);
+      // console.log("Error detecting language:", error);
       callback('en'); 
     }
   },

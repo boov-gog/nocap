@@ -35,13 +35,13 @@ export const VerifyScreen = ({ navigation }) => {
 
           setUser({ ...user, ...registeredUser });
         } catch (error) {
-          console.error("Error signing in to backend:", error);
+          // console.log("Error signing in to backend:", error);
 
           try {
             await signOut(auth);
             setUser(null);
           } catch (error) {
-            console.error("Error signing out:", error);
+            // console.log("Error signing out:", error);
           }
         }
         setIsSigning(false);
@@ -64,7 +64,7 @@ export const VerifyScreen = ({ navigation }) => {
       await sendEmailVerification(auth.currentUser);
       showSuccessToast("Verification email sent. Please check your inbox.");
     } catch (error) {
-      console.error("Error sending verification email:", error);
+      // console.log("Error sending verification email:", error);
       showErrorToast("Failed to send verification email. Please try again.");
     }
   };
@@ -75,7 +75,7 @@ export const VerifyScreen = ({ navigation }) => {
       await updateUser(user.id, {isOnline: false}); 
       setUser(null); 
     } catch (error) {
-      console.error("Error signing out:", error);
+      // console.log("Error signing out:", error);
     }
   };
 

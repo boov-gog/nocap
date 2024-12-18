@@ -110,7 +110,7 @@ const GroupScreen = ({ navigation }) => {
         showSuccessToast("Joined the group successfully.");
       }
     } catch (error) {
-      console.error("Error joing the group: ", error);
+      // console.log("Error joing the group: ", error);
       showErrorToast("Error joining the group: " + error.message);
     }
   }

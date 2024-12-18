@@ -115,7 +115,7 @@ export const SearchFriendScreen = (props) => {
           const _friend = await loadFriends();
           await initLunrIndex(_friend);
         } catch (error) {
-          console.error("Error loading friends:", error);
+          // console.log("Error loading friends:", error);
         }
       };
 

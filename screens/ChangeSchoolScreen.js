@@ -105,7 +105,7 @@ export const ChangeSchoolScreen = (props) => {
 
         props.navigation.goBack();
       } catch (error) {
-        console.error("Error updating user school: ", error);
+        // console.log("Error updating user school: ", error);
         showErrorToast("Error updating user school: " + error.message);
       }
     }
@@ -166,7 +166,7 @@ export const ChangeSchoolScreen = (props) => {
         await initLunrIndex(schoolsWithDistance);
       }
     } catch (error) {
-      console.error("Error fetching location: ", error);
+      // console.log("Error fetching location: ", error);
       showErrorToast("Unable to fetch location: " + error.message);
       props.navigation.goBack();
     }

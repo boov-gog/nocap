@@ -8,7 +8,7 @@ export const saveCap = async (cap) => {
     const response = await axios.post(CAP_API_URL, cap);
     return response.data;
   } catch (error) {
-    console.error("Error saving cap:", error);
+    // console.log("Error saving cap:", error);
     throw error;
   }
 };

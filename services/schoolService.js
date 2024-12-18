@@ -15,7 +15,7 @@ export const fetchSchools = async () => {
     const response = await axios.get(SCHOOL_API_URL);
     return response.data;
   } catch (error) {
-    console.error("Error fetching schools:", error);
+    // console.log("Error fetching schools:", error);
     throw error;
   }
 };
@@ -25,7 +25,7 @@ export const getSchoolById = async (schoolId) => {
     const response = await axios.get(`${SCHOOL_API_URL}/${schoolId}`);
     return response.data;
   } catch (error) {
-    console.error(`Error getting school by id[${schoolId}]:`, error);
+    // console.log(`Error getting school by id[${schoolId}]:`, error);
     throw error;
   }
 }; 
@@ -35,7 +35,7 @@ export const deleteSchoolById = async (schoolId) => {
     const response = await axios.delete(`${SCHOOL_API_URL}/${schoolId}`);
     return response;
   } catch (error) {
-    console.error(`Error getting school by id[${schoolId}]:`, error);
+    // console.log(`Error getting school by id[${schoolId}]:`, error);
     throw error;
   }
 }; 
@@ -46,7 +46,7 @@ export const addGroup = async (data) => {
     // console.log("addRes: ", response); 
     return response; 
   } catch (error) {
-    console.error(`Error adding a group: `, error);
+    // console.log(`Error adding a group: `, error);
     throw error;
   }
 } 
@@ -56,7 +56,7 @@ export const updateGroup = async (data) => {
     const response = await axios.post(`${UPDATE_GROUP_URL}`, data); 
     return response.data; 
   } catch (error) {
-    console.error(`Error adding a group: `, error);
+    // console.log(`Error adding a group: `, error);
     throw error;
   }
 } 
@@ -66,7 +66,7 @@ export const getLimitDistance = async () => {
     const response = await axios.post(LIMIT_DISTANCE_URL); 
     return response.data; 
   } catch (error) {
-    console.error(`Error to get limit distance: `, error);
+    // console.log(`Error to get limit distance: `, error);
     throw error;
   }
 } 
@@ -76,7 +76,7 @@ export const updateQuestion = async (questionId, data) => {
     const response = await axios.put(`${UPDATE_QUESTION_URL}/${questionId}`, { data }); 
     return response.data; 
   } catch (error) {
-    console.error(`Error to update a question: `, error);
+    // console.log(`Error to update a question: `, error);
     throw error;
   }
 } 
@@ -86,7 +86,7 @@ export const delQuestion = async (questionId) => {
     const response = await axios.delete(`${DEL_QUESTION_URL}/${questionId}`); 
     return response; 
   } catch (error) {
-    console.error(`Error to del a question: `, error);
+    // console.log(`Error to del a question: `, error);
     throw error;
   }
 } 
@@ -96,7 +96,7 @@ export const delQuestion = async (questionId) => {
 //     const response = await axios.get(`${SCHOOL_SEARCH_URL}?query=${query}`);
 //     return response.data;
 //   } catch (error) {
-//     console.error("Error searching schools:", error);
+//     // console.log("Error searching schools:", error);
 //     throw error;
 //   }
 // };

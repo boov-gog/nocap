@@ -1,29 +1,8 @@
 import React from 'react';
 import messaging from '@react-native-firebase/messaging';
-import { PermissionsAndroid, Platform } from 'react-native';
+import { PermissionsAndroid, Platform, Alert } from 'react-native';
 
-// import firebase from '@react-native-firebase/app';
-
-// const firebaseConfig = {
-//   // Your Firebase configuration
-//   apiKey: 'AIzaSyDjGVXOrtn4_CNEbdY1B5cIVEAv4mZuQxY',
-//   authDomain: 'djt-alpha---adrian---no-cap.firebaseapp.com',
-//   projectId: 'djt-alpha---adrian---no-cap',
-//   storageBucket: 'djt-alpha---adrian---no-cap.appspot.com',
-//   messagingSenderId: '1065420768217',
-//   appId: '1:1065420768217:android:bac4aa2a04654108188fc8',
-// };
-
-// console.log("firebase_apps_length: ", firebase.apps.length);
-
-// Make sure to initialize only once
-// if (!firebase.apps.length) {
-//   // console.log("firebase initialize");
-//   firebase.initializeApp(firebaseConfig);
-
-//   // console.log("firebase_apps_length_later: ", firebase.apps.length);
-
-// }
+import { showSuccessToast } from '../utils';
 
 const usePushNotification = () => {
   const requestUserPermission = async () => {
@@ -38,6 +17,12 @@ const usePushNotification = () => {
       console.log('Authorization status:', authStatus);
     }
 
+    const res = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+    ); 
+
+    console.log("res1: ", res);
+
     // if (Platform.OS === 'ios') {
     //   //Request iOS permission
     //   const authStatus = await messaging().requestPermission();
@@ -50,9 +35,9 @@ const usePushNotification = () => {
     //   }
     // } else if (Platform.OS === 'android') {
     //   //Request Android permission (For API level 33+, for 32 or below is not required)
-    //   const res = await PermissionsAndroid.request(
-    //     PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-    //   );
+      // const res = await PermissionsAndroid.request(
+      //   PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      // );
     // }
   }
 
@@ -81,11 +66,21 @@ const usePushNotification = () => {
   const listenToForegroundNotifications = async () => {
     console.log("call listenToForegroundNotifications"); 
 
+    messaging().onme
+
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log(
         'A new message arrived! (FOREGROUND)',
         JSON.stringify(remoteMessage),
       );
+
+      showSuccessToast(remoteMessage.notification.body); 
+
+      // Alert.alert(
+      //   remoteMessage.notification.title,
+      //   remoteMessage.notification.body,
+      //   [{ text: 'OK' }]
+      // );
     });
 
     console.log("unsubscribe"); 
@@ -104,6 +99,9 @@ const usePushNotification = () => {
         );
       },
     );
+
+    console.log("unsubscribe"); 
+
     return unsubscribe;
   }
 

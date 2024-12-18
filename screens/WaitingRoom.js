@@ -1,4 +1,13 @@
-import { Image, ScrollView, StyleSheet, Text, View, Modal, Button, TouchableOpacity } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Colors, Images } from "../config";
 import { GENDER_TYPE, showErrorToast, showSuccessToast } from "../utils";
@@ -12,7 +21,7 @@ import { LoadingIndicator } from "../components";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { Audio } from 'expo-av';
+import { Audio } from "expo-av";
 import { Icon, TextInput } from "../components";
 import { sendInvite, userSendNotification } from "../services/userService";
 import { SegmentedButtons } from "react-native-paper";
@@ -23,10 +32,10 @@ import { useTranslation } from "react-i18next";
 
 import usePushNotification from "../hooks/usePushNotification";
 
-const WaitingRoom = ({ navigation }) => { 
-  const { getFCMToken } = usePushNotification(); 
+const WaitingRoom = ({ navigation }) => {
+  const { getFCMToken } = usePushNotification();
 
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const [pollTime, setPollTime] = useState("59:59");
   const [playEnable, setPlayEnable] = useState(true);
@@ -43,16 +52,20 @@ const WaitingRoom = ({ navigation }) => {
 
   const [leaders, setLeaders] = useState([]);
 
-  let timer = null
+  let timer = null;
 
-  const calculatePollTime = () => {
+  const calculatePollTime = async () => {
     // Calculate left time to the next right hour in UTC + 0.00 timezone
     const now = new Date();
     const nextHour = new Date(now);
 
     let isPaid = false;
 
-    if (user.isSubscribed && (now.getUTCMinutes() < 30 || (now.getUTCMinutes() == 30 && now.getUTCSeconds() == 0))) {
+    if (
+      user.isSubscribed &&
+      (now.getUTCMinutes() < 30 ||
+        (now.getUTCMinutes() == 30 && now.getUTCSeconds() == 0))
+    ) {
       nextHour.setUTCHours(nextHour.getUTCHours());
       nextHour.setUTCMinutes(30);
       nextHour.setUTCSeconds(0);
@@ -77,6 +90,16 @@ const WaitingRoom = ({ navigation }) => {
     );
 
     if (leftMinutes == 0 && leftSeconds == 0) {
+      const fcmToken = await getFCMToken();
+
+      console.log("Gamer fcmToken1: ", fcmToken);
+  
+      await userSendNotification({
+        token: fcmToken,
+        title: "Nocap notification",
+        body: "Game pull timer has run out!",
+      });
+
       if (isPaid) {
         checkGamePaid();
       } else {
@@ -86,9 +109,9 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGame = async () => {
-    // console.log("checkGame_NonPaid");
+    console.log("checkGame_NonPaid");
 
-    // showSuccessToast("Timer has run out!"); 
+    // showSuccessToast("Timer has run out!");
 
     setChecking(true);
     try {
@@ -96,7 +119,7 @@ const WaitingRoom = ({ navigation }) => {
       const roundId = await AsyncStorage.getItem("roundId");
       const gameData = await fetchGameData(user.id);
 
-      // console.log("gameData: ", gameData); 
+      // console.log("gameData: ", gameData);
 
       //remove me in friends list
       gameData.friends = gameData.friends.filter((f) => f.id !== user.id);
@@ -109,7 +132,7 @@ const WaitingRoom = ({ navigation }) => {
         let questions = await AsyncStorage.getItem("questions");
         questions = JSON.parse(questions);
 
-        // console.log("questions: ", questions); 
+        // console.log("questions: ", questions);
 
         const unselectedQuestions = questions.filter(
           (q) => q.selected == false
@@ -122,7 +145,7 @@ const WaitingRoom = ({ navigation }) => {
         }
       }
     } catch (error) {
-      console.error("Error checking the game:", error);
+      // console.log("Error checking the game:", error);
       showErrorToast("Failed to initialize the game. Please try again.");
       setPlayEnable(false);
     }
@@ -130,9 +153,9 @@ const WaitingRoom = ({ navigation }) => {
   };
 
   const checkGamePaid = async () => {
-    // console.log("checkGame_Paid");
+    console.log("checkGame_Paid");
 
-    // showSuccessToast("Timer has run out!"); 
+    // showSuccessToast("Timer has run out!");
 
     setChecking(true);
     try {
@@ -162,7 +185,7 @@ const WaitingRoom = ({ navigation }) => {
         }
       }
     } catch (error) {
-      console.error("Error checking the game:", error);
+      // console.log("Error checking the game:", error);
       showErrorToast("Failed to initialize the game. Please try again.");
       setPlayEnable(false);
     }
@@ -175,7 +198,7 @@ const WaitingRoom = ({ navigation }) => {
     }, [])
   );
 
-  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleSetLeaders = async () => {
     setIsLeaderLoading(true);
@@ -183,14 +206,15 @@ const WaitingRoom = ({ navigation }) => {
     // console.log("handleSetLeaders");
     const gameData = await fetchGameData(user.id);
 
-    // console.log("gameData: ", gameData); 
+    // console.log("gameData: ", gameData);
     // await delay(2000);
 
     let friends = gameData.friends.filter((f) => f.id !== user.id);
 
     if (friends.length >= 4) {
-
-      let roundSelectedCountId = await AsyncStorage.getItem("rountSelectedCountId");
+      let roundSelectedCountId = await AsyncStorage.getItem(
+        "rountSelectedCountId"
+      );
       roundSelectedCountId = JSON.parse(roundSelectedCountId);
 
       // console.log("friends: ", friends);
@@ -227,7 +251,7 @@ const WaitingRoom = ({ navigation }) => {
     }
 
     setIsLeaderLoading(false);
-  }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -258,23 +282,29 @@ const WaitingRoom = ({ navigation }) => {
     navigation.navigate(StackNav.MyCaps);
   };
 
-  const handlePlay = async () => { 
-    const fcmToken = await getFCMToken(); 
+  const handlePlay = async () => {
+    // const fcmToken = await getFCMToken();
 
-    // console.log("Gamer fcmToken: ", fcmToken); 
+    // console.log("Gamer fcmToken1: ", fcmToken);
 
-    await userSendNotification({token: fcmToken, title: "Hello", body: "Nice to meet you."}); 
+    // await userSendNotification({token: fcmToken, title: "Hello", body: "Nice to meet you."});
 
     try {
       const gameData = await fetchGameData(user.id);
       const roundId = await AsyncStorage.getItem("roundId");
+
+      console.log("roundId: ", roundId);
+      console.log("gameDataRoundId: ", gameData.roundId);
 
       if (roundId != gameData.roundId) {
         let roundSelectedCountId = [];
         for (let i = 0; i < 100; i++) {
           roundSelectedCountId.push(0);
         }
-        await AsyncStorage.setItem("roundSelectedCountId", JSON.stringify(roundSelectedCountId));
+        await AsyncStorage.setItem(
+          "roundSelectedCountId",
+          JSON.stringify(roundSelectedCountId)
+        );
 
         await AsyncStorage.setItem("roundId", gameData.roundId.toString());
         await AsyncStorage.setItem(
@@ -289,7 +319,7 @@ const WaitingRoom = ({ navigation }) => {
 
       navigation.replace(StackNav.GamePage, {});
     } catch (error) {
-      console.error("Error starting the game:", error);
+      // console.log("Error starting the game:", error);
       showErrorToast("Failed to start the game. Please try again.");
     }
   };
@@ -315,7 +345,7 @@ const WaitingRoom = ({ navigation }) => {
         showErrorToast(res.data.error);
       }
     }
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -326,38 +356,48 @@ const WaitingRoom = ({ navigation }) => {
           color="black"
         />
       </View>
-      <ScrollView contentContainerStyle={styles.scrollViewer} showsVerticalScrollIndicator={false} >
+      <ScrollView
+        contentContainerStyle={styles.scrollViewer}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.title}>{t("schoolLeaders")}</Text>
-        <View style={[styles.leaderListContainer, isLeaderLoading && { backgroundColor : "#FFFFFF" }]}>
+        <View
+          style={[
+            styles.leaderListContainer,
+            isLeaderLoading && { backgroundColor: "#FFFFFF" },
+          ]}
+        >
           {isLeaderLoading ? (
             <LoadingIndicator />
-          ) : isLeader ? (leaders.map((value, index) => (
-            <View style={styles.leaderListOne} key={index}>
-              <Text style={styles.leaderListText} ellipsizeMode="tail">
-                {`${index + 1}. ${value.name}`}
-              </Text>
-              <Image
-                style={[
-                  styles.leaderListImage,
-                  {
-                    backgroundColor:
-                      value.gender == GENDER_TYPE.Boy
-                        ? Colors.mainBlue
-                        : value.gender == GENDER_TYPE.Girl
+          ) : isLeader ? (
+            leaders.map((value, index) => (
+              <View style={styles.leaderListOne} key={index}>
+                <Text style={styles.leaderListText} ellipsizeMode="tail">
+                  {`${index + 1}. ${value.name}`}
+                </Text>
+                <Image
+                  style={[
+                    styles.leaderListImage,
+                    {
+                      backgroundColor:
+                        value.gender == GENDER_TYPE.Boy
+                          ? Colors.mainBlue
+                          : value.gender == GENDER_TYPE.Girl
                           ? Colors.mainPink
                           : Colors.mainGreen,
-                  },
-                ]}
-                source={value.avatar}
-              ></Image>
-            </View>
-          ))) : (
+                    },
+                  ]}
+                  source={value.avatar}
+                ></Image>
+              </View>
+            ))
+          ) : (
             <View style={styles.noListTextContainer}>
-              <Text style={styles.noListText} ellipsizeMode="tail">There are no leading friends.</Text>
+              <Text style={styles.noListText} ellipsizeMode="tail">
+                There are no leading friends.
+              </Text>
             </View>
-          )
-          }
-
+          )}
         </View>
         <View style={styles.timerContainer}>
           <Image style={styles.lockImage} source={Images.locker} />
@@ -365,7 +405,10 @@ const WaitingRoom = ({ navigation }) => {
           <Text style={styles.timerText}>{pollTime}</Text>
         </View>
         <Text style={styles.skipText}>Skip the wait</Text>
-        <TouchableOpacity style={styles.inviteBtn} onPress={() => setModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.inviteBtn}
+          onPress={() => setModalVisible(true)}
+        >
           <Image
             style={styles.inviteBtnImage}
             source={Images.inviteFrinedsBtn}
@@ -395,20 +438,29 @@ const WaitingRoom = ({ navigation }) => {
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Please invite a friend to play with.</Text>
+            <Text style={styles.modalTitle}>
+              Please invite a friend to play with.
+            </Text>
             <TextInput
               style={styles.modalInput}
               value={email}
               onChangeText={setEmail}
               placeholder="Enter the email address"
             />
-            <TouchableOpacity style={styles.modalButton} onPress={() => handleInvite()}>
+            <TouchableOpacity
+              style={styles.modalButton}
+              onPress={() => handleInvite()}
+            >
               <Text style={styles.modalButtonText}>Invite this friend</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.modalCloseButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setModalVisible(false)}
+            >
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
@@ -545,14 +597,14 @@ const styles = StyleSheet.create({
 
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
   },
   modalContainer: {
     width: 360,
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 10,
     elevation: 5,
   },
@@ -584,8 +636,8 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     fontSize: 14,
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });

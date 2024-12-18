@@ -39,6 +39,8 @@ import { StackNav } from "../../navigation/NavigationKeys";
 
 import { useTranslation } from "react-i18next";
 
+import usePushNotification from "../../hooks/usePushNotification";
+
 export const PasswordScreen = ({ navigation }) => { 
   const { t } = useTranslation(); 
 
@@ -77,6 +79,12 @@ export const PasswordScreen = ({ navigation }) => {
     // console.log("signupGroupCode1", groupCode); 
     // console.log("signupGroupQuestions1", groupQuestions); 
 
+    const {getFCMToken} = usePushNotification(); 
+
+    const fcmToken = await getFCMToken(); 
+
+    console.log("Sign Up FcmToken: ", fcmToken); 
+
     const userData = {
       email,
       age,
@@ -89,6 +97,7 @@ export const PasswordScreen = ({ navigation }) => {
       groupName, 
       groupCode, 
       groupQuestions, 
+      fcmToken
     }; 
 
     // console.log("signupUserData", userData); 
@@ -116,7 +125,7 @@ export const PasswordScreen = ({ navigation }) => {
         try {
           await insertFriends(createdUser.id, friends);
         } catch (error) {
-          console.error("Error inserting friends:", error);
+          // console.log("Error inserting friends:", error);
           showErrorToast("Error inserting friends. Please try again later.");
         }
       } 
@@ -133,11 +142,11 @@ export const PasswordScreen = ({ navigation }) => {
         routes: [{ name: StackNav.Verify }],
       });
     } catch (error) {
-      console.error("Error signing up user:", error);
+      // console.log("Error signing up user:", error);
       showErrorToast("Error signing up user:" + error);
 
       deleteUser(auth.currentUser).catch((error) => {
-        console.error("Error deleting firebase user:", error);
+        // console.log("Error deleting firebase user:", error);
       });
 
       try {
@@ -145,7 +154,7 @@ export const PasswordScreen = ({ navigation }) => {
         const res = await deleteUserByEmail(email);
         // console.log("Delete user response:", res);
       } catch (error) {
-        console.error("Error deleting backend user:", error);
+        // console.log("Error deleting backend user:", error);
       }
     }
   };

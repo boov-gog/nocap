@@ -19,7 +19,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAnsweredPercentage } from "../services/gameService";
 import { AuthenticatedUserContext } from "../providers";
 import * as Contacts from "expo-contacts";
-import { updateUser } from "../services/userService";
+import { updateUser, userSendNotification } from "../services/userService";
 import { saveCap } from "../services/capService";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -79,7 +79,10 @@ const GameScreen = ({ navigation }) => {
         roundId: Number(roundId),
         showToOthers: false,
         isUnlocked: false,
-      };
+      }; 
+
+      console.log("selectedFriend: ", friends[selected]); 
+      userSendNotification({token: friends[selected].fcmToken, title: "Nocap Notification", body: "You were selected as the answer."}); 
 
       // console.log("gameCap: ", cap);
 
@@ -132,7 +135,7 @@ const GameScreen = ({ navigation }) => {
       if (error.response.status == 409) {
         showErrorToast("You already answered to this question");
       } else {
-        console.error("Error saving cap:", error);
+        // console.log("Error saving cap:", error);
         showErrorToast("Error saving cap");
       }
     }
@@ -255,7 +258,7 @@ const GameScreen = ({ navigation }) => {
 
       setAnswerNums(updatedAnswerNums);
     } catch (error) {
-      console.error("Error getting answered percentage:", error);
+      // console.log("Error getting answered percentage:", error);
       showErrorToast("Failed to get answered percentage. Please try again.");
     }
   };
@@ -416,7 +419,7 @@ const GameScreen = ({ navigation }) => {
         // Select friends using the selectFriends function
         await selectFriends();
       } catch (error) {
-        console.error("Error initializing game:", error);
+        // console.log("Error initializing game:", error);
         showErrorToast("Failed to initialize the game. Please try again.");
 
         navigation.replace(StackNav.WaitingRoom, {});
@@ -427,7 +430,7 @@ const GameScreen = ({ navigation }) => {
         setShuffleEnable(Number(await AsyncStorage.getItem("shuffle")) > 0);
         setSkipEnable(Number(await AsyncStorage.getItem("skip")) > 0);
       } catch (error) {
-        console.error("Error getting shuffle and skip left values:", error);
+        // console.log("Error getting shuffle and skip left values:", error);
         showErrorToast(
           "Failed to get shuffle and skip left values. Please try again."
         );

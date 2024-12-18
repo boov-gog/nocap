@@ -70,7 +70,7 @@ const SubscriptionScreen = ( { navigation } ) => {
 
     // const { responseCode } = await InAppPurchases.purchaseItemAsync(productId);
     // if (responseCode !== InAppPurchases.IAPResponseCode.OK) {
-    //   console.error('Error purchasing item:', responseCode);
+    //   // console.log('Error purchasing item:', responseCode);
     // }
   };
 

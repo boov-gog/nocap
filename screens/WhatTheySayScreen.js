@@ -72,7 +72,7 @@ const WhatTheySayScreen = ({ navigation }) => {
         setGamerDescription(gamer1?.firstName + (gamer1?.firstName ? " " : "") + gamer1?.lastName);
       }
     } catch (error) {
-      console.error(`Error getting cap by id: ${id}`, error);
+      // console.log(`Error getting cap by id: ${id}`, error);
       showErrorToast("Error getting cap. Please try again.");
       navigation.goBack();
     }
@@ -117,7 +117,7 @@ const WhatTheySayScreen = ({ navigation }) => {
       await updateCapPublicity(id, !toggleState);
       setToggleState(!toggleState);
     } catch (error) {
-      console.error(`Error update cap by id: ${id}`, error);
+      // console.log(`Error update cap by id: ${id}`, error);
       showErrorToast("Error update cap. Please try again.");
     }
     setIsToggling(false);
