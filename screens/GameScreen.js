@@ -25,9 +25,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTranslation } from "react-i18next";
 
+import { Audio } from 'expo-av';
+
 let timer = null;
 
 const GameScreen = ({ navigation }) => {
+  let { onAudio } = useContext(AuthenticatedUserContext);
+
   const { t } = useTranslation(); 
 
   const { user } = useContext(AuthenticatedUserContext);
@@ -317,10 +321,25 @@ const GameScreen = ({ navigation }) => {
   };
 
   // Function to handle the selection of an answer
-  const handleAnswerSelect = (index) => {
+  const handleAnswerSelect = async (index) => {
     if (selected != -1) return;
 
     setSelected(index);
+
+    if (onAudio) {
+      const sound = new Audio.Sound();
+
+      await sound?.loadAsync(require('../assets/sounds/DJT/Game_Button.mp3'));
+      
+      await sound.setVolumeAsync(1.0);
+      await sound?.playAsync();
+      sound?.setOnPlaybackStatusUpdate(status => {
+        if (status?.didJustFinish) {
+          sound?.unloadAsync();
+        }
+      });
+    }
+
 
     let totalAnswered = 1;
     answerNums.forEach((num) => {

@@ -9,11 +9,11 @@ const PlayButton = ({ onPress, playEnabled }) => {
   const [clicked, setClicked] = useState(false);
   const [imageSrc, setImageSrc] = useState(Images.playEnabledNormal);
 
-  let { onAudio } = useContext(AuthenticatedUserContext);
+  let { onAudio } = useContext(AuthenticatedUserContext); 
 
-  const handlePress = async () => {
-    // console.log("handlePress: ", onAudio);
-    
+  const handlePressIn = async () => {
+    setClicked(true); 
+
     if (onAudio) {
       const sound = new Audio.Sound();
       if (!playEnabled) {
@@ -29,6 +29,10 @@ const PlayButton = ({ onPress, playEnabled }) => {
         }
       });
     }
+  }
+
+  const handlePress = async () => {
+    // console.log("handlePress: ", onAudio);
 
     if (playEnabled) {
       onPress();
@@ -57,7 +61,7 @@ const PlayButton = ({ onPress, playEnabled }) => {
   return (
     <TouchableWithoutFeedback
       onPress={handlePress}
-      onPressIn={() => setClicked(true)}
+      onPressIn={handlePressIn}
       onPressOut={() => setClicked(false)}
     >
       <Image style={styles.image} source={imageSrc} />
