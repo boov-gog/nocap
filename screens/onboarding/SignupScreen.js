@@ -152,10 +152,10 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   formContainer: {
-    paddingTop: 0,
+    paddingTop: 24,
   },
   inputContainer: {
-    paddingHorizontal: 60,
+    paddingHorizontal: 20,
   },
   checkContainer: {
     flexDirection: "row",

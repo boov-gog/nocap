@@ -57,7 +57,7 @@ const MyCapScreen = ({ navigation }) => {
           ? Images.pinkCap
           : Images.greenCap;
 
-    if (item.gamer == user.id) {
+    if (item.gamer == user?.id) {
       title =
         item.userAnswer?.firstName +
         (item.userAnswer?.firstName ? " " : "") +
@@ -98,7 +98,7 @@ const MyCapScreen = ({ navigation }) => {
   };
 
   const _onPress = (item) => {
-    if (item.gamer == user.id) {
+    if (item.gamer == user?.id) {
       navigation.navigate(StackNav.ReplyDetail, { id: item.id });
       return;
     }
@@ -128,11 +128,11 @@ const MyCapScreen = ({ navigation }) => {
     // console.log("getCaps is called");
 
     try {
-      const caps = await getRestCaps(user.id);
+      const caps = await getRestCaps(user?.id);
       // console.log("caps: ", caps);
       setCaps(caps);
       //only count that userInAnswer is mine
-      const myCaps = caps.filter((cap) => cap.userInAnswer == user.id);
+      const myCaps = caps.filter((cap) => cap.userInAnswer == user?.id);
       setFollowers(myCaps.length);
     } catch (error) {
       // console.log("Error getting followers: ", error);
@@ -208,7 +208,7 @@ const MyCapScreen = ({ navigation }) => {
               renderItem={capListItem}
               keyExtractor={(item) => item.id}
               style={styles.listStyle}
-              contentContainerStyle={{ paddingBottom: 150 }}
+              contentContainerStyle={{ paddingBottom: 120 }}
               refreshControl={
                 <RefreshControl
                   refreshing={listRefreshing}
@@ -329,14 +329,14 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   oneItemImage: {
-    width: 60,
-    height: 60,
+    width: 45,
+    height: 45,
   },
   oneItemTitle: {
     flex: 1,
     marginHorizontal: 20,
     fontFamily: "Kanit-Bold",
-    fontSize: 26,
+    fontSize: 24,
   },
   oneItemDate: {
     fontFamily: "Kanit-Bold",

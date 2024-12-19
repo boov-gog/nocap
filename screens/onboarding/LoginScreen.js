@@ -166,10 +166,12 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   formContainer: {
-    paddingTop: 0,
+    paddingTop: 24,
+    width: "100%", 
   },
   inputContainer: {
-    paddingHorizontal: 60,
+    paddingHorizontal: 20, 
+    // width: "80%", 
   },
   button: {
     width: "100%",

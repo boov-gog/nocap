@@ -217,7 +217,8 @@ const styles = StyleSheet.create({
     marginTop: 68,
     fontFamily: "Kanit-Bold",
     fontSize: 24,
-    color: "white",
+    color: "white", 
+    textAlign: "center", 
   },
   listContainer: {
     flex: 1,
