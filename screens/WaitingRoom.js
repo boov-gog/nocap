@@ -250,6 +250,8 @@ const WaitingRoom = ({ navigation }) => {
       setIsLeader(false);
     }
 
+    console.log("isLeader: ", isLeader); 
+
     setIsLeaderLoading(false);
   };
 
@@ -390,9 +392,9 @@ const WaitingRoom = ({ navigation }) => {
                 ></Image>
               </View>
             ))
-          ) : (
+          ) : (            
             <View style={styles.noListTextContainer}>
-              <Text style={styles.noListText} ellipsizeMode="tail">
+              <Text style={styles.noListText}>
                 There are no leading friends.
               </Text>
             </View>
@@ -494,7 +496,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   noListTextContainer: {
-    flex: 1,
+    display: "flex", 
     alignItems: "center",
     justifyContent: "center",
   },
@@ -587,6 +589,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: "row",
     justifyContent: "space-between",
+    position: "absolute", 
+    bottom: 0,
   },
   soundIcon: {
     position: "absolute",
