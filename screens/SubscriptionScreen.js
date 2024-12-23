@@ -98,7 +98,7 @@ const SubscriptionScreen = ( { navigation } ) => {
         <Image style={styles.logo} source={Images.logoNoback} />
 
         <Carousel images={carouselImages} />
-        <Text style={styles.price}>$4/WK</Text>
+        <Text style={styles.price}>$4/{t("week")}</Text>
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity 
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: 10,
-    paddingHorizontal: 30,
+    paddingHorizontal: 24,
     gap: 17,
     backgroundColor: "white",
   },
@@ -180,6 +180,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
   unlockBtnTxt: {
-    fontSize: 36,
+    fontSize: 32,
   },
 });

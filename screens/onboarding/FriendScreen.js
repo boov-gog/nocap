@@ -112,7 +112,7 @@ export const FriendScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Choose Friends to Play With!</Text>
+        <Text style={styles.titleStyle}>{t("chooseFriendsToPlayWith")}</Text>
         <View
           style={{
             flexDirection: "row",
@@ -128,14 +128,14 @@ export const FriendScreen = (props) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNext}>
             <View style={styles.skipBtnBack}>
-              <Text style={styles.skipBtnTxt}>Next</Text>
+              <Text style={styles.skipBtnTxt}>{t("Next")}</Text>
             </View>
           </TouchableOpacity>
         </View>
         <View style={styles.listContainer}>
           <TextInput
             leftIconName={"magnify"}
-            placeholder="Search..."
+            placeholder={`${t("search")}...`}
             borderLess={true}
           />
 

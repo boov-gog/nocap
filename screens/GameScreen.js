@@ -523,7 +523,8 @@ const GameScreen = ({ navigation }) => {
     },
     shuffleBtn: {
       marginTop: 15,
-      width: 135,
+      // width: 135,
+      paddingHorizontal: 20, 
       height: 45,
       backgroundColor: "white",
       justifyContent: "center",
@@ -555,7 +556,8 @@ const GameScreen = ({ navigation }) => {
     nextBtn: {
       marginTop: 73,
       marginBottom: 37,
-      width: 110,
+      // width: 110,
+      paddingHorizontal: 20, 
       height: 45,
       backgroundColor: "white",
       justifyContent: "center",
@@ -645,7 +647,7 @@ const GameScreen = ({ navigation }) => {
           </View>
           {selected !== -1 ? (
             <TouchableOpacity onPress={handleNext} style={styles.nextBtn}>
-              <Text style={styles.nextText}>Next</Text>
+              <Text style={styles.nextText}>{t("Next")}</Text>
             </TouchableOpacity>
           ) : (
             <>

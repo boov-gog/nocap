@@ -65,10 +65,10 @@ export const PhoneScreen = (props) => {
       > */}
       <Logo uri={Images.logo} />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Enter Your Phone Number</Text>
+        <Text style={styles.titleStyle}>{t("enterYourPhoneNumber")}</Text>
         <TextInput
           style={[styles.inputStyle, !isValid && styles.invalidInput]}
-          placeholder="Phone Number..."
+          placeholder={`${t("phoneNumber")}...`}
           placeholderTextColor={Colors.gray}
           keyboardType="phone-pad"
           value={phoneNumber}
@@ -81,6 +81,11 @@ export const PhoneScreen = (props) => {
           </Text>
         )}
         <NocapButton title={t("Next")} onPress={handleNext} />
+      </View>
+      <View>
+        <Text style={styles.description}>
+          {t("neverTextWithoutPermission")}
+        </Text>
       </View>
       {/* </KeyboardAwareScrollView> */}
     </SafeAreaView>
@@ -118,5 +123,11 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     fontSize: 12,
+  },
+  description: {
+    fontFamily: "Kanit-Bold",
+    fontSize: 14,
+    color: Colors.white,
+    textAlign: "center",
   },
 });

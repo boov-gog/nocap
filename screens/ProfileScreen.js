@@ -22,14 +22,16 @@ import { updateUser } from "../services/userService";
 import { useTranslation } from "react-i18next";
 
 export const ProfileScreen = ({ navigation }) => {
-  const { t } = useTranslation(); 
+  const { t } = useTranslation();
 
   const { user, setUser, onAudio, setOnAudio } = useContext(AuthenticatedUserContext);
   const [schoolTitle, setSchoolTitle] = useState("");
   const [toggleState, setToggleState] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false);
 
   const [modalDowngradeVisible, setModalDowngradeVisible] = useState(false);
+
+  const [modalDowngradeSure, setModalDowngradeSure] = useState(false);
 
   const handleToggle = () => {
     setToggleState(!toggleState);
@@ -39,9 +41,9 @@ export const ProfileScreen = ({ navigation }) => {
   const handleLogout = () => {
     const signOutUser = async () => {
       try {
-        await signOut(auth); 
-        await updateUser(user.id, {isOnline: false}); 
-        setUser(null); 
+        await signOut(auth);
+        await updateUser(user.id, { isOnline: false });
+        setUser(null);
 
         navigation.reset({
           index: 0,
@@ -81,15 +83,20 @@ export const ProfileScreen = ({ navigation }) => {
     if (!user.isSubscribed) {
       showErrorToast("You have no subscription!");
     } else {
-      setModalDowngradeVisible(true); 
+      setModalDowngradeVisible(true);
     }
   }
 
   const handleDowngradeAction = async () => {
+    setModalDowngradeVisible(false);
+    setModalDowngradeSure(true);
+  }
+
+  const handleDowngradeSure = async () => {
     const updatedUser = await updateUser(user.id, { isSubscribed: false });
     setUser({ ...user, ...updatedUser });
-    showSuccessToast("You downgraded subscription successfully!"); 
-    setModalDowngradeVisible(false); 
+    showSuccessToast("You downgraded subscription successfully!");
+    setModalDowngradeSure(false);
   }
 
   const avatarImage =
@@ -133,13 +140,38 @@ export const ProfileScreen = ({ navigation }) => {
           }}>
           <View style={styles.modalDowngradeBackground}>
             <View style={styles.modalDowngradeContainer}>
-              <Text style={styles.modalDowngradeTitle}>You will loose every unlocked caps. Are you sure?</Text>
-              <TouchableOpacity style={styles.modalDowngradeButton} onPress={() => handleDowngradeAction()}>
-                <Text style={styles.modalDowngradeButtonText}>Yes, sure</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.modalDowngradeCloseButton} onPress={() => setModalDowngradeVisible(false)}>
-                <Text style={styles.modalDowngradeButtonText}>{t("cancel")}</Text>
-              </TouchableOpacity>
+              <Text style={styles.modalDowngradeTitle}>
+                {t("warning")}
+              </Text>
+              <View style={styles.modalDowngradeButtonContainer}>
+                <TouchableOpacity style={styles.modalDowngradeButton} onPress={() => handleDowngradeAction()}>
+                  <Text style={styles.modalDowngradeButtonText}>{t("downgrade")}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalDowngradeSure}
+          onRequestClose={() => {
+            setModalDowngradeSure(!modalDowngradeSure);
+          }}>
+          <View style={styles.modalDowngradeBackground}>
+            <View style={styles.modalDowngradeContainer}>
+              <Text style={styles.modalDowngradeTitle}>
+                {t("sureDescription")}
+              </Text>
+              <View style={styles.modalDowngradeButtonContainer}>
+                <TouchableOpacity style={styles.modalDowngradeButtonBack} onPress={() => setModalDowngradeSure(false)}>
+                  <Text style={styles.modalDowngradeButtonText}>{t("back")}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalDowngradeButtonContinue} onPress={() => handleDowngradeSure()}>
+                  <Text style={styles.modalDowngradeButtonText}>{t("continue")}</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </Modal>
@@ -156,7 +188,7 @@ export const ProfileScreen = ({ navigation }) => {
             </Text>
             <Text style={styles.followersText}>{user?.email}</Text>
             <View style={styles.followersContainer}>
-              <Text style={styles.followersText}>{"age: " + user?.age}</Text>
+              <Text style={styles.followersText}>{t("Age") + ": " + user?.age}</Text>
               <Text style={styles.followersText}>{user?.grade}</Text>
             </View>
             <View style={styles.followersContainer}>
@@ -229,7 +261,7 @@ export const ProfileScreen = ({ navigation }) => {
                 numberOfLines={1}
                 ellipsizeMode="head"
               >
-                Pro Mode
+                {t("proMode")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -274,7 +306,7 @@ export const ProfileScreen = ({ navigation }) => {
                 {t("appInfo")}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity  
+            <TouchableOpacity
               style={styles.settingBtn}
               onPress={() => {
                 navigation.navigate(StackNav.Group);
@@ -381,7 +413,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 20,
-  }, 
+  },
 
   modalDowngradeBackground: {
     flex: 1,
@@ -393,12 +425,14 @@ const styles = StyleSheet.create({
     width: 360,
     padding: 20,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 16,
     elevation: 5,
   },
   modalDowngradeTitle: {
-    fontSize: 20, 
-    fontWeight: "bold", 
+    fontSize: 20,
+    lineHeight: 36,
+    fontWeight: "bold",
+    fontFamily: "Kanit",
     marginBottom: 10,
     textAlign: "center",
   },
@@ -409,11 +443,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingHorizontal: 4,
   },
+  modalDowngradeButtonContainer: {
+    width: "100%",
+    // flex: 1, 
+    display: "flex", 
+    flexDirection: "row", 
+    justifyContent: "center", 
+    gap: 16, 
+    // justifyContent: "center", 
+    // backgroundColor: "cyan",
+    // textAlign: "center", 
+    alignItems: "center",
+  },
   modalDowngradeButton: {
-    padding: 14,
-    borderRadius: 10,
-    backgroundColor: "#007C00",
+    padding: 10,
+    paddingHorizontal: 30,
+    borderRadius: 28,
+    backgroundColor: "#FF0000",
     color: "white",
+    // width: 200, 
+  }, 
+  modalDowngradeButtonBack: {
+    padding: 10,
+    paddingHorizontal: 30,
+    borderRadius: 28,
+    backgroundColor: "#000000",
+    color: "white",
+    // width: 200, 
+  },
+  modalDowngradeButtonContinue: {
+    padding: 10,
+    paddingHorizontal: 30,
+    borderRadius: 28,
+    backgroundColor: "#FF0000",
+    color: "white",
+    // width: 200, 
   },
   modalDowngradeCloseButton: {
     marginTop: 10,
@@ -423,9 +487,8 @@ const styles = StyleSheet.create({
     color: "white",
   },
   modalDowngradeButtonText: {
-    fontSize: 14,
+    fontSize: 24,
     color: 'white',
-    fontWeight: 'bold',
     textAlign: 'center',
   },
 });

@@ -127,13 +127,13 @@ const GroupScreen = ({ navigation }) => {
         }}>
         <View style={styles.modalBackground}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalTitle}>Are you sure you want to delete this group?</Text>
+            <Text style={styles.modalTitle}>{t("sureDelete")}</Text>
             <View style={styles.modalBtnContainer}>
               <TouchableOpacity style={styles.modalCloseButton} onPress={() => setModalVisible(false)}>
                 <Text style={styles.modalButtonText}>{t("back")}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.modalDelButton} onPress={() => handleDelACtion()}>
-                <Text style={styles.modalButtonText}>Delete</Text>
+                <Text style={styles.modalButtonText}>{t("delete")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -183,7 +183,7 @@ const GroupScreen = ({ navigation }) => {
         </View>
       </Modal>
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>All Groups</Text>
+        <Text style={styles.titleStyle}>{t("yourGroups")}</Text>
 
         <View style={styles.topContainer}>
           <View style={styles.searchContainer}>
@@ -191,7 +191,7 @@ const GroupScreen = ({ navigation }) => {
               style={styles.search}
               value={searchText}
               onChangeText={setSearchText}
-              placeholder="Search..."
+              placeholder={`${t("search")}...`}
             />
           </View>
           <View style={styles.topEmptySpace}></View>
@@ -200,7 +200,7 @@ const GroupScreen = ({ navigation }) => {
               // setLimitModalVisible(true);
               handleNew(); 
             }}>
-              <Text style={styles.newBtnText}>New</Text>
+              <Text style={styles.newBtnText}>{t("new")}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -214,7 +214,7 @@ const GroupScreen = ({ navigation }) => {
               <TouchableOpacity style={styles.groupJoinBtn} onPress={() => {
                 handleJoinGroup(item.id);
               }}>
-                <Text style={styles.groupJoinBtnText}>Join</Text>
+                <Text style={styles.groupJoinBtnText}>{t("join")}</Text>
               </TouchableOpacity>
               {user && (
                 <TouchableOpacity onPress={() => {
@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   searchContainer: {
-    width: "75%",
+    width: "65%",
   },
   search: {
     backgroundColor: "white",

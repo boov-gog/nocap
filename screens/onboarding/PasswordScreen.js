@@ -274,7 +274,7 @@ export const PasswordScreen = ({ navigation }) => {
                 <LoadingIndicator />
               </View>
             ) : (
-              <NocapButton title={"Done!"} onPress={handleSubmit} />
+              <NocapButton title={t("done")} onPress={handleSubmit} />
             )}
           </View>
         )}

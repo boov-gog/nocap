@@ -87,7 +87,7 @@ export const LoginScreen = ({ navigation }) => {
                   <TextInput
                     name="email"
                     leftIconName="email"
-                    placeholder={t("enterEmail")}
+                    placeholder={t("emailOrUsername")}
                     autoCapitalize="none"
                     keyboardType="email-address"
                     textContentType="emailAddress"
@@ -103,7 +103,7 @@ export const LoginScreen = ({ navigation }) => {
                   <TextInput
                     name="password"
                     leftIconName="key-variant"
-                    placeholder={t("enterPassword")} 
+                    placeholder={t("password")} 
                     autoCapitalize="none"
                     autoCorrect={false}
                     secureTextEntry={passwordVisibility}
@@ -142,7 +142,7 @@ export const LoginScreen = ({ navigation }) => {
             </View>
             <View style={{ width: 220 }}>
               <NocapButton
-                title={"Forgot Password?"}
+                title={t("forgotPassword")}
                 onPress={() => navigation.navigate(StackNav.ForgotPassword)}
                 titleStyle={{ fontSize: 16 }}
                 containerWidth={220}

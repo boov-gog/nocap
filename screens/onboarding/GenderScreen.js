@@ -50,7 +50,7 @@ export const GenderScreen = (props) => {
               onPress={() => handleNext(0)}
               width={dimWidth * 0.4}
             />
-            <Text style={styles.genderLabel}>Boy</Text>
+            <Text style={styles.genderLabel}>{t("boy")}</Text>
           </View>
           <View style={{ alignItems: "center" }}>
             <GenderButton
@@ -58,7 +58,7 @@ export const GenderScreen = (props) => {
               onPress={() => handleNext(1)}
               width={dimWidth * 0.4}
             />
-            <Text style={styles.genderLabel}>Girl</Text>
+            <Text style={styles.genderLabel}>{t("girl")}</Text>
           </View>
         </View>
         <View
@@ -73,7 +73,7 @@ export const GenderScreen = (props) => {
               onPress={() => handleNext(2)}
               width={dimWidth * 0.4}
             />
-            <Text style={styles.genderLabel}>Non-Binary</Text>
+            <Text style={styles.genderLabel}>{t("nonBinary")}</Text>
           </View>
         </View>
       </View>

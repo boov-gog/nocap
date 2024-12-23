@@ -77,7 +77,7 @@ const ChangePasswordScreen = () => {
             style={styles.input}
             value={password}
             onChangeText={setPassword}
-            placeholder={`${t(currentPassword)}...`}
+            placeholder={`${t("currentPassword")}...`}
             secureTextEntry={true}
           />
           <TextInput

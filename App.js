@@ -8,7 +8,7 @@ import { AuthenticatedUserProvider } from "./providers";
 import Toast from "react-native-toast-message";
 
 import { I18nextProvider } from 'react-i18next';
-import i18n from './i18n'; // Adjust the path as necessary 
+import i18n from './i18n'; 
 
 import usePushNotification from './hooks/usePushNotification';
 

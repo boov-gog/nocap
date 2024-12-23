@@ -20,12 +20,16 @@ import { useRoute } from "@react-navigation/native";
 import { AuthenticatedUserContext } from "../../providers";
 import lunr from "lunr";
 
+import { useTranslation } from "react-i18next";
+
 lunr.tokenizer.minLength = 3;
 
 let lunrIdx = null;
 let schoolsMap = null;
 
 export const SchoolScreen = (props) => {
+  const { t } = useTranslation(); 
+
   const { setSchool } = useContext(AuthenticatedUserContext);
   const [sortedSchools, setSortedSchools] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -177,12 +181,12 @@ export const SchoolScreen = (props) => {
     <SafeAreaView style={styles.container}>
       <TopBar />
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Find Your School (inside {limitDistance}miles)</Text>
+        <Text style={styles.titleStyle}>{t("findYourSchool")} ({t("inside")} {limitDistance}miles)</Text>
 
         <View style={styles.listContainer}>
           <TextInput
             leftIconName={"magnify"}
-            placeholder="Search..."
+            placeholder={`${t("search")}...`}
             borderLess={true}
             onChangeText={handleQueryChange}
             value={query}

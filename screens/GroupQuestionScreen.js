@@ -235,7 +235,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
           <View style={styles.textInputContainer}>
             <RNTextInput
               style={styles.inputStyle}
-              placeholder="Add group name..."
+              placeholder={t("addGroupName")}
               placeholderTextColor={Colors.gray}
               keyboardType="decimal-pad"
               value={groupName}
@@ -245,7 +245,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
           <View style={styles.textInputContainer}>
             <RNTextInput
               style={styles.inputStyle}
-              placeholder="Add group code..."
+              placeholder={t("addGroupCode")}
               placeholderTextColor={Colors.gray}
               keyboardType="decimal-pad"
               value={groupCode}
@@ -261,7 +261,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
                 style={styles.newInput}
                 value={insertEngQuestion}
                 onChangeText={setInsertEngQuestion}
-                placeholder="Insert a question..."
+                placeholder={t("insertAQuestion")}
               />
             </View>
             <View style={styles.topEmptySpace}></View>
@@ -269,7 +269,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
               <TouchableOpacity style={styles.newBtn} onPress={() => {
                 handleAddQuestion();
               }}>
-                <Text style={styles.newBtnText}>Add</Text>
+                <Text style={styles.newBtnText}>{t("add")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -349,7 +349,7 @@ const GroupQuestionsScreen = ({ navigation }) => {
           <TouchableOpacity style={styles.doneBtn} onPress={() => {
             handleDone();
           }}>
-            <Text style={styles.doneBtnText}>{groupId == -1 ? "Create" : "Update"}</Text>
+            <Text style={styles.doneBtnText}>{groupId == -1 ? t("done") : t("update")}</Text>
           </TouchableOpacity>
         </View>
       </View>

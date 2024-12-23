@@ -19,6 +19,9 @@ import { debounce } from "lodash";
 import TopBar from "../components/TopBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
+
+import { useTranslation } from "react-i18next";
+
 import lunr from "lunr";
 
 lunr.tokenizer.minLength = 2;
@@ -27,6 +30,8 @@ let lunrIdx = null;
 let friendsMap = null;
 
 export const SearchFriendScreen = (props) => {
+  const { t } = useTranslation();
+
   const [friends, setFriends] = useState([]);
   const [query, setQuery] = useState("");
 
@@ -150,12 +155,12 @@ export const SearchFriendScreen = (props) => {
     <SafeAreaView style={styles.container}>
       {/* <TopBar /> */}
       <View style={styles.mainContainer}>
-        <Text style={styles.titleStyle}>Search for friends</Text>
+        <Text style={styles.titleStyle}>{t("searchForFriends")}</Text>
 
         <View style={styles.listContainer}>
           <TextInput
             leftIconName={"magnify"}
-            placeholder="Search..."
+            placeholder={`${t("search")}...`}
             borderLess={true}
             onChangeText={handleQueryChange}
             value={query}
@@ -163,7 +168,7 @@ export const SearchFriendScreen = (props) => {
 
           {friends.length === 0 ? (
             <Text style={styles.noFriendsText}>
-              There are no friends at the same school.
+              {t("thereAreNoFriends")}
             </Text>
           ) : (
             <FlatList

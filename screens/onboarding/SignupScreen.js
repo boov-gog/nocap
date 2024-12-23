@@ -83,7 +83,7 @@ export const SignupScreen = ({ navigation }) => {
               <TextInput
                 name="email"
                 leftIconName="email"
-                placeholder={t("enterEmail")}
+                placeholder={t("email")}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"
@@ -95,7 +95,7 @@ export const SignupScreen = ({ navigation }) => {
               <TextInput
                 name="inviter"
                 leftIconName="inbox"
-                placeholder="Who invited you?"
+                placeholder={t("whoInvitedYou")}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"

@@ -395,7 +395,7 @@ const WaitingRoom = ({ navigation }) => {
           ) : (            
             <View style={styles.noListTextContainer}>
               <Text style={styles.noListText}>
-                There are no leading friends.
+                {t("thereAreNoLeadingFriends")}
               </Text>
             </View>
           )}
@@ -405,7 +405,7 @@ const WaitingRoom = ({ navigation }) => {
           <Text style={styles.timerBefore}>{t("newPollsIn")} </Text>
           <Text style={styles.timerText}>{pollTime}</Text>
         </View>
-        <Text style={styles.skipText}>Skip the wait</Text>
+        <Text style={styles.skipText}>{t("skipTheWait")}</Text>
         <TouchableOpacity
           style={styles.inviteBtn}
           onPress={() => setModalVisible(true)}

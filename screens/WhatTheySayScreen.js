@@ -62,12 +62,12 @@ const WhatTheySayScreen = ({ navigation }) => {
       if (cap1?.isUnlocked == false) {
         let title =
           gender1 == GENDER_TYPE.Boy
-            ? "From a Boy"
+            ? t("fromABoy")
             : gender1 == GENDER_TYPE.Girl
-              ? "From a Girl"
-              : "From Someone";
+              ? t("fromAGirl")
+              : t("fromSomeone");
 
-        setGamerDescription(`${title} in the ${gamer1?.grade} grade.`);
+        setGamerDescription(`${title} ${t(inThe)} ${gamer1?.grade} ${t("grade")}.`);
       } else {
         setGamerDescription(gamer1?.firstName + (gamer1?.firstName ? " " : "") + gamer1?.lastName);
       }
@@ -237,7 +237,7 @@ const WhatTheySayScreen = ({ navigation }) => {
             // numberOfLines={1}
             // ellipsizeMode="tail"
             >
-              {"You replied: " + cap?.replySentence?.content}
+              {t("youReplied") + ": " + cap?.replySentence?.content}
             </Text>
           )}
 

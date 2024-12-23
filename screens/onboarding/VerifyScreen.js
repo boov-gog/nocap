@@ -12,7 +12,11 @@ import { StackNav } from "../../navigation/NavigationKeys";
 import { signinUser, updateUser } from "../../services/userService";
 import { isObject } from "formik";
 
+import { useTranslation } from "react-i18next";
+
 export const VerifyScreen = ({ navigation }) => {
+  const { t } = useTranslation(); 
+
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSigning, setIsSigning] = useState(false);
@@ -117,15 +121,15 @@ export const VerifyScreen = ({ navigation }) => {
           {!isEmailVerified && (
             <>
               <NocapButton
-                title="Verify Your Email"
+                title={t("verifyYourEmail")}
                 onPress={handleSendVerificationEmail}
               />
-              <NocapButton title="Sign Out" onPress={handleSignOut} />
+              <NocapButton title={t("signout")} onPress={handleSignOut} />
             </>
           )}
           {showSuccess && (
             <View style={styles.successContainer}>
-              <Text style={styles.successText}>Verified!</Text>
+              <Text style={styles.successText}>{t("verified")}</Text>
               <Image source={Images.success} style={styles.successGif} />
             </View>
           )}
