@@ -12,10 +12,6 @@ import i18n from './i18n';
 
 import usePushNotification from './hooks/usePushNotification';
 
-import * as Notifications from 'expo-notifications';
-import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants'; 
-
 LogBox.ignoreLogs([
   "Warning: ...",
   "[react-native-gesture-handler] Seems like you're using an old API with gesture components, check out new Gestures system!",
@@ -35,10 +31,6 @@ const App = () => {
 
 
   useEffect(() => {
-
-
-
-
     const listenToNotifications = async () => {
       try {
         const fcm = await getFCMToken();
